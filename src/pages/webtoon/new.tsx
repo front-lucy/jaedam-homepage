@@ -6,7 +6,6 @@ import WebtoonItem from "@/components/WebtoonItem";
 import { newWebtoons } from "@/util/code";
 import { useEffect, useState } from "react";
 
-// ✅ 기존 배열과 다를 때까지 무한 반복해서 섞는 함수
 const shuffleArray = (array: any[]) => {
   let shuffled = [...array];
   let attempt = 0;
@@ -38,7 +37,7 @@ export default function New() {
         alignItems: "center",
       }}
     >
-      <Header background="#fff" color="#000" logoColor="black" />
+      <Header color="#000" />
       <PageTop />
 
       <TitleTabMenu

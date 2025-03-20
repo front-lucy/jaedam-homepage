@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 interface HeaderProps {
   background?: string;
@@ -8,26 +9,103 @@ interface HeaderProps {
   logoColor?: string;
 }
 
+// ✅ 메뉴 항목 타입 정의
+interface MenuItem {
+  label: string;
+  path: string;
+  submenu: string[];
+}
+
+// ✅ 네비게이션 메뉴 데이터
+const menuItems: MenuItem[] = [
+  {
+    label: "WEBTOON",
+    path: "/webtoon/new",
+    submenu: ["신작", "연재작", "완결작"],
+  },
+  {
+    label: "BUSINESS",
+    path: "/business",
+    submenu: ["만화 제작", "콘텐츠 유통", "해외 세일즈", "IP 비즈니스"],
+  },
+  {
+    label: "BRAND",
+    path: "/brand",
+    submenu: ["만화 제작", "콘텐츠 유통", "해외 세일즈", "IP 비즈니스"],
+  },
+  {
+    label: "ABOUT",
+    path: "/about",
+    submenu: ["미션&비전", "연혁", "조직도", "오시는 길"],
+  },
+  {
+    label: "CONTACT US",
+    path: "/contact",
+    submenu: ["NEWS", "작가 모집", "사업문의&제휴"],
+  },
+];
+
+export default function Header({ background, color, hoverColor }: HeaderProps) {
+  const router = useRouter();
+  const { pathname } = router;
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+
+  return (
+    <HeaderWrap onMouseLeave={() => setActiveMenu(null)}>
+      <HeaderContainer background={background}>
+        <Logo>
+          <LogoLink href="/">
+            <LogoImage
+              src={
+                "https://s3.ap-northeast-2.amazonaws.com/shortz.net/public/images/logo/Logo-Symboltype-color.png"
+              }
+              alt="logo"
+            />
+          </LogoLink>
+        </Logo>
+        <Nav>
+          <NavList>
+            {menuItems.map(({ label, path }) => {
+              const isActive = pathname === path;
+              return (
+                <NavItem key={label} onMouseEnter={() => setActiveMenu(label)}>
+                  <NavLink
+                    isActive={isActive}
+                    color={color}
+                    hoverColor={hoverColor}
+                    onClick={() => router.push(path)}
+                  >
+                    {label}
+                  </NavLink>
+                </NavItem>
+              );
+            })}
+          </NavList>
+        </Nav>
+      </HeaderContainer>
+    </HeaderWrap>
+  );
+}
+
+// ✅ 스타일 컴포넌트
 const HeaderWrap = styled.div`
   position: sticky;
-  width: 100%;
   top: 0;
-  z-index: 10;
+  width: 100%;
+  z-index: 100;
 `;
 
 const HeaderContainer = styled.header<HeaderProps>`
-  position: sticky;
-  top: 0;
-  padding: 40px 80px;
-  background-color: ${({ background }: HeaderProps) =>
-    background || "transparent"};
+  position: relative; /* 서브메뉴가 메인 메뉴 아래에 나오도록 기준점 설정 */
   display: flex;
   justify-content: space-between;
+
   align-items: center;
-  z-index: 10;
+  padding: 20px 80px;
+  background: ${({ background }: { background: string }) =>
+    background || "#fff"};
   transition: background-color 0.3s ease;
 `;
-
 const Logo = styled.h1`
   margin: 0;
   font-size: 1.5rem;
@@ -39,79 +117,44 @@ const LogoLink = styled.a`
 `;
 
 const LogoImage = styled.img`
-  width: 100px;
+  width: 30px;
 `;
 
 const Nav = styled.nav``;
 
 const NavList = styled.div`
   display: flex;
-  gap: 20px;
+  gap: 30px;
+  margin-left: 30px;
+  line-height: 1.4;
 `;
 
-const NavLink = styled.div<HeaderProps>`
-  text-decoration: none;
-  color: ${({ color }: HeaderProps) => color || "#fff"};
-  cursor: pointer;
+const NavItem = styled.div`
   font-size: 1.1rem;
   font-weight: 700;
-  transition: color 0.3s ease;
+  cursor: pointer;
 
   &:hover {
-    color: ${({ hoverColor }: HeaderProps) => hoverColor || "#00c1d4"};
+    color: #00c1d4;
   }
 `;
 
-export default function Header({
-  logoColor,
-  background,
-  color,
-  hoverColor,
-}: HeaderProps) {
-  const router = useRouter();
-
-  return (
-    <HeaderWrap>
-      <HeaderContainer background={background}>
-        <Logo>
-          <LogoLink href="https://www.jaedam.com/">
-            {logoColor === "black" ? (
-              <LogoImage
-                src="https://s3.ap-northeast-2.amazonaws.com/shortz.net/public/images/logo/Logo-Black.png"
-                alt="logo"
-              />
-            ) : (
-              <LogoImage
-                src="https://s3.ap-northeast-2.amazonaws.com/shortz.net/public/images/logo/Logo-jaedamshortz-kr-color.png"
-                alt="logo"
-              />
-            )}
-          </LogoLink>
-        </Logo>
-        <Nav>
-          <NavList>
-            <NavLink
-              color={color}
-              hoverColor={hoverColor}
-              onClick={() => router.push("/webtoon/new")}
-            >
-              WEBTOON
-            </NavLink>
-            <NavLink color={color} hoverColor={hoverColor}>
-              BUSINESS
-            </NavLink>
-            <NavLink color={color} hoverColor={hoverColor}>
-              BRAND
-            </NavLink>
-            <NavLink color={color} hoverColor={hoverColor}>
-              ABOUT
-            </NavLink>
-            <NavLink color={color} hoverColor={hoverColor}>
-              CONTACT US
-            </NavLink>
-          </NavList>
-        </Nav>
-      </HeaderContainer>
-    </HeaderWrap>
-  );
-}
+const NavLink = styled.div<{
+  isActive: boolean;
+  color?: string;
+  hoverColor?: string;
+}>`
+  cursor: pointer;
+  transition: color 0.3s ease;
+  color: ${({ isActive, color }: { isActive: boolean; color?: string }) =>
+    isActive ? "#00c1d4" : color || "#333"};
+  &:hover {
+    color: ${({
+      isActive,
+      hoverColor,
+    }: {
+      isActive: boolean;
+      hoverColor?: string;
+    }) => (isActive ? "#00c1d4" : hoverColor || "#00c1d4")};
+  }
+`;

@@ -45,7 +45,6 @@ const WebtoonAuthor = styled.p`
   text-align: left;
   font-size: 16px;
   margin-top: 10px;
-  font-family: "NanumBarunGothic", sans-serif;
   color: #999;
 `;
 
@@ -55,6 +54,5 @@ const WebtoonDescription = styled.p`
   margin-top: 10px;
   word-break: keep-all;
   transform: skew(-0.05deg);
-  font-family: "NanumBarunGothic", sans-serif;
   line-height: 1.4;
 `;

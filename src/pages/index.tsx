@@ -63,7 +63,7 @@ const FooterRight = styled.div`
 export default function Home() {
   return (
     <Container>
-      <Header />
+      <Header color="#fff" logoColor="white" background="transparent" />
       <VideoBackground autoPlay loop muted playsInline>
         <source
           src="https://s3.ap-northeast-2.amazonaws.com/shortz.net/public/test/shortz-intro.mp4"
