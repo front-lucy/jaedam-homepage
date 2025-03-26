@@ -61,12 +61,12 @@ export default function business() {
     >
       <Header background="" color="#000" hoverColor="#00c1d4" />
       <img
-        src="/images/Google Form.png"
+        src="/images/og img.png"
         alt="business"
         style={{
           width: "100%",
-          height: "auto",
-          objectFit: "contain",
+          height: "500px",
+          objectFit: "cover",
         }}
       />
 
