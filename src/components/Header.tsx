@@ -24,6 +24,11 @@ const menuItems: MenuItem[] = [
     submenu: ["신작", "연재작", "완결작"],
   },
   {
+    label: "WORK",
+    path: "/work",
+    submenu: ["NEWS", "작가 모집", "사업문의&제휴"],
+  },
+  {
     label: "BUSINESS",
     path: "/business",
     submenu: ["만화 제작", "콘텐츠 유통", "해외 세일즈", "IP 비즈니스"],
@@ -42,11 +47,6 @@ const menuItems: MenuItem[] = [
     label: "ABOUT",
     path: "/about",
     submenu: ["미션&비전", "연혁", "조직도", "오시는 길"],
-  },
-  {
-    label: "CONTACT US",
-    path: "/contact",
-    submenu: ["NEWS", "작가 모집", "사업문의&제휴"],
   },
 ];
 
