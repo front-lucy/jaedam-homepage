@@ -110,6 +110,10 @@ body {
   -ms-use-select: all;
   user-select: all;
   cursor: url("/images/cucucucu.png"), auto;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 ol,
 ul {

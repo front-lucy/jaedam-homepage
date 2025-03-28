@@ -17,14 +17,14 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   {
-    label: "WEBTOON",
-    path: "/webtoon/new",
-    submenu: ["신작", "연재작", "완결작"],
-  },
-  {
     label: "WORK",
     path: "/work",
     submenu: ["NEWS", "작가 모집", "사업문의&제휴"],
+  },
+  {
+    label: "WEBTOON",
+    path: "/webtoon/new",
+    submenu: ["신작", "연재작", "완결작"],
   },
 
   {
@@ -32,11 +32,7 @@ const menuItems: MenuItem[] = [
     path: "/brand",
     submenu: ["만화 제작", "콘텐츠 유통", "해외 세일즈", "IP 비즈니스"],
   },
-  {
-    label: "NEWSROOM",
-    path: "/news",
-    submenu: ["만화 제작", "콘텐츠 유통", "해외 세일즈", "IP 비즈니스"],
-  },
+
   {
     label: "CAREER",
     path: "/career",
@@ -46,6 +42,11 @@ const menuItems: MenuItem[] = [
     label: "ABOUT",
     path: "/about",
     submenu: ["미션&비전", "연혁", "조직도", "오시는 길"],
+  },
+  {
+    label: "NEWSROOM",
+    path: "/news",
+    submenu: ["만화 제작", "콘텐츠 유통", "해외 세일즈", "IP 비즈니스"],
   },
 ];
 

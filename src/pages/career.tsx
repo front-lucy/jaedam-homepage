@@ -51,83 +51,6 @@ const StatLabel = styled.span`
   font-weight: 500;
 `;
 
-const Section = styled.section`
-  max-width: 1200px;
-  padding: 80px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  color: #333;
-`;
-
-const SectionTitle = styled.h2`
-  font-size: 32px;
-  font-weight: 700;
-  color: #00c1d4;
-`;
-
-const Paragraph = styled.p`
-  font-size: 16px;
-  line-height: 1.9;
-`;
-
-const TimelineWrapper = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 60px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-`;
-
-const YearBlock = styled.div`
-  position: relative;
-  padding-left: 24px;
-
-  &::before {
-    content: "";
-    position: absolute;
-    left: 6px;
-    top: 5px;
-    width: 12px;
-    height: 12px;
-    background-color: #00c1d4;
-    border-radius: 50%;
-  }
-
-  &::after {
-    content: "";
-    position: absolute;
-    left: 11px;
-    top: 25px;
-    width: 2px;
-    height: calc(100% - 25px);
-    background-color: #ccc;
-  }
-
-  &:last-of-type::after {
-    display: none;
-  }
-`;
-
-const YearTitle = styled.h3`
-  font-size: 20px;
-  font-weight: 700;
-  color: #00c1d4;
-  margin-bottom: 10px;
-`;
-
-const Item = styled.li`
-  font-size: 15px;
-  color: #444;
-  line-height: 1.8;
-`;
-
-interface TimelineData {
-  year: string;
-  items: string[];
-}
-
 export default function About() {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.3 });
   const videoRef = useRef(null);
@@ -135,7 +58,9 @@ export default function About() {
     target: videoRef,
     offset: ["start end", "end start"],
   });
-  const videoWidth = useTransform(scrollYProgress, [0, 1], ["100%", "50%"]);
+
+  const videoWidth = useTransform(scrollYProgress, [0, 1], ["100vw", "50%"]);
+  const videoHeight = useTransform(scrollYProgress, [0, 1], ["100vh", "50%"]);
 
   return (
     <Wrapper>
@@ -162,7 +87,9 @@ export default function About() {
         muted
         style={{
           width: videoWidth,
+          height: videoHeight,
           maxWidth: "100%",
+          maxHeight: "100%",
           margin: "0 auto",
           display: "block",
           borderRadius: "16px",
