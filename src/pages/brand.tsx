@@ -128,7 +128,11 @@ export default function Brand() {
   return (
     <Wrapper>
       <Header background="" color="#000" hoverColor="#00c1d4" />
-
+      <img
+        src="/images/ca.png"
+        alt="mission"
+        style={{ width: "100%", margin: "0 0 60px 0" }}
+      />
       <div>
         <BrandSection
           title="캐릭터의 모든 것 “큐티즈”"

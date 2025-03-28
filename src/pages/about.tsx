@@ -1,9 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import Header from "@/components/Header";
 import styled from "@emotion/styled";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import CountUp from "react-countup";
 import { useInView } from "react-intersection-observer";
 
 const Wrapper = styled.div`
@@ -11,7 +10,6 @@ const Wrapper = styled.div`
   width: 100%;
   flex-direction: column;
   align-items: center;
-  padding-bottom: 100px;
 `;
 
 const ContentWrapper = styled.div`
@@ -52,7 +50,7 @@ const StatLabel = styled.span`
 `;
 
 const Section = styled.section`
-  max-width: 960px;
+  max-width: 1200px;
   padding: 80px 20px;
   display: flex;
   flex-direction: column;
@@ -61,9 +59,10 @@ const Section = styled.section`
 `;
 
 const SectionTitle = styled.h2`
+  font-family: "Roboto Slab", serif;
   font-size: 32px;
   font-weight: 700;
-  color: #00c1d4;
+  color: #000;
 `;
 
 const Paragraph = styled.p`
@@ -127,7 +126,6 @@ interface TimelineData {
   year: string;
   items: string[];
 }
-
 const historyData: TimelineData[] = [
   {
     year: "2013.03",
@@ -183,63 +181,8 @@ export default function About() {
   return (
     <Wrapper>
       <Header background="" color="#000" hoverColor="#00c1d4" />
-
-      <div
-        style={{
-          margin: "80px 0 80px",
-          textAlign: "center",
-          fontWeight: "bold",
-          fontSize: "64px",
-          lineHeight: "70.4px",
-          color: "rgb(17 17 17)",
-        }}
-      >
-        To inspire people
-        <br /> all over the world with story-oriented
-        <br /> entertainment services
-      </div>
-
-      <motion.video
-        ref={videoRef}
-        src="/images/20240808_Vision.mp4"
-        autoPlay
-        loop
-        muted
-        style={{
-          width: videoWidth,
-          maxWidth: "100%",
-          margin: "0 auto",
-          display: "block",
-          borderRadius: "16px",
-        }}
-      />
-
-      <ContentWrapper ref={ref}>
-        <Mission>
-          To provide opportunities
-          <br /> for everyone to create their own stories
-          <br /> and share them with others.
-        </Mission>
-        <StatsWrapper>
-          <StatBox>
-            {inView && (
-              <CountUp end={2450} duration={2} separator="," suffix="+" />
-            )}
-            <StatLabel>Total Creators</StatLabel>
-          </StatBox>
-          <StatBox>
-            {inView && <CountUp end={5000} duration={2.5} separator="," />}
-            <StatLabel>Total Readers</StatLabel>
-          </StatBox>
-          <StatBox>
-            {inView && <CountUp end={900} duration={1.5} suffix="+" />}
-            <StatLabel>Adapted Stories</StatLabel>
-          </StatBox>
-        </StatsWrapper>
-      </ContentWrapper>
-
       <Section>
-        <SectionTitle>미션 & 비전</SectionTitle>
+        <SectionTitle>MISSION & VISION</SectionTitle>
         <Paragraph>
           만화는 재미있어야 한다! 그것이 개그 만화든, 공포든, 학원액션이든,
           순정이든, 드라마든!
@@ -252,7 +195,7 @@ export default function About() {
           있습니다. 이를 통해 나날이 커져가는 글로벌 만화 시장 속에서 대한민국의
           ‘만화(MANHWA)’ 브랜드를 구축하고 만화 산업을 선도해가겠습니다.
         </Paragraph>
-        <img
+        {/* <img
           src="/images/funandjoy.jpg"
           alt="mission"
           style={{
@@ -261,21 +204,35 @@ export default function About() {
             objectFit: "cover",
             marginTop: "75px",
           }}
-        />
-      </Section>
-
-      <TimelineWrapper>
-        {historyData.map(({ year, items }) => (
-          <YearBlock key={year}>
-            <YearTitle>{year}</YearTitle>
-            <ul>
-              {items.map((text, idx) => (
-                <Item key={idx}>{text}</Item>
-              ))}
-            </ul>
-          </YearBlock>
-        ))}
-      </TimelineWrapper>
+        /> */}
+      </Section>{" "}
+      <img
+        src="/images/about3.png"
+        alt="mission"
+        style={{ maxWidth: "1200px", margin: "0px auto 0" }}
+      />
+      <img
+        src="/images/history.png"
+        alt="mission"
+        style={{ maxWidth: "1200px", margin: "80px auto 0" }}
+      />{" "}
+      <img
+        src="/images/partners.png"
+        alt="mission"
+        style={{
+          minWidth: "1200px",
+          maxWidth: "1200px",
+          margin: "160px auto 0",
+        }}
+      />
+      <img
+        src="/images/contactus.png"
+        alt="mission"
+        style={{
+          width: "100%",
+          marginTop: "80px",
+        }}
+      />
     </Wrapper>
   );
 }

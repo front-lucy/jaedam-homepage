@@ -33,6 +33,15 @@ export default function news() {
           onChange={handleTabChange}
           fontSize="18px"
         />
+        <img
+          src="/images/news1.png"
+          alt="news"
+          style={{
+            width: "100%",
+            maxWidth: "1100px",
+            marginTop: "50px",
+          }}
+        />
       </div>
     </div>
   );

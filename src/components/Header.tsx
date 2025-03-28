@@ -9,14 +9,12 @@ interface HeaderProps {
   logoColor?: string;
 }
 
-// ✅ 메뉴 항목 타입 정의
 interface MenuItem {
   label: string;
   path: string;
   submenu: string[];
 }
 
-// ✅ 네비게이션 메뉴 데이터
 const menuItems: MenuItem[] = [
   {
     label: "WEBTOON",
@@ -28,11 +26,7 @@ const menuItems: MenuItem[] = [
     path: "/work",
     submenu: ["NEWS", "작가 모집", "사업문의&제휴"],
   },
-  {
-    label: "BUSINESS",
-    path: "/business",
-    submenu: ["만화 제작", "콘텐츠 유통", "해외 세일즈", "IP 비즈니스"],
-  },
+
   {
     label: "BRAND",
     path: "/brand",
@@ -41,6 +35,11 @@ const menuItems: MenuItem[] = [
   {
     label: "NEWSROOM",
     path: "/news",
+    submenu: ["만화 제작", "콘텐츠 유통", "해외 세일즈", "IP 비즈니스"],
+  },
+  {
+    label: "CAREER",
+    path: "/career",
     submenu: ["만화 제작", "콘텐츠 유통", "해외 세일즈", "IP 비즈니스"],
   },
   {
