@@ -11,7 +11,7 @@ const VideoBackground = styled.video`
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 110%;
   height: 100%;
   object-fit: cover;
   z-index: -1;
@@ -66,7 +66,7 @@ export default function Home() {
       <Header color="#fff" logoColor="white" background="transparent" />
       <VideoBackground autoPlay loop muted playsInline>
         <source
-          src="https://s3.ap-northeast-2.amazonaws.com/shortz.net/public/test/shortz-intro.mp4"
+          src="https://s3.ap-northeast-2.amazonaws.com/shortz.net/public/test/jaedam-vidio.mp4"
           type="video/mp4"
         />
       </VideoBackground>

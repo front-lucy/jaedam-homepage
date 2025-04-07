@@ -60,12 +60,7 @@ export default function Header({ background, color, hoverColor }: HeaderProps) {
       <HeaderContainer background={background}>
         <Logo>
           <LogoLink href="/">
-            <LogoImage
-              src={
-                "https://s3.ap-northeast-2.amazonaws.com/shortz.net/public/images/logo/Logo-Symboltype-color.png"
-              }
-              alt="logo"
-            />
+            <LogoImage src={"/images/jaedam.svg"} alt="logo" />
           </LogoLink>
         </Logo>
         <Nav>
@@ -122,7 +117,8 @@ const LogoLink = styled.a`
 `;
 
 const LogoImage = styled.img`
-  width: 30px;
+  width: 100%;
+  height: 25px;
 `;
 
 const Nav = styled.nav``;
@@ -136,7 +132,7 @@ const NavList = styled.div`
 
 const NavItem = styled.div`
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 900;
   cursor: pointer;
 
   &:hover {

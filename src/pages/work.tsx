@@ -7,12 +7,12 @@ import { useState } from "react";
 const data = [
   {
     id: 1,
-    title: "아기님의 장래희망은 흑막",
-    description:
-      "여행 가이드인 연슬은 어느 날 까칠하고 미스터리한 고객 장태주를 만나게 된다. 이들의 여행은 단순한 관광이 아닌, 과거와 비밀이 얽힌 감정의 여정으로 이어진다. 예상치 못한 사건과 감정의 파도 속에서 두 사람은 점점 서로에게 빠져들게 되고, 여행의 끝에서 진짜 자신과 마주하게 된다.",
-    image: "https://www.studiolico.com/img/work/work_2048_death.jpg",
-    author: "홍길동",
-    illustrator: "이몽룡",
+    title: "",
+    description: "",
+    image:
+      "https://s3.ap-northeast-2.amazonaws.com/shortz.net/public/test/%E1%84%8C%E1%85%A2%E1%84%83%E1%85%A1%E1%86%B7%E1%84%92%E1%85%A9%E1%86%B7%E1%84%91%E1%85%A6%E1%84%8B%E1%85%B5%E1%84%8C%E1%85%B5%E1%84%86%E1%85%A9%E1%86%A8%E1%84%8B%E1%85%A5%E1%86%B8-1.jpg",
+    author: "",
+    illustrator: "",
     link: "#",
   },
   {
@@ -231,7 +231,7 @@ export default function Work() {
 
   return (
     <Wrapper>
-      <Header background="#00000000" color="#fff" />
+      <Header background="#00000000" color="#c" />
       <AnimatePresence mode="wait">
         <Slide
           key={selected.id}
