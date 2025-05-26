@@ -2,7 +2,7 @@
 export const jaedamCyan = "#22d4dd";
 
 // gray scale
-export const gray1000 = "#000000";
+export const black = "#000000";
 export const gray900 = "#121212";
 export const gray850 = "#242424";
 export const gray800 = "#363636";
