@@ -1,5 +1,6 @@
 "use client";
 
+import { Footer } from "@/components/molecules/footer";
 import { Header } from "@/components/molecules/header";
 
 export default function Home() {
@@ -8,6 +9,8 @@ export default function Home() {
       <Header pageType="sub" mode="dark" />
 
       <div style={{ width: "100%", height: "150vh" }}>s</div>
+
+      <Footer />
     </div>
   );
 }
