@@ -1,6 +1,6 @@
 export interface WorkGridProps {
   items: {
-    id: string;
+    id: number;
     thumbnailUrl: string;
     title: string;
   }[];

@@ -15,11 +15,11 @@ export const Title = styled.h2`
   color: ${colors.gray900};
 
   @media (max-width: 1024px) {
-    font-size: 32px;
+    font-size: 44px;
   }
 
   @media (max-width: 768px) {
-    font-size: 24px;
+    font-size: 40px;
   }
 `;
 
@@ -30,6 +30,7 @@ export const TabList = styled.ul`
   padding: 0;
   justify-content: center;
   align-items: center;
+  position: relative;
 
   @media (max-width: 1024px) {
     gap: 32px;
@@ -38,10 +39,8 @@ export const TabList = styled.ul`
     justify-content: flex-start;
     scrollbar-width: none;
     -ms-overflow-style: none;
-  }
 
-  @media (max-width: 1024px) {
-    ::-webkit-scrollbar {
+    &::-webkit-scrollbar {
       display: none;
     }
   }
@@ -49,24 +48,25 @@ export const TabList = styled.ul`
 
 export const TabItem = styled.li<{ isActive: boolean }>`
   position: relative;
+  font-family: ${typography.fontFamily};
   font-size: 20px;
   font-weight: 700;
   color: ${({ isActive }) => (isActive ? colors.gray900 : colors.gray600)};
   cursor: pointer;
   padding: 4px 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  &:hover {
-    color: ${colors.gray900};
-
-    &::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      height: 3px;
-      width: 100%;
-      background-color: ${colors.jaedamCyan};
-    }
+  &::after {
+    content: "";
+    display: ${({ isActive }) => (isActive ? "block" : "none")};
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: ${colors.jaedamCyan};
   }
 
   @media (max-width: 1024px) {
@@ -78,13 +78,4 @@ export const TabItem = styled.li<{ isActive: boolean }>`
     font-size: 16px;
     font-weight: 700;
   }
-`;
-
-export const Underline = styled.div`
-  position: absolute;
-  bottom: -8px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: ${colors.jaedamCyan};
 `;

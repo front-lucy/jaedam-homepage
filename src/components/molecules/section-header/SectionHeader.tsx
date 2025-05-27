@@ -1,12 +1,6 @@
 import { FC } from "react";
+import { TabItem, TabList, Title, Wrapper } from "./sectionHeader.styles";
 import { SectionHeaderProps } from "./sectionHeader.types";
-import {
-  Wrapper,
-  Title,
-  TabList,
-  TabItem,
-  Underline,
-} from "./sectionHeader.styles";
 
 export const SectionHeader: FC<SectionHeaderProps> = ({
   title,
@@ -25,7 +19,6 @@ export const SectionHeader: FC<SectionHeaderProps> = ({
             onClick={() => onChange(tab)}
           >
             {tab}
-            {tab === activeTab && <Underline />}
           </TabItem>
         ))}
       </TabList>
