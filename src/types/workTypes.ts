@@ -24,18 +24,10 @@ export const contentTypes: ContentType[] = [
   "DIGITAL",
 ];
 
-export interface WorkContentItem {
-  id: number;
-  title: string;
-  thumbnailUrl: string;
-}
-
 export interface SortObject {
-  direction: string;
-  nullHandling: string;
-  ascending: boolean;
-  property: string;
-  ignoreCase: boolean;
+  empty: boolean;
+  sorted: boolean;
+  unsorted: boolean;
 }
 
 export interface PageableObject {
@@ -44,7 +36,13 @@ export interface PageableObject {
   pageSize: number;
   paged: boolean;
   unpaged: boolean;
-  sort: SortObject[];
+  sort: SortObject;
+}
+
+export interface WorkContentItem {
+  id: number;
+  title: string;
+  thumbnailUrl: string;
 }
 
 export interface PageContentHomeListResponse {
@@ -56,7 +54,7 @@ export interface PageContentHomeListResponse {
   first: boolean;
   last: boolean;
   empty: boolean;
-  sort: SortObject[];
+  sort: SortObject;
   pageable: PageableObject;
   content: WorkContentItem[];
 }

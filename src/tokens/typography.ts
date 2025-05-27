@@ -39,22 +39,22 @@ export const typography = {
     },
     body: {
       fontSize: 16,
-      lineHeight: 20,
+      lineHeight: 26,
       fontWeight: 400,
     },
     caption1: {
       fontSize: 14,
-      lineHeight: 18,
+      lineHeight: 22,
       fontWeight: 400,
     },
     caption2: {
       fontSize: 13,
-      lineHeight: 16,
+      lineHeight: 20,
       fontWeight: 400,
     },
     caption3: {
       fontSize: 12,
-      lineHeight: 14,
+      lineHeight: 18,
       fontWeight: 400,
     },
     buttonLarge: {

@@ -10,6 +10,12 @@ interface GetContentsParams {
   sort?: string;
 }
 
+// 서버 응답이 { success: boolean; body: T } 구조라고 가정
+type ApiWrapped<T> = {
+  success: boolean;
+  body: T;
+};
+
 export async function getContents({
   type,
   category = "",
@@ -17,8 +23,8 @@ export async function getContents({
   page = 0,
   size = 20,
   sort = "",
-}: GetContentsParams): Promise<PageContentHomeListResponse | null> {
-  const response = await globalCommonApi<PageContentHomeListResponse>({
+}: GetContentsParams): Promise<PageContentHomeListResponse> {
+  const res = await globalCommonApi<ApiWrapped<PageContentHomeListResponse>>({
     url: `contents/${type}`,
     method: "GET",
     data: {
@@ -30,5 +36,5 @@ export async function getContents({
     },
   });
 
-  return response.success ? response.body : null;
+  return res.body;
 }

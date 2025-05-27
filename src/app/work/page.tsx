@@ -45,13 +45,14 @@ const WorkPage = () => {
         const res = await getContents({
           type: selectedTab,
           category: "NEW",
-          genre: "ACTION",
+          genre: "",
           page: currentPage,
           size: 20,
           sort: "",
         });
 
         if (res) {
+          console.log("🌐 res", res);
           setItems(res.content);
           setTotalPages(res.totalPages);
         }
