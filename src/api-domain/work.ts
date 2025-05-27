@@ -19,7 +19,7 @@ export async function getContents({
   sort = "",
 }: GetContentsParams): Promise<PageContentHomeListResponse | null> {
   return await globalCommonApi({
-    url: `v1/jaedam/homepage/contents/${type}?category=${category}&genre=${genre}&page=${page}&size=${size}&sort=${sort}`,
+    url: `/contents/${type}?category=${category}&genre=${genre}&page=${page}&size=${size}&sort=${sort}`,
     method: "GET",
   });
 }

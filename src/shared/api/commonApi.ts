@@ -8,6 +8,7 @@ interface CommonApiProps {
   data?: unknown;
 }
 
+// src/shared/api/commonApi.ts
 export async function globalCommonApi<T>(
   props: CommonApiProps
 ): Promise<T | null> {
@@ -16,17 +17,20 @@ export async function globalCommonApi<T>(
   try {
     const { url, method, data } = props;
 
+    console.log("🌐 요청 URL:", url);
+    console.log("📦 요청 메서드:", method);
+    console.log("📨 요청 데이터:", data);
     const response = isServer
-      ? await fetchData<T>(props)
+      ? await fetchData<T>({
+          url,
+          method: method as "GET" | "POST" | "PUT" | "DELETE",
+          data: data as Record<string, unknown> | undefined,
+        })
       : (
-          await axios({
-            url: `/api/commonApi`,
-            method: "POST",
-            data: {
-              url,
-              method,
-              ...(method === "GET" ? { params: data } : { data }),
-            },
+          await axios.post("/api/commonApi", {
+            url,
+            method,
+            data, // 여기서 `params`로 바꾸지 마세요!
           })
         ).data;
 

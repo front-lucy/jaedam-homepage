@@ -1,45 +1,49 @@
-import { Method } from "axios";
-
-interface FetchDataProps {
-  url: string;
-  method: Method;
-  data?: unknown;
-}
-
-interface ApiResponse<T> {
-  success: boolean;
-  body: T;
-}
+// src/shared/api/fetchData.ts
 
 export async function fetchData<T>({
   url,
   method,
   data,
-}: FetchDataProps): Promise<ApiResponse<T>> {
+}: {
+  url: string;
+  method: "GET" | "POST" | "PUT" | "DELETE";
+  data?: Record<string, unknown>;
+}): Promise<{ success: boolean; body: T }> {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   if (!baseUrl) {
     throw new Error("NEXT_PUBLIC_API_BASE_URL 환경변수가 설정되지 않았습니다.");
   }
 
-  const fullUrl = `${baseUrl}/${url}`;
-
   try {
-    const isGet = method === "GET";
+    const fullUrl =
+      method === "GET" && data
+        ? `${baseUrl}/${url}${buildQueryString(data)}`
+        : `${baseUrl}/${url}`;
 
     const res = await fetch(fullUrl, {
       method,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      ...(isGet ? {} : { body: JSON.stringify(data) }),
-      cache: "no-store",
+      ...(method !== "GET"
+        ? {
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          }
+        : {}),
     });
+
+    const contentType = res.headers.get("content-type");
+
+    if (!contentType || !contentType.includes("application/json")) {
+      const text = await res.text(); // 디버깅용
+      console.error("❌ JSON 아님:", text);
+      throw new Error("JSON 형식이 아님");
+    }
 
     const json = await res.json();
 
     return {
       success: res.ok,
-      body: json.body,
+      body: json as T,
     };
   } catch (error) {
     console.error("❌ fetchData 요청 실패:", error);
@@ -48,4 +52,9 @@ export async function fetchData<T>({
       body: {} as T,
     };
   }
+}
+
+function buildQueryString(params: unknown): string {
+  const query = new URLSearchParams(params as Record<string, string>);
+  return `?${query.toString()}`;
 }
