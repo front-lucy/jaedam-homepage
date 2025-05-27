@@ -11,7 +11,7 @@ import { colors } from "@/tokens";
 import styled from "@emotion/styled";
 import { AnimatePresence, motion } from "framer-motion";
 import { FC, useState } from "react";
-import { Wrapper } from "./header.styles";
+import { NavItem, Wrapper } from "./header.styles";
 import { HeaderProps } from "./header.types";
 
 export const MobileHeader: FC<HeaderProps> = ({
@@ -47,13 +47,12 @@ export const MobileHeader: FC<HeaderProps> = ({
                   <CloseIcon style={{ color: "white" }} />
                 </CloseButton>
               </SlideHeader>
-
               <NavList>
-                <li>ABOUT</li>
-                <li>BUSINESS</li>
-                <li>WORK</li>
-                <li>CAREER</li>
-                <li>NEWS</li>
+                <NavItem href="/about">ABOUT</NavItem>
+                <NavItem href="/business">BUSINESS</NavItem>
+                <NavItem href="/work">WORK</NavItem>
+                <NavItem href="/career">CAREER</NavItem>
+                <NavItem href="/news">NEWS</NavItem>
               </NavList>
 
               <Footer>

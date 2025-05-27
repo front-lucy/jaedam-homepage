@@ -1,5 +1,6 @@
 import { colors, typography } from "@/tokens";
 import styled from "@emotion/styled";
+import Link from "next/link";
 
 export const Wrapper = styled.header<{
   pageType: "home" | "sub";
@@ -40,7 +41,7 @@ export const Nav = styled.nav`
   gap: 32px;
 `;
 
-export const NavItem = styled.span<{ mode?: "light" | "dark" }>`
+export const NavItem = styled(Link)<{ mode?: "light" | "dark" }>`
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
