@@ -1,46 +1,78 @@
 // src/shared/api/commonApi.ts
+import { ICommonResponseType } from "@/types/response";
 import axios from "axios";
-import { fetchData } from "./fetchData";
 
-interface CommonApiProps {
+interface IglobalCommonApiProps {
   url: string;
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   data?: unknown;
 }
 
-// src/shared/api/commonApi.ts
-export async function globalCommonApi<T>(
-  props: CommonApiProps
-): Promise<T | null> {
+export async function globalCommonApi(
+  props: IglobalCommonApiProps
+): Promise<ICommonResponseType<unknown>> {
   const isServer = typeof window === "undefined";
 
   try {
-    const { url, method, data } = props;
+    const apiData: ICommonResponseType<unknown> = isServer
+      ? await serverFetch(props)
+      : (await axios.post("/api/commonApi", props)).data;
 
-    console.log("🌐 요청 URL:", url);
-    console.log("📦 요청 메서드:", method);
-    console.log("📨 요청 데이터:", data);
-    const response = isServer
-      ? await fetchData<T>({
-          url,
-          method: method as "GET" | "POST" | "PUT" | "DELETE",
-          data: data as Record<string, unknown> | undefined,
-        })
-      : (
-          await axios.post("/api/commonApi", {
-            url,
-            method,
-            data, // 여기서 `params`로 바꾸지 마세요!
-          })
-        ).data;
-
-    return response.success ? response.body : null;
-  } catch (e) {
-    if (!isServer) {
-      alert(
-        `요청 중 오류가 발생했습니다. ${e instanceof Error ? e.message : ""}`
-      );
-    }
-    return null;
+    return apiData;
+  } catch (error) {
+    console.error("❌ API 요청 실패:", error);
+    return {
+      success: false,
+      body: {
+        status: "error",
+        code: "error",
+        message: "API 호출 중 오류 발생",
+      },
+    };
   }
+}
+
+async function serverFetch({
+  url,
+  method,
+  data,
+}: IglobalCommonApiProps): Promise<ICommonResponseType<unknown>> {
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  if (!baseUrl) throw new Error("NEXT_PUBLIC_API_BASE_URL 환경변수 누락");
+
+  const fullUrl =
+    method === "GET" && data
+      ? `${baseUrl}/${url}${buildQueryString(data as Record<string, unknown>)}`
+      : `${baseUrl}/${url}`;
+
+  const res = await fetch(fullUrl, {
+    method,
+    ...(method !== "GET"
+      ? {
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }
+      : {}),
+  });
+
+  const contentType = res.headers.get("content-type") || "";
+  if (!contentType.includes("application/json")) {
+    const text = await res.text();
+    console.error("❌ JSON 형식 아님 응답:", text);
+    throw new Error("JSON 형식이 아닌 응답");
+  }
+
+  const json = await res.json();
+  return {
+    success: res.ok,
+    body: json,
+  };
+}
+
+function buildQueryString(params: Record<string, unknown>): string {
+  const stringParams = Object.fromEntries(
+    Object.entries(params).map(([key, value]) => [key, String(value)])
+  );
+  const query = new URLSearchParams(stringParams).toString();
+  return `?${query}`;
 }

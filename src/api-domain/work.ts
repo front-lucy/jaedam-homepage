@@ -18,8 +18,14 @@ export async function getContents({
   size = 20,
   sort = "",
 }: GetContentsParams): Promise<PageContentHomeListResponse | null> {
-  return await globalCommonApi({
+  const response = await globalCommonApi({
     url: `/contents/${type}?category=${category}&genre=${genre}&page=${page}&size=${size}&sort=${sort}`,
     method: "GET",
   });
+  if (response.success) {
+    return response.body as PageContentHomeListResponse;
+  } else {
+    console.warn("콘텐츠 요청 실패:", response.body.message);
+    return null;
+  }
 }

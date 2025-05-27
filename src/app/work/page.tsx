@@ -1,6 +1,8 @@
+// src/app/work/page.tsx
+
 "use client";
 
-import { getContents } from "@/api-domain/work"; // ✅ 여기 경로 확인
+import { getContents } from "@/api-domain/work";
 import { Footer } from "@/components/molecules/footer";
 import { DesktopHeader } from "@/components/molecules/header/header.desktop";
 import { SectionHeader } from "@/components/molecules/section-header";
@@ -42,7 +44,11 @@ const WorkPage = () => {
       try {
         const res = await getContents({
           type: selectedTab,
+          category: "NEW",
+          genre: "ACTION",
           page: currentPage,
+          size: 20,
+          sort: "",
         });
 
         if (res) {

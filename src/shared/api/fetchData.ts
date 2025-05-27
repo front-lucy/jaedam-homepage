@@ -34,7 +34,7 @@ export async function fetchData<T>({
     const contentType = res.headers.get("content-type");
 
     if (!contentType || !contentType.includes("application/json")) {
-      const text = await res.text(); // 디버깅용
+      const text = await res.text();
       console.error("❌ JSON 아님:", text);
       throw new Error("JSON 형식이 아님");
     }
