@@ -31,6 +31,13 @@ export async function fetchData<T>({
         : {}),
     });
 
+    console.log("🌐 fetch 응답:", {
+      status: res.status,
+      statusText: res.statusText,
+      headers: Object.fromEntries(res.headers.entries()),
+      url: res.url,
+    });
+
     const contentType = res.headers.get("content-type");
 
     if (!contentType || !contentType.includes("application/json")) {

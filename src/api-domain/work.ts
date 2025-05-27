@@ -12,20 +12,23 @@ interface GetContentsParams {
 
 export async function getContents({
   type,
-  category = "NEW",
-  genre = "ACTION",
+  category = "",
+  genre = "",
   page = 0,
   size = 20,
   sort = "",
 }: GetContentsParams): Promise<PageContentHomeListResponse | null> {
-  const response = await globalCommonApi({
-    url: `/contents/${type}?category=${category}&genre=${genre}&page=${page}&size=${size}&sort=${sort}`,
+  const response = await globalCommonApi<PageContentHomeListResponse>({
+    url: `contents/${type}`,
     method: "GET",
+    data: {
+      category,
+      genre,
+      page,
+      size,
+      sort,
+    },
   });
-  if (response.success) {
-    return response.body as PageContentHomeListResponse;
-  } else {
-    console.warn("콘텐츠 요청 실패:", response.body.message);
-    return null;
-  }
+
+  return response.success ? response.body : null;
 }
