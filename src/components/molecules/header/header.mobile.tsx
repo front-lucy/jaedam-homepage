@@ -5,13 +5,23 @@ import InstagramIcon from "@/assets/icons/Icon-sns-instagram.svg";
 import XIcon from "@/assets/icons/Icon-sns-x.svg";
 import YouTubeIcon from "@/assets/icons/Icon-sns-youtube.svg";
 import CloseIcon from "@/assets/icons/Icon-x.svg";
-import LogoIcon from "@/assets/icons/Logo_Jaedam-Eng.svg";
 
-import { colors } from "@/tokens";
-import styled from "@emotion/styled";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { FC, useState } from "react";
-import { NavItem, Wrapper } from "./header.styles";
+import {
+  CloseButton,
+  Footer,
+  Hamburger,
+  LogoContainer,
+  LogoIconStyled,
+  NavItem,
+  NavList,
+  Overlay,
+  SlideHeader,
+  SlideMenu,
+  SocialIcons,
+  Wrapper,
+} from "./header.styles";
 import { HeaderProps } from "./header.types";
 
 export const MobileHeader: FC<HeaderProps> = ({
@@ -24,10 +34,10 @@ export const MobileHeader: FC<HeaderProps> = ({
     <>
       <Wrapper pageType={pageType}>
         <LogoContainer>
-          <LogoIconStyled />
+          <LogoIconStyled mode={mode} />
         </LogoContainer>
         <Hamburger mode={mode} onClick={() => setMenuOpen(true)}>
-          <MenuIcon style={{ color: "white" }} />
+          <MenuIcon style={{ color: mode === "dark" ? "white" : "black" }} />
         </Hamburger>
       </Wrapper>
 
@@ -42,7 +52,7 @@ export const MobileHeader: FC<HeaderProps> = ({
               onClick={(e) => e.stopPropagation()}
             >
               <SlideHeader>
-                <LogoIconStyled />
+                <LogoIconStyled mode={mode} />
                 <CloseButton mode={mode} onClick={() => setMenuOpen(false)}>
                   <CloseIcon style={{ color: "white" }} />
                 </CloseButton>
@@ -76,108 +86,3 @@ export const MobileHeader: FC<HeaderProps> = ({
     </>
   );
 };
-
-// 스타일 정의
-
-const LogoContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  min-width: 100px;
-  height: 100%;
-`;
-
-const LogoIconStyled = styled(LogoIcon)`
-  height: 20px;
-  width: auto;
-  display: block;
-  color: ${colors.white};
-`;
-
-const Hamburger = styled.button<{ mode: "light" | "dark" }>`
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: ${({ mode }) => (mode === "dark" ? colors.gray100 : colors.gray900)};
-
-  svg {
-    width: 24px;
-    height: 24px;
-  }
-`;
-
-const CloseButton = styled.button<{ mode: "light" | "dark" }>`
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: ${({ mode }) => (mode === "dark" ? colors.gray100 : colors.gray900)};
-
-  svg {
-    width: 24px;
-    height: 24px;
-  }
-`;
-
-const Overlay = styled.div`
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.9);
-  z-index: 999;
-  display: flex;
-  justify-content: flex-start;
-`;
-
-const SlideMenu = styled(motion.div)`
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background: ${colors.black};
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const SlideHeader = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const NavList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-  font-size: 18px;
-  color: ${colors.white};
-`;
-
-const Footer = styled.footer`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  font-size: 12px;
-  color: ${colors.gray700};
-`;
-
-const SocialIcons = styled.div`
-  display: flex;
-  gap: 16px;
-
-  svg {
-    width: 20px;
-    height: 20px;
-    color: ${colors.gray700};
-    flex-shrink: 0;
-    object-fit: contain;
-    overflow: visible;
-  }
-`;

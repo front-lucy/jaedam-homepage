@@ -1,4 +1,4 @@
-import { colors, typography } from "@/tokens";
+import { colors, spacing, typography } from "@/tokens";
 import styled from "@emotion/styled";
 
 export const Wrapper = styled.div`
@@ -25,24 +25,29 @@ export const Title = styled.h2`
 
 export const TabList = styled.ul`
   display: flex;
-  gap: 48px;
-  list-style: none;
-  padding: 0;
-  justify-content: center;
   align-items: center;
-  position: relative;
+  gap: ${spacing["2XL"]};
+  align-self: stretch;
+  color: ${colors.gray900};
+  text-align: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 
-  @media (max-width: 1024px) {
-    gap: 32px;
-    overflow-x: auto;
-    padding: 0 32px;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @media (max-width: 799px) {
     justify-content: flex-start;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    padding: 0 ${spacing.M};
+    gap: ${spacing.L};
+  }
 
-    &::-webkit-scrollbar {
-      display: none;
-    }
+  @media (min-width: 800px) {
+    justify-content: center;
+    padding: 0;
+    gap: ${spacing["2XL"]};
   }
 `;
 

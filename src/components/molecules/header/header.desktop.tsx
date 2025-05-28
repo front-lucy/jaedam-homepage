@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Logo, Nav, NavItem, Wrapper } from "./header.styles";
+import { DesktopLogoIconStyled, Nav, NavItem, Wrapper } from "./header.styles";
 import { HeaderProps } from "./header.types";
 
 export const DesktopHeader: FC<HeaderProps> = ({
@@ -8,7 +8,8 @@ export const DesktopHeader: FC<HeaderProps> = ({
 }) => {
   return (
     <Wrapper pageType={pageType}>
-      <Logo mode={mode}>JAEDAM</Logo>
+      <DesktopLogoIconStyled mode={mode} />
+
       <Nav>
         <NavItem mode={mode} href="/about">
           ABOUT

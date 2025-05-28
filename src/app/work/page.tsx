@@ -4,12 +4,13 @@
 
 import { getContents } from "@/api-domain/work";
 import { Footer } from "@/components/molecules/footer";
-import { DesktopHeader } from "@/components/molecules/header/header.desktop";
+import { Header } from "@/components/molecules/header";
 import { SectionHeader } from "@/components/molecules/section-header";
 import { useWorkStore } from "@/store/useWorkStore";
 import { ContentType, contentTypeLabels } from "@/types/workTypes";
 import styled from "@emotion/styled";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { GenreTabs } from "./component/genre-tabs/GenreTabs";
 import { WorkGrid } from "./component/work-grid/WorkGrid";
 
 const LayoutWrapper = styled.div`
@@ -39,6 +40,8 @@ const WorkPage = () => {
     setTotalPages,
   } = useWorkStore();
 
+  const [selectedGenre, setSelectedGenre] = useState("");
+
   useEffect(() => {
     const loadContents = async () => {
       try {
@@ -66,7 +69,7 @@ const WorkPage = () => {
 
   return (
     <>
-      <DesktopHeader pageType="sub" mode="light" />
+      <Header pageType="sub" mode="light" />
       <LayoutWrapper>
         <SectionHeader
           title="WORK"
@@ -80,6 +83,10 @@ const WorkPage = () => {
               setSelectedTab(entry[0] as ContentType);
             }
           }}
+        />
+        <GenreTabs
+          activeGenre={selectedGenre}
+          onChange={(genre) => setSelectedGenre(genre)}
         />
         <WorkGrid items={items} />
         {/* <Pagination current={currentPage} total={totalPages} onChange={setCurrentPage} /> */}

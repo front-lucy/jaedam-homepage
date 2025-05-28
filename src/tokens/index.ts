@@ -4,6 +4,9 @@ import * as radius from "./radius";
 import * as shadow from "./shadow";
 import { typography } from "./typography";
 
+export { spacing } from "./spacing";
+export type { SpacingToken } from "./spacing";
+
 export { border, colors, radius, shadow, typography };
 
 export type ColorToken = keyof typeof colors;
