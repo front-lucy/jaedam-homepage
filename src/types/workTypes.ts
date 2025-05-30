@@ -58,3 +58,28 @@ export interface PageContentHomeListResponse {
   pageable: PageableObject;
   content: WorkContentItem[];
 }
+
+export interface WriterDto {
+  id: number;
+  name: string;
+  nickname: string;
+}
+
+export interface PlatformDto {
+  id: number;
+  url: string;
+  type: "NAVER" | "KAKAO";
+}
+
+export interface ContentHomeDetailResponse {
+  id: number;
+  title: string;
+  synopsis: string;
+  logline: string;
+  thumbnailUrl: string;
+  category: "NEW" | "ONGOING" | "COMPLETED" | "FEATURED";
+  genre: string;
+  tags: string[];
+  writers: WriterDto[];
+  platformList: PlatformDto[];
+}

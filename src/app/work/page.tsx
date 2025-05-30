@@ -1,5 +1,3 @@
-// src/app/work/page.tsx
-
 "use client";
 
 import { getContents } from "@/api-domain/work";
@@ -74,6 +72,16 @@ const WorkPage = () => {
 
     loadContents();
   }, [selectedTab, currentPage, setItems, setTotalPages]);
+
+  useEffect(() => {
+    // 복원 후 scrollY는 0으로 초기화(한 번만 복원)
+    const y = useWorkStore.getState().scrollY;
+    if (y > 0) {
+      window.scrollTo(0, y);
+      useWorkStore.getState().setScrollY(0);
+    }
+  }, []);
+
   const [activeTab, setActiveTab] = useState<TabKey>("WEBTOON");
 
   return (

@@ -33,8 +33,6 @@ export const TabItem = styled.li<{ active: boolean }>`
   cursor: pointer;
   white-space: nowrap;
   color: ${({ active }) => (active ? colors.black : colors.gray400)};
-  border-bottom: ${({ active }) =>
-    active ? `2px solid ${colors.black}` : "none"};
 
   font-size: 18px;
 

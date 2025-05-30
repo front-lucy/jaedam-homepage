@@ -1,5 +1,9 @@
 import { globalCommonApi } from "@/shared/api/commonApi";
-import { ContentType, PageContentHomeListResponse } from "@/types/workTypes";
+import {
+  ContentHomeDetailResponse,
+  ContentType,
+  PageContentHomeListResponse,
+} from "@/types/workTypes";
 
 interface GetContentsParams {
   type: ContentType;
@@ -36,5 +40,19 @@ export async function getContents({
     },
   });
 
+  return res.body;
+}
+
+// 상세 데이터 조회
+export async function getContentDetail(
+  id: number | string
+): Promise<ContentHomeDetailResponse> {
+  const res = await globalCommonApi<{
+    success: boolean;
+    body: ContentHomeDetailResponse;
+  }>({
+    url: `content/${id}`,
+    method: "GET",
+  });
   return res.body;
 }
