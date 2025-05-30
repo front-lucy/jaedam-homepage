@@ -14,7 +14,7 @@ import {
   Hamburger,
   LogoContainer,
   LogoIconStyled,
-  NavItem,
+  MNavItem,
   NavList,
   Overlay,
   SlideHeader,
@@ -58,11 +58,11 @@ export const MobileHeader: FC<HeaderProps> = ({
                 </CloseButton>
               </SlideHeader>
               <NavList>
-                <NavItem href="/about">ABOUT</NavItem>
-                <NavItem href="/business">BUSINESS</NavItem>
-                <NavItem href="/work">WORK</NavItem>
-                <NavItem href="/career">CAREER</NavItem>
-                <NavItem href="/news">NEWS</NavItem>
+                <MNavItem href="/about">ABOUT</MNavItem>
+                <MNavItem href="/business">BUSINESS</MNavItem>
+                <MNavItem href="/work">WORK</MNavItem>
+                <MNavItem href="/career">CAREER</MNavItem>
+                <MNavItem href="/news">NEWS</MNavItem>
               </NavList>
 
               <Footer>

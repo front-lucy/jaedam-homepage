@@ -1,6 +1,7 @@
-import { colors, spacing, typography } from "@/tokens";
+import { colors, spacing } from "@/tokens";
 import styled from "@emotion/styled";
 
+// 전체 wrapper
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -8,8 +9,8 @@ export const Wrapper = styled.div`
   gap: 40px;
 `;
 
+// 제목
 export const Title = styled.h2`
-  font-family: ${typography.fontFamily};
   font-size: 64px;
   font-weight: 700;
   color: ${colors.gray900};
@@ -22,14 +23,9 @@ export const Title = styled.h2`
     font-size: 40px;
   }
 `;
-
-export const TabList = styled.ul`
-  display: flex;
-  align-items: center;
-  gap: ${spacing["2XL"]};
-  align-self: stretch;
-  color: ${colors.gray900};
-  text-align: center;
+// TabListWrapper.ts
+export const TabListWrapper = styled.div`
+  width: 100%;
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -38,49 +34,60 @@ export const TabList = styled.ul`
     display: none;
   }
 
-  @media (max-width: 799px) {
-    justify-content: flex-start;
-    padding: 0 ${spacing.M};
-    gap: ${spacing.L};
+  display: flex;
+  justify-content: flex-start; // 좌측 정렬
+`;
+
+// TabList.ts
+export const TabList = styled.ul`
+  display: flex;
+  align-items: center;
+  gap: ${spacing.L};
+  flex-shrink: 0;
+  width: max-content;
+
+  &.centered {
+    margin: 0 auto;
   }
 
-  @media (min-width: 800px) {
-    justify-content: center;
-    padding: 0;
-    gap: ${spacing["2XL"]};
+  &.scrollable {
+    margin-left: 0;
   }
 `;
 
+// 탭 항목
 export const TabItem = styled.li<{ isActive: boolean }>`
   position: relative;
-  font-family: ${typography.fontFamily};
   font-size: 20px;
   font-weight: 700;
   color: ${({ isActive }) => (isActive ? colors.gray900 : colors.gray600)};
   cursor: pointer;
-  padding: 4px 0 12px;
+  padding: 4px 0 8px;
   display: flex;
   align-items: center;
   justify-content: center;
 
   &::after {
     content: "";
-    display: ${({ isActive }) => (isActive ? "block" : "none")};
     position: absolute;
-    bottom: -4px;
+    bottom: 0;
     left: 0;
     width: 100%;
-    height: 3px;
-    background-color: ${colors.jaedamCyan};
+    height: 4px;
+    background-color: ${({ isActive }) =>
+      isActive ? colors.jaedamCyan : "transparent"};
+    transition: background-color 0.2s ease-in-out;
   }
 
   @media (max-width: 1024px) {
     font-size: 18px;
-    padding: 4px 0 12px;
+
+    &::after {
+      height: 3px;
+    }
   }
 
   @media (max-width: 768px) {
     font-size: 16px;
-    font-weight: 700;
   }
 `;

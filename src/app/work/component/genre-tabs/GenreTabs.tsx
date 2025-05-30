@@ -20,7 +20,7 @@ export const GenreTabs: FC<GenreTabsProps> = ({ activeGenre, onChange }) => {
     <TabList>
       {genres.map((genre) => (
         <TabItem
-          key={genre}
+          key={genre + Math.random()}
           active={genre === activeGenre}
           onClick={() => onChange(genre)}
         >

@@ -5,13 +5,17 @@
 import { getContents } from "@/api-domain/work";
 import { Footer } from "@/components/molecules/footer";
 import { Header } from "@/components/molecules/header";
-import { SectionHeader } from "@/components/molecules/section-header";
 import { useWorkStore } from "@/store/useWorkStore";
-import { ContentType, contentTypeLabels } from "@/types/workTypes";
+import { colors } from "@/tokens";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import { GenreTabs } from "./component/genre-tabs/GenreTabs";
+import {
+  TabKey,
+  WorkCategoryTabs,
+} from "./component/work-category/WorkCategoryTabs";
 import { WorkGrid } from "./component/work-grid/WorkGrid";
+import { WorkGridSkeleton } from "./component/work-grid/WorkGridSkeleton";
 
 const LayoutWrapper = styled.div`
   display: flex;
@@ -36,14 +40,16 @@ const WorkPage = () => {
     currentPage,
     items,
     setItems,
-    setSelectedTab,
+    // setSelectedTab,
     setTotalPages,
   } = useWorkStore();
 
   const [selectedGenre, setSelectedGenre] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadContents = async () => {
+      setIsLoading(true);
       try {
         const res = await getContents({
           type: selectedTab,
@@ -61,34 +67,30 @@ const WorkPage = () => {
         }
       } catch (err) {
         console.error("콘텐츠 불러오기 실패:", err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     loadContents();
   }, [selectedTab, currentPage, setItems, setTotalPages]);
+  const [activeTab, setActiveTab] = useState<TabKey>("WEBTOON");
 
   return (
     <>
       <Header pageType="sub" mode="light" />
       <LayoutWrapper>
-        <SectionHeader
-          title="WORK"
-          tabs={Object.values(contentTypeLabels)}
-          activeTab={contentTypeLabels[selectedTab]}
-          onChange={(label) => {
-            const entry = Object.entries(contentTypeLabels).find(
-              ([, value]) => value === label
-            );
-            if (entry) {
-              setSelectedTab(entry[0] as ContentType);
-            }
-          }}
-        />
+        <div>
+          <Title>WORK</Title>
+        </div>
+        <div style={{ width: "100%" }}>
+          <WorkCategoryTabs activeKey={activeTab} onChange={setActiveTab} />
+        </div>
         <GenreTabs
           activeGenre={selectedGenre}
           onChange={(genre) => setSelectedGenre(genre)}
         />
-        <WorkGrid items={items} />
+        {isLoading ? <WorkGridSkeleton /> : <WorkGrid items={items} />}
         {/* <Pagination current={currentPage} total={totalPages} onChange={setCurrentPage} /> */}
       </LayoutWrapper>
       <Footer />
@@ -97,3 +99,17 @@ const WorkPage = () => {
 };
 
 export default WorkPage;
+
+export const Title = styled.h2`
+  font-size: 64px;
+  font-weight: 700;
+  color: ${colors.gray900};
+
+  @media (max-width: 1024px) {
+    font-size: 44px;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 40px;
+  }
+`;

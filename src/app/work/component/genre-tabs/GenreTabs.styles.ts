@@ -2,6 +2,8 @@ import { colors } from "@/tokens";
 import styled from "@emotion/styled";
 
 export const TabList = styled.ul`
+  width: 100%;
+  background-color: ${colors.gray100};
   display: flex;
   overflow-x: auto;
   white-space: nowrap;
@@ -10,12 +12,13 @@ export const TabList = styled.ul`
   gap: 40px;
 
   @media (max-width: 1279px) {
-    justify-content: flex-start;
+    justify-content: center;
     padding: 0 20px;
     gap: 32px;
   }
 
   @media (max-width: 799px) {
+    justify-content: flex-start;
     padding: 0 16px;
     gap: 24px;
   }
@@ -26,7 +29,6 @@ export const TabList = styled.ul`
 `;
 
 export const TabItem = styled.li<{ active: boolean }>`
-  font-family: "Pretendard", sans-serif;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;

@@ -1,5 +1,5 @@
 import LogoIcon from "@/assets/icons/Logo_Jaedam-Eng.svg";
-import { colors, typography } from "@/tokens";
+import { colors } from "@/tokens";
 import styled from "@emotion/styled";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -32,7 +32,6 @@ export const Wrapper = styled.header<{
 export const Logo = styled.h1<{ mode?: "light" | "dark" }>`
   font-size: 18px;
   font-weight: 400;
-  font-family: ${typography.fontFamily};
   color: ${({ mode }) => (mode === "dark" ? colors.gray100 : colors.gray900)};
 
   @media (min-width: 1280px) {
@@ -49,7 +48,7 @@ export const NavItem = styled(Link)<{ mode?: "light" | "dark" }>`
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
-  color: ${colors.white};
+  color: ${({ mode }) => (mode === "dark" ? colors.white : colors.black)};
 
   &:hover {
     color: ${colors.jaedamCyan};
@@ -145,6 +144,16 @@ export const NavList = styled.ul`
   gap: 24px;
   font-size: 18px;
   color: ${colors.white};
+`;
+
+export const MNavItem = styled(Link)`
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  color: ${colors.white};
+  &:hover {
+    color: ${colors.jaedamCyan};
+  }
 `;
 
 export const Footer = styled.footer`

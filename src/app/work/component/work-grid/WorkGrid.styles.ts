@@ -88,7 +88,6 @@ export const Bubble = styled(BubbleIcon)`
 `;
 
 export const Title = styled.div`
-  font-family: "Pretendard", sans-serif;
   font-weight: 700;
   color: ${colors.white};
   text-align: center;
