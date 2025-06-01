@@ -31,6 +31,19 @@ const LayoutWrapper = styled.div`
     gap: 32px;
   }
 `;
+export const Title = styled.h2`
+  font-size: 64px;
+  font-weight: 700;
+  color: ${colors.gray900};
+
+  @media (max-width: 1024px) {
+    font-size: 44px;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 40px;
+  }
+`;
 
 const WorkPage = () => {
   const {
@@ -107,17 +120,3 @@ const WorkPage = () => {
 };
 
 export default WorkPage;
-
-export const Title = styled.h2`
-  font-size: 64px;
-  font-weight: 700;
-  color: ${colors.gray900};
-
-  @media (max-width: 1024px) {
-    font-size: 44px;
-  }
-
-  @media (max-width: 768px) {
-    font-size: 40px;
-  }
-`;
