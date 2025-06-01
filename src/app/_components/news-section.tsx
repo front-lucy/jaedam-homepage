@@ -3,16 +3,19 @@ import { colors, radius, shadow, spacing, typography } from '@/tokens';
 import { formatDate } from '@/utils/formatDate';
 import styled from '@emotion/styled';
 import { useRef } from 'react';
-// main-logo-jaedam-studiodam
-import MainLogoJaedamStudioDam from '@/assets/icons/main-logo-jaedam-studiodam.svg';
+
 //main-logo-jaedam.svg
 import MainLogoJaedam from '@/assets/icons/main-logo-jaedam.svg';
+
+// main-logo-jaedam-studiodam
+import MainLogoJaedamStudioDam from '@/assets/icons/main-logo-jaedam-studiodam.svg';
+
 //main-logo-marketoon.png
 import MainLogoMarketoon from '@/assets/icons/main-logo-marketoon.png';
 //main-logo-omg.svg
 import MainLogoOmg from '@/assets/icons/main-logo-omg.svg';
 //main-logo-qtizz.png
-import MainLogoQtizz from '@/assets/icons/main-logo-qtizz.png';
+import MainLogoQtizz from '@/assets/icons/main-logo-qtizz.svg';
 //main-logo-shortz.svg
 import MainLogoShortz from '@/assets/icons/main-logo-shortz.svg';
 
@@ -57,59 +60,47 @@ export function AboutSection({ className }: AboutSectionProps) {
   const displayedNews = deviceType === 'mobile' ? newsList.slice(0, 3) : newsList;
 
   return (
-    <Wrapper
-      ref={ref}
-      className={className}
-    >
-      <TextArea>
-        <Title>NEWS</Title>
-        <Description>
-          재담미디어의 재미있는 소식,
-          <br />
-          놓치지 마세요
-        </Description>
-      </TextArea>
-      <CardArea>
-        {displayedNews.map(item => (
-          <CardContainer key={item.id + item.category}>
-            <Badge>{item.category}</Badge>
-            <CardTitle>{item.title}</CardTitle>
-            <CardDate>{formatDate(item.noticedAt)}</CardDate>
-          </CardContainer>
-        ))}
-      </CardArea>
-      <LogoLineWrapper>
-        <LogoLineTitle>Partners</LogoLineTitle>
-        <LogoLineImage
-          src={MainLogoJaedamStudioDam.src}
-          alt='Jaedam Studio Dam'
-        />
-        <LogoLineImage
-          src={MainLogoJaedam.src}
-          alt='Jaedam'
-        />
-        <LogoLineImage
-          src={MainLogoMarketoon.src}
-          alt='Marketoon'
-        />
-        <LogoLineImage
-          src={MainLogoOmg.src}
-          alt='OMG'
-        />
-        <LogoLineImage
-          src={MainLogoQtizz.src}
-          alt='Qtizz'
-        />
-        <LogoLineImage
-          src={MainLogoShortz.src}
-          alt='Shortz'
-        />
-      </LogoLineWrapper>
-    </Wrapper>
+    <>
+      <Wrapper
+        ref={ref}
+        className={className}
+      >
+        <TextArea>
+          <Title>NEWS</Title>
+          <Description>
+            재담미디어의 재미있는 소식,
+            <br />
+            놓치지 마세요
+          </Description>
+        </TextArea>
+        <CardArea>
+          {displayedNews.map(item => (
+            <CardContainer key={item.id + item.category}>
+              <Badge>{item.category}</Badge>
+              <CardTitle>{item.title}</CardTitle>
+              <CardDate>{formatDate(item.noticedAt)}</CardDate>
+            </CardContainer>
+          ))}
+        </CardArea>{' '}
+        <LogoLineWrapper>
+          <LogoLineImage
+            as={MainLogoJaedam}
+            width={149}
+            height={'auto'}
+          />
+          <LogoLineImage as={MainLogoShortz} />
+          <LogoLineImage as={MainLogoQtizz} />
+          <LogoLineImage as={MainLogoOmg} />
+          <LogoLineImage as={MainLogoJaedamStudioDam} />
+          <LogoLineImage src={MainLogoMarketoon.src} />
+        </LogoLineWrapper>
+      </Wrapper>
+    </>
   );
 }
 
 const Wrapper = styled.section`
+  position: relative;
   display: flex;
   align-items: center;
   padding: 0px 64px;
@@ -218,22 +209,21 @@ const CardDate = styled.time`
 `;
 
 const LogoLineWrapper = styled.section`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   width: 100%;
-  padding: ${spacing.XL} ${spacing.L};
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
   text-align: center;
-`;
-
-const LogoLineTitle = styled.h2`
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: ${spacing.M};
+  align-items: flex-start;
+  padding: 42.5px 0px 42px 0px;
+  background-color: aliceblue;
+  gap: ${spacing['6XL']};
 `;
 
 const LogoLineImage = styled.img`
-  max-width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: contain;
 `;
