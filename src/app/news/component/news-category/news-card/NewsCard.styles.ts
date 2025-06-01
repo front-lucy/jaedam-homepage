@@ -53,7 +53,7 @@ export const Title = styled.h3<{ hasBadge: boolean }>`
   ${({ hasBadge }) =>
     hasBadge
       ? css`
-          -webkit-line-clamp: 1;
+          -webkit-line-clamp: 2;
         `
       : css`
           -webkit-line-clamp: 2;
@@ -61,7 +61,7 @@ export const Title = styled.h3<{ hasBadge: boolean }>`
 
   @media (max-width: 1279px) {
     font-size: 16px;
-    line-height: 24px;
+    line-height: 22px;
   }
 `;
 
