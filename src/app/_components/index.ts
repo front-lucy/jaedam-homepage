@@ -4,3 +4,4 @@ export { ContactSection } from './contact-section';
 export { LineupSection } from './lineup-section';
 export { ServicesSection } from './services-section';
 export { IntroSection } from './intro-section'
+export { BusinessSection } from './business-section'

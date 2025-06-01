@@ -6,14 +6,12 @@ import { Text } from '@/components/atom/text';
 import { useDeviceType } from '@/hooks/useDeviceType';
 import { colors, radius, spacing } from '@/tokens';
 import styled from '@emotion/styled';
-import { motion, useInView } from 'framer-motion';
-import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { useRef, useState } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { useMainStore } from '@/store/useMainStore';
 import 'swiper/css';
-import { Navigation, Pagination } from 'swiper/modules';
+import { Carousel } from './carousel/carousel';
 
 interface HeroSectionProps {
   className?: string;
@@ -25,7 +23,9 @@ const SectionWrapper = styled.div`
   overflow: hidden;
 `;
 
-const BackgroundImage = styled(motion.div)<{ imageUrl: string }>`
+const BackgroundImage = styled(motion.div, {
+  shouldForwardProp: (prop) => prop !== 'imageUrl',
+})<{ imageUrl: string }>`
   position: absolute;
   top: 0;
   left: 0;
@@ -58,6 +58,10 @@ const Container = styled.div<{ device: ReturnType<typeof useDeviceType> }>`
   width: 100%;
   display: flex;
 
+  & .swiper-container {
+    width: 100%;
+  }
+
   & .navigation-container {
     ${({ device }) => device === 'mobile' && 'width: 0px;'}
     ${({ device }) => device === 'tablet' && 'width: 40px;'}
@@ -85,13 +89,13 @@ const Container = styled.div<{ device: ReturnType<typeof useDeviceType> }>`
       justify-content: flex-end;
       padding-right: 32px;
     }
-    
+
     @media (max-width: 1260px) {
       & {
         width: 40px;
       }
     }
-    
+
     @media (max-width: 480px) {
       & {
         display: none;
@@ -145,6 +149,44 @@ const Container = styled.div<{ device: ReturnType<typeof useDeviceType> }>`
       scrollbar-width: none;
     }
   }
+
+  & .focus-item-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    padding-left: 40px;
+    width: 100%;
+
+    @media (max-width: 480px) {
+      padding-left: 40px;
+      gap: 8px;
+    }
+  }
+
+  & .focus-item-dot {
+    width: 8px;
+    height: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 99999px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+      border-color: rgba(34, 212, 221, 0.5);
+    }
+
+    &.active {
+      width: 20px;
+      background-color: #22D4DD;
+      border-color: #22D4DD;
+    }
+  }
 `;
 
 const StyledButton = styled.button<{ device: ReturnType<typeof useDeviceType> }>`
@@ -176,6 +218,7 @@ const StyledButton = styled.button<{ device: ReturnType<typeof useDeviceType> }>
   }
 `;
 
+
 const backgroundVariants = {
   hidden: {
     scale: 1,
@@ -189,29 +232,12 @@ const backgroundVariants = {
   },
 };
 
-const SlideImage = styled(Image)<{ isActive: boolean }>`
-  border-radius: 8px;
-  border: ${props => (props.isActive ? '3px solid #22D4DD' : '3px solid transparent')};
-  transition: border-color 0.3s ease;
-  cursor: pointer;
-
-  &:hover {
-    border-color: ${props => (props.isActive ? '#22D4DD' : 'rgba(255, 255, 255, 0.5)')};
-  }
-`;
-
 export function LineupSection({ className }: HeroSectionProps) {
   const ref = useRef(null);
   const [focusIndex, setFocusIndex] = useState(0);
   const device = useDeviceType();
 
   const { focusList } = useMainStore();
-
-  const isInView = useInView(ref, {
-    once: true,
-    amount: 0.2,
-    margin: '-50px',
-  });
 
   if (!focusList.length) return null; // 데이터가 없으면 아무것도 렌더링하지 않음
 
@@ -227,8 +253,7 @@ export function LineupSection({ className }: HeroSectionProps) {
 
   const currentFocusItem = focusList[focusIndex];
 
-  console.log(currentFocusItem);
-  console.log(device, 'device type');
+  console.log (focusList, currentFocusItem, focusIndex);
 
   return (
     <SwitchCase
@@ -237,10 +262,11 @@ export function LineupSection({ className }: HeroSectionProps) {
         mobile: (
           <SectionWrapper>
             <BackgroundImage
+              key={`mobile-${focusIndex}`}
               imageUrl={currentFocusItem.mobileBackgroundUrl}
               variants={backgroundVariants}
               initial='hidden'
-              animate={isInView ? 'visible' : 'hidden'}
+              animate='visible'
             />
             <Section
               ref={ref}
@@ -309,7 +335,16 @@ export function LineupSection({ className }: HeroSectionProps) {
                 }}
                 device={device}
               >
-
+                {/* focus item dot 인디케이터 */}
+                <div className='focus-item-indicator'>
+                  {focusList.map((_, index) => (
+                    <div 
+                      key={index} 
+                      className={`focus-item-dot ${index === focusIndex ? 'active' : ''}`}
+                      onClick={() => setFocusIndex(index)}
+                    />
+                  ))}
+                </div>
               </Container>
             </Section>
           </SectionWrapper>
@@ -317,10 +352,11 @@ export function LineupSection({ className }: HeroSectionProps) {
         tablet: (
           <SectionWrapper>
             <BackgroundImage
+              key={`tablet-${focusIndex}`}
               imageUrl={currentFocusItem.backgroundUrl}
               variants={backgroundVariants}
               initial='hidden'
-              animate={isInView ? 'visible' : 'hidden'}
+              animate='visible'
             />
             <Section
               ref={ref}
@@ -384,31 +420,16 @@ export function LineupSection({ className }: HeroSectionProps) {
                 device={device}
               >
                 <div className='navigation-container' />
-                <Swiper
-                  slidesPerView={5}
-                  spaceBetween={12}
-                  loop={true}
-                  pagination={{
-                    clickable: true,
-                  }}
-                  navigation={true}
-                  modules={[Pagination, Navigation]}
-                  className='mySwiper'
-                >
-                  {focusList?.map((item, index) => (
-                    <SwiperSlide key={index}>
-                      {({ isActive }) => (
-                        <SlideImage
-                          src={item.backgroundUrl}
-                          alt='slide'
-                          width={180}
-                          height={100}
-                          isActive={isActive}
-                        />
-                      )}
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
+
+                <Carousel
+                  items={focusList}
+                  activeIndex={focusIndex}
+                  onItemClick={setFocusIndex}
+                  itemWidth={148}
+                  itemHeight={86}
+                  gap={12}
+                  visibleItems={5}
+                />
 
                 <div className='navigation-container next' />
               </Container>
@@ -418,10 +439,11 @@ export function LineupSection({ className }: HeroSectionProps) {
         desktop: (
           <SectionWrapper>
             <BackgroundImage
+              key={`desktop-${focusIndex}`}
               imageUrl={currentFocusItem.backgroundUrl}
               variants={backgroundVariants}
               initial='hidden'
-              animate={isInView ? 'visible' : 'hidden'}
+              animate='visible'
             />
             <Section
               ref={ref}
@@ -431,7 +453,7 @@ export function LineupSection({ className }: HeroSectionProps) {
                 <div className='navigation-container prev'>
                   <button
                     className='navigation-button'
-                    onClick={() => handleNavigation('next')}
+                    onClick={() => handleNavigation('prev')}
                   >
                     <svg
                       width='40'
@@ -465,20 +487,27 @@ export function LineupSection({ className }: HeroSectionProps) {
                       ))}
                     </div>
                   )}
+                  <div className='header-container'>
+                    
                   <Text
                     typography={'title2-bold'}
                     color='jaedamCyan'
-                    style={{ textAlign: 'center', marginBottom: '20px' }}
                   >
                     {currentFocusItem.subTitle}
                   </Text>
                   <Text
                     typography={'display2-bold'}
                     color='white'
-                    style={{ textAlign: 'center', marginBottom: '20px' }}
                   >
                     {currentFocusItem.title}
                   </Text>
+                  <Text
+                    typography={'body-regular'}
+                    color='white'
+                  >
+                    &copy; {currentFocusItem.title}
+                  </Text>
+                  </div>
                   <Text
                     typography={'headline3-medium'}
                     color='white'
@@ -500,7 +529,7 @@ export function LineupSection({ className }: HeroSectionProps) {
                 <div className='navigation-container next'>
                   <button
                     className='navigation-button'
-                    onClick={() => handleNavigation('prev')}
+                    onClick={() => handleNavigation('next')}
                   >
                     <svg
                       width='40'
@@ -530,31 +559,15 @@ export function LineupSection({ className }: HeroSectionProps) {
               >
                 <div className='navigation-container' />
 
-                <Swiper
-                  slidesPerView={10}
-                  spaceBetween={12}
-                  loop={true}
-                  pagination={{
-                    clickable: true,
-                  }}
-                  navigation={true}
-                  modules={[Pagination, Navigation]}
-                  className='mySwiper'
-                >
-                  {focusList?.map((item, index) => (
-                    <SwiperSlide key={index}>
-                      {({ isActive }) => (
-                        <SlideImage
-                          src={item.backgroundUrl}
-                          alt='slide'
-                          width={180}
-                          height={100}
-                          isActive={isActive}
-                        />
-                      )}
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
+                <Carousel
+                  items={focusList}
+                  activeIndex={focusIndex}
+                  onItemClick={setFocusIndex}
+                  itemWidth={148}
+                  itemHeight={86}
+                  gap={12}
+                  visibleItems={10}
+                />
 
                 <div className='navigation-container next' />
               </Container>
@@ -565,3 +578,4 @@ export function LineupSection({ className }: HeroSectionProps) {
     />
   );
 }
+

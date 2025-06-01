@@ -8,7 +8,7 @@ import { useMainStore } from '@/store/useMainStore';
 import styled from '@emotion/styled';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
-import { AboutSection, BestSection, ContactSection, IntroSection, LineupSection, ServicesSection } from './_components';
+import { AboutSection, BusinessSection, ContactSection, IntroSection, LineupSection, ServicesSection } from './_components';
 
 
 const Container = styled.div`
@@ -54,7 +54,7 @@ const NavDot = styled.button<{ active: boolean }>`
 
 const sections: Array<{ id: string; component: React.ComponentType; header: 'light' | 'dark' }> = [
   { id: 'lineup', component: LineupSection, header: 'dark' },
-  { id: 'best', component: BestSection, header: 'light' },
+  { id: 'BusinessPage', component: BusinessSection, header: 'light' },
   { id: 'services', component: ServicesSection, header: 'light' },
   { id: 'about', component: AboutSection, header: 'light' },
   { id: 'contact', component: ContactSection, header: 'light' },
