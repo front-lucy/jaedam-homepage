@@ -34,7 +34,7 @@ interface PageableObject {
   unpaged: boolean;
 }
 
-interface NoticeHomeListResponse {
+export interface NoticeHomeListResponse {
   id: number;
   important: boolean;
   category:

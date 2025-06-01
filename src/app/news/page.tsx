@@ -1,47 +1,29 @@
 "use client";
 
-import { getNoticeList } from "@/api-domain/news";
+import { getNoticeList, NoticeHomeListResponse } from "@/api-domain/news";
 import { Header } from "@/components/molecules/header";
-import { colors } from "@/tokens";
-import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
+import { NewsCard } from "./component/news-category/news-card/NewsCard";
+import {
+  BadgeType,
+  NewsCardProps,
+} from "./component/news-category/news-card/NewsCard.types";
 import {
   NewsCategoryTabs,
   TabKey,
 } from "./component/news-category/NewsCategoryTabs";
-
-const LayoutWrapper = styled.div`
-  display: flex;
-  max-width: 1920px;
-  flex-direction: column;
-  align-items: center;
-  align-self: stretch;
-  margin: 0 auto;
-
-  padding: calc(64px + 48px) 24px 128px 24px;
-  gap: 48px;
-
-  @media (max-width: 1279px) {
-    padding: calc(64px + 48px) 16px 128px 16px;
-    gap: 32px;
-  }
-`;
-export const Title = styled.h2`
-  font-size: 64px;
-  font-weight: 700;
-  color: ${colors.gray900};
-
-  @media (max-width: 1024px) {
-    font-size: 44px;
-  }
-
-  @media (max-width: 768px) {
-    font-size: 40px;
-  }
-`;
+import { GridContainer, LayoutWrapper, Title } from "./news.styles";
 
 export default function NewsPage() {
+  const [noticeList, setNoticeList] = useState<NoticeHomeListResponse[]>([]);
   const [activeTab, setActiveTab] = useState<TabKey>("SNS");
+  const mapToNewsCardProps = (item: NoticeHomeListResponse): NewsCardProps => ({
+    noticedAt: item.noticedAt.slice(0, 10).replace(/-/g, "."),
+    title: item.title,
+    category: item.category as BadgeType,
+    important: item.important,
+  });
+
   useEffect(() => {
     const loadNoticeList = async () => {
       const res = await getNoticeList({
@@ -51,6 +33,7 @@ export default function NewsPage() {
         sort: "",
       });
       console.log("🌐 res", res.body);
+      setNoticeList(res.body.content);
     };
 
     loadNoticeList();
@@ -64,6 +47,11 @@ export default function NewsPage() {
         </div>
         <Header pageType="sub" mode="light" />
         <NewsCategoryTabs activeKey={activeTab} onChange={setActiveTab} />
+        <GridContainer>
+          {noticeList.map((item, index) => (
+            <NewsCard key={index} {...mapToNewsCardProps(item)} />
+          ))}
+        </GridContainer>
       </LayoutWrapper>
     </>
   );
