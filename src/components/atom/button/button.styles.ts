@@ -1,4 +1,3 @@
-import { typography } from "@/tokens";
 import styled from "@emotion/styled";
 import {
   ButtonRadius,
@@ -38,7 +37,6 @@ export const StyledButton = styled.button<StyledButtonProps>(
       color: `${styles.color} !important`,
       padding,
       fontSize,
-      fontFamily: typography.fontFamily,
       fontWeight: 500,
       borderRadius: radius === "round" ? "9999px" : "4px",
       cursor: state === "disabled" ? "not-allowed" : "pointer",

@@ -14,5 +14,3 @@ export const spacing = {
   "6XL": "128px",
   "7XL": "256px",
 } as const;
-
-export type SpacingToken = keyof typeof spacing;
