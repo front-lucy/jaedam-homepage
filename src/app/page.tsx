@@ -27,7 +27,7 @@ const SectionWrapper = styled (motion.div)`
 
 const sections: Array<{ id: string; component: React.ComponentType; header: 'light' | 'dark' }> = [
   { id: 'lineup', component: LineupSection, header: 'dark' },
-  { id: 'BusinessPage', component: BusinessSection, header: 'light' },
+  { id: 'business', component: BusinessSection, header: 'light' },
   { id: 'services', component: ServicesSection, header: 'light' },
   { id: 'about', component: AboutSection, header: 'light' },
   { id: 'contact', component: ContactSection, header: 'light' },
@@ -78,11 +78,6 @@ export default function Home() {
   }, [isScrolling]);
 
   const handleWheel = useCallback ((e: WheelEvent) => {
-    // 마지막 섹션에서 아래로 스크롤하는 경우 정상 스크롤 허용
-    if (currentSection === sections.length - 1 && e.deltaY > 0) {
-      return; // preventDefault 호출하지 않음
-    }
-
     e.preventDefault ();
 
     if (isScrolling) return;
