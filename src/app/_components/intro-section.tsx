@@ -84,14 +84,14 @@ interface IntroSectionProps {
   onEndSplash: () => void;
 }
 
-export default function IntroSection({ onEndSplash }: IntroSectionProps) {
+export function IntroSection({ onEndSplash }: IntroSectionProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dotsRef = useRef<Dot[]>([]);
   const [step, setStep] = useState(1);
   const [expandBubble, setExpandBubble] = useState(false);
   const [bubbleIn, setBubbleIn] = useState(false);
   const isFixed = step < 5;
-  const MotionSpeechBubble = motion(SpeechBubbleSVG);
+  const MotionSpeechBubble = motion.create(SpeechBubbleSVG);
   const MotionLogo = motion.img;
 
   useEffect(() => {
@@ -119,6 +119,7 @@ export default function IntroSection({ onEndSplash }: IntroSectionProps) {
     // };
     // window.addEventListener("wheel", handleScroll, { passive: false });
     // return () => window.removeEventListener("wheel", handleScroll);
+    // TODO: 애니메이션 step 조절 필요
     setInterval(() => {
       setStep((prev) => Math.min(prev + 1, 5));
     }, 1500);
