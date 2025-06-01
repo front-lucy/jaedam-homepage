@@ -1,5 +1,5 @@
 import LogoIcon from "@/assets/icons/Logo_Jaedam-Eng.svg";
-import { colors } from "@/tokens";
+import { colors, typography } from "@/tokens";
 import styled from "@emotion/styled";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -30,14 +30,14 @@ export const Wrapper = styled.header<{
 `;
 
 export const Logo = styled.h1<{ mode?: "light" | "dark" }>`
-  font-size: 18px;
-  font-weight: 400;
+  ${typography["headline4-regular"]};
   color: ${({ mode }) => (mode === "dark" ? colors.gray100 : colors.gray900)};
 
   @media (min-width: 1280px) {
-    font-size: 24px;
+    font-size: 24px; // 필요 시 오버라이딩 (또는 typography에 desktop 전용 추가)
   }
 `;
+
 
 export const Nav = styled.nav`
   display: flex;
@@ -45,8 +45,7 @@ export const Nav = styled.nav`
 `;
 
 export const NavItem = styled(Link)<{ mode?: "light" | "dark" }>`
-  font-size: 16px;
-  font-weight: 500;
+  ${typography["body-medium"]};
   cursor: pointer;
   color: ${({ mode }) => (mode === "dark" ? colors.white : colors.black)};
 
@@ -54,6 +53,17 @@ export const NavItem = styled(Link)<{ mode?: "light" | "dark" }>`
     color: ${colors.jaedamCyan};
   }
 `;
+
+export const MNavItem = styled(Link)`
+  ${typography["body-medium"]};
+  cursor: pointer;
+  color: ${colors.white};
+
+  &:hover {
+    color: ${colors.jaedamCyan};
+  }
+`;
+
 
 export const DesktopLogoIconStyled = styled(LogoIcon)<{
   mode: "light" | "dark";
@@ -134,6 +144,7 @@ export const SlideHeader = styled.div`
   align-items: center;
 `;
 
+ 
 export const NavList = styled.ul`
   list-style: none;
   padding: 0;
@@ -142,26 +153,17 @@ export const NavList = styled.ul`
   flex-direction: column;
   align-items: center;
   gap: 24px;
-  font-size: 18px;
+  ${typography["headline4-medium"]};
   color: ${colors.white};
 `;
 
-export const MNavItem = styled(Link)`
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  color: ${colors.white};
-  &:hover {
-    color: ${colors.jaedamCyan};
-  }
-`;
 
 export const Footer = styled.footer`
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  font-size: 12px;
+  ${typography["caption2-regular"]};
   color: ${colors.gray700};
 `;
 
