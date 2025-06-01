@@ -1,4 +1,4 @@
-import { colors, typography } from "@/tokens";
+import { colors } from "@/tokens";
 import styled from "@emotion/styled";
 import Image from "next/image";
 
@@ -53,6 +53,9 @@ export const BackLink = styled.div`
   }
 `;
 
+// const isDesktop = useMediaQuery("(min-width: 1280px)");
+// const isTablet = useMediaQuery("(min-width: 800px) and (max-width: 1279px)");
+// const isMobile = useMediaQuery("(max-width: 799px)");
 // 컨텐츠 레퍼
 export const ContentWrapper = styled.div`
   display: flex;
@@ -76,6 +79,16 @@ export const ContentWrapper = styled.div`
 export const TextSection = styled.section`
   flex: 1;
   width: 100%;
+ 
+  @media (max-width: 1279px) {
+    width: 556px;
+  }
+  @media (min-width: 800px) and (max-width: 1279px) {
+    width: 390px;
+  }
+  @media (max-width: 799px) {
+    width: 301px;
+  }
 `;
 
 export const Logline = styled.div`
@@ -93,7 +106,6 @@ export const Title = styled.h1`
   font-weight: 700;
   line-height: normal;
   margin-bottom: 16px;
-  font-family: ${typography.fontFamily};
   font-size: 44px;
 
   @media (max-width: 799px) {

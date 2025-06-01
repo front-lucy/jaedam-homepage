@@ -61,6 +61,21 @@ interface PageNoticeHomeListResponse {
   empty: boolean;
 }
 
+interface FileResponse {
+  description?: string;
+  url: string;
+  originalName: string;
+}
+
+export interface NoticeHomeDetailResponse {
+  id: number;
+  category: "SNS" | "JAEDAM_NOTICE" | "PRESS_RELEASE" | "MEDIA_CONTENT" | "LINK_RESOURCE"
+  title: string;
+  content: string;
+  fileList: FileResponse[];
+  noticedAt: string;
+}
+
 // /v1/jaedam/homepage/notice
 export async function getNoticeList({
   category,
@@ -75,3 +90,14 @@ export async function getNoticeList({
   });
   return res;
 }
+
+// /v1/jaedam/homepage/notice/{id}
+export async function getNoticeDetail(id: number): Promise<ApiWrapped<NoticeHomeDetailResponse>> {
+  const res = await globalCommonApi<ApiWrapped<NoticeHomeDetailResponse>>({
+    url: `notice/${id}`,
+    method: "GET",
+    data: {},
+  });
+  return res;
+}
+

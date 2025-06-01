@@ -2,6 +2,8 @@
 
 import { getNoticeList, NoticeHomeListResponse } from "@/api-domain/news";
 import { Header } from "@/components/molecules/header";
+import { formatDate } from "@/utils/formatDate";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { NewsCard } from "./component/news-category/news-card/NewsCard";
 import {
@@ -17,8 +19,9 @@ import { GridContainer, LayoutWrapper, Title } from "./news.styles";
 export default function NewsPage() {
   const [noticeList, setNoticeList] = useState<NoticeHomeListResponse[]>([]);
   const [activeTab, setActiveTab] = useState<TabKey>("SNS");
+  const router = useRouter();
   const mapToNewsCardProps = (item: NoticeHomeListResponse): NewsCardProps => ({
-    noticedAt: item.noticedAt.slice(0, 10).replace(/-/g, "."),
+    noticedAt: formatDate(item.noticedAt),
     title: item.title,
     category: item.category as BadgeType,
     important: item.important,
@@ -49,7 +52,7 @@ export default function NewsPage() {
         <NewsCategoryTabs activeKey={activeTab} onChange={setActiveTab} />
         <GridContainer>
           {noticeList.map((item, index) => (
-            <NewsCard key={index} {...mapToNewsCardProps(item)} />
+            <NewsCard key={index} {...mapToNewsCardProps(item)} onClick={() => router.push(`/news/${item.id}`)} />
           ))}
         </GridContainer>
       </LayoutWrapper>

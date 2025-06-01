@@ -1,13 +1,13 @@
-import LogoIcon from "@/assets/icons/Logo_Jaedam-Eng.svg";
-import { colors } from "@/tokens";
-import styled from "@emotion/styled";
-import { motion } from "framer-motion";
-import Link from "next/link";
+import LogoIcon from '@/assets/icons/Logo_Jaedam-Eng.svg';
+import { colors, typography } from '@/tokens';
+import styled from '@emotion/styled';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 /* ────────── 공통 및 Desktop 전용 ────────── */
 
 export const Wrapper = styled.header<{
-  pageType: "home" | "sub";
+  pageType: 'home' | 'sub';
 }>`
   width: 100%;
   height: 64px;
@@ -19,23 +19,20 @@ export const Wrapper = styled.header<{
   top: 0;
   left: 0;
   z-index: 100;
-  background: ${({ pageType }) =>
-    pageType === "home" ? "transparent" : "rgba(255, 255, 255, 0.7)"};
-  backdrop-filter: ${({ pageType }) =>
-    pageType === "home" ? "none" : "blur(8px)"};
+  background: ${({ pageType }) => (pageType === 'home' ? 'transparent' : 'rgba(255, 255, 255, 0.7)')};
+  backdrop-filter: ${({ pageType }) => (pageType === 'home' ? 'none' : 'blur(8px)')};
 
   @media (min-width: 1280px) {
     padding: 0 40px;
   }
 `;
 
-export const Logo = styled.h1<{ mode?: "light" | "dark" }>`
-  font-size: 18px;
-  font-weight: 400;
-  color: ${({ mode }) => (mode === "dark" ? colors.gray100 : colors.gray900)};
+export const Logo = styled.h1<{ mode?: 'light' | 'dark' }>`
+  ${typography['headline4-regular']};
+  color: ${({ mode }) => (mode === 'dark' ? colors.gray100 : colors.gray900)};
 
   @media (min-width: 1280px) {
-    font-size: 24px;
+    font-size: 24px; // 필요 시 오버라이딩 (또는 typography에 desktop 전용 추가)
   }
 `;
 
@@ -44,11 +41,20 @@ export const Nav = styled.nav`
   gap: 32px;
 `;
 
-export const NavItem = styled(Link)<{ mode?: "light" | "dark" }>`
-  font-size: 16px;
-  font-weight: 500;
+export const NavItem = styled(Link)<{ mode?: 'light' | 'dark' }>`
+  ${typography['body-medium']};
   cursor: pointer;
-  color: ${({ mode }) => (mode === "dark" ? colors.white : colors.black)};
+  color: ${({ mode }) => (mode === 'dark' ? colors.white : colors.black)};
+
+  &:hover {
+    color: ${colors.jaedamCyan};
+  }
+`;
+
+export const MNavItem = styled(Link)`
+  ${typography['body-medium']};
+  cursor: pointer;
+  color: ${colors.white};
 
   &:hover {
     color: ${colors.jaedamCyan};
@@ -56,12 +62,13 @@ export const NavItem = styled(Link)<{ mode?: "light" | "dark" }>`
 `;
 
 export const DesktopLogoIconStyled = styled(LogoIcon)<{
-  mode: "light" | "dark";
+  mode: 'light' | 'dark';
 }>`
   height: 20px;
   width: auto;
   display: block;
-  color: ${({ mode }) => (mode === "dark" ? colors.white : colors.black)};
+  cursor: pointer;
+  color: ${({ mode }) => (mode === 'dark' ? colors.white : colors.black)};
 `;
 
 /* ────────── Mobile 전용 스타일 ────────── */
@@ -74,18 +81,18 @@ export const LogoContainer = styled.div`
   height: 100%;
 `;
 
-export const LogoIconStyled = styled(LogoIcon)<{ mode: "light" | "dark" }>`
+export const LogoIconStyled = styled(LogoIcon)<{ mode: 'light' | 'dark' }>`
   height: 20px;
   width: auto;
   display: block;
-  color: ${({ mode }) => (mode === "dark" ? colors.white : colors.black)};
+  color: ${({ mode }) => (mode === 'dark' ? colors.white : colors.black)};
 `;
 
-export const Hamburger = styled.button<{ mode: "light" | "dark" }>`
+export const Hamburger = styled.button<{ mode: 'light' | 'dark' }>`
   background: none;
   border: none;
   cursor: pointer;
-  color: ${({ mode }) => (mode === "dark" ? colors.white : colors.black)};
+  color: ${({ mode }) => (mode === 'dark' ? colors.white : colors.black)};
 
   svg {
     width: 24px;
@@ -93,11 +100,11 @@ export const Hamburger = styled.button<{ mode: "light" | "dark" }>`
   }
 `;
 
-export const CloseButton = styled.button<{ mode: "light" | "dark" }>`
+export const CloseButton = styled.button<{ mode: 'light' | 'dark' }>`
   background: none;
   border: none;
   cursor: pointer;
-  color: ${({ mode }) => (mode === "dark" ? colors.gray100 : colors.gray900)};
+  color: ${({ mode }) => (mode === 'dark' ? colors.gray100 : colors.gray900)};
 
   svg {
     width: 24px;
@@ -142,18 +149,8 @@ export const NavList = styled.ul`
   flex-direction: column;
   align-items: center;
   gap: 24px;
-  font-size: 18px;
+  ${typography['headline4-medium']};
   color: ${colors.white};
-`;
-
-export const MNavItem = styled(Link)`
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  color: ${colors.white};
-  &:hover {
-    color: ${colors.jaedamCyan};
-  }
 `;
 
 export const Footer = styled.footer`
@@ -161,7 +158,7 @@ export const Footer = styled.footer`
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  font-size: 12px;
+  ${typography['caption2-regular']};
   color: ${colors.gray700};
 `;
 

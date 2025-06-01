@@ -99,6 +99,11 @@ table {
 img {
   border: 0;
   vertical-align: top;
+  user-drag: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 }
 
 address,
