@@ -1,4 +1,4 @@
-import { colors } from "@/tokens";
+import { colors, typography } from "@/tokens";
 import styled from "@emotion/styled";
 
 export const GridContainer = styled.div`
@@ -35,8 +35,7 @@ export const LayoutWrapper = styled.div`
 `;
 
 export const Title = styled.h2`
-  font-size: 64px;
-  font-weight: 700;
+  ${typography["headline1-bold"]};
   color: ${colors.gray900};
 
   @media (max-width: 1024px) {
