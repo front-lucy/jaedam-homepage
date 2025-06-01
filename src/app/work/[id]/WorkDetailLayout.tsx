@@ -83,7 +83,7 @@ export const WorkDetailLayout: FC<WorkDetailProps> = ({
               alt={title}
               width={320}
               height={426}
-            />{" "}
+            />
           </S.ThumbnailWrapper>
           {deviceType === "mobile" && (
             <S.BackLink onClick={() => router.back()}>

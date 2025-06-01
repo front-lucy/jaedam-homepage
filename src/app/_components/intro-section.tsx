@@ -61,8 +61,8 @@ const Tag = styled(motion.div)<{ angle: number }>`
   background-color: #22d4dd;
   color: white;
   font-size: 20px;
-  font-weight: bold;
-  font-family: "Pretendard", sans-serif;
+  font-weight: bold; 
+
   padding: 8px 18px;
   border-radius: 900px;
   white-space: nowrap;

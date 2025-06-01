@@ -1,4 +1,4 @@
-import { colors, radius, shadow, spacing } from "@/tokens";
+import { colors, radius, shadow, spacing, typography } from "@/tokens";
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import { BadgeType } from "./NewsCard.types";
@@ -36,22 +36,20 @@ export const CardContainer = styled.div`
 
 // ▸ 날짜 텍스트
 export const DateText = styled.p`
-  font-size: 14px;
-  font-weight: 400;
+  ${typography["caption1-regular"]};
   color: ${colors.gray500};
 `;
 
 // ▸ 제목 텍스트
 export const Title = styled.h3<{ hasBadge: boolean }>`
-  font-size: 20px;
-  font-weight: 700;
+  ${typography["headline4-bold"]};
   color: ${colors.gray900};
-  line-height: 1.5;
 
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+
   ${({ hasBadge }) =>
     hasBadge
       ? css`
@@ -59,9 +57,11 @@ export const Title = styled.h3<{ hasBadge: boolean }>`
         `
       : css`
           -webkit-line-clamp: 2;
-        `}
+        `};
+
   @media (max-width: 1279px) {
     font-size: 16px;
+    line-height: 24px;
   }
 `;
 
@@ -76,10 +76,8 @@ export const Badge = styled.span<{
   gap: ${spacing["4XS"]};
   padding: ${spacing["3XS"]} ${spacing["2XS"]};
   border-radius: ${radius.r100};
-  font-size: 13px;
-  font-weight: 700;
-  font-family: "Pretendard", sans-serif;
-  line-height: 20px;
+  ${typography["caption2-bold"]}; 
+
 
   ${({ isNoticeFixed, category }) =>
     isNoticeFixed

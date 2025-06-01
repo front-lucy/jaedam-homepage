@@ -1,6 +1,6 @@
 // molecules/footer/footer.styles.ts
 
-import { colors } from "@/tokens";
+import { colors, typography } from "@/tokens";
 import styled from "@emotion/styled";
 
 export const FooterWrapper = styled.footer`
@@ -54,8 +54,7 @@ export const CompanyInfo = styled.div`
   flex-direction: column;
   gap: 4px;
 
-  font-size: 12px;
-  line-height: 1.6;
+  ${typography["caption2-regular"]};
   color: ${colors.gray600};
 
   strong {
@@ -124,14 +123,13 @@ export const DropdownList = styled.ul`
   gap: 8px;
 
   li {
-    font-size: 12px;
-    color: ${colors.gray300};
-    font-weight: 400;
-    cursor: pointer;
-    padding: 0;
+  ${typography["caption2-regular"]};
+  color: ${colors.gray300};
+  padding: 0;
+  cursor: pointer;
 
-    &:hover {
-      color: ${colors.white};
-    }
+  &:hover {
+    color: ${colors.white};
+  }
   }
 `;
