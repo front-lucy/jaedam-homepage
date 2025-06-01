@@ -25,33 +25,6 @@ const SectionWrapper = styled (motion.div)`
     height: 100vh;
 `;
 
-const Navigation = styled.div`
-    position: fixed;
-    right: 2rem;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-`;
-
-const NavDot = styled.button<{ active: boolean }>`
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: 2px solid white;
-    background: ${props => props.active ? 'white' : 'transparent'};
-    cursor: pointer;
-    transition: all 0.3s ease;
-    opacity: 0.7;
-
-    &:hover {
-        opacity: 1;
-        transform: scale(1.2);
-    }
-`;
-
 const sections: Array<{ id: string; component: React.ComponentType; header: 'light' | 'dark' }> = [
   { id: 'lineup', component: LineupSection, header: 'dark' },
   { id: 'BusinessPage', component: BusinessSection, header: 'light' },
@@ -59,6 +32,14 @@ const sections: Array<{ id: string; component: React.ComponentType; header: 'lig
   { id: 'about', component: AboutSection, header: 'light' },
   { id: 'contact', component: ContactSection, header: 'light' },
 ];
+
+const HiddenScroll = styled.div`
+  height: 100dvh;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
 
 
 export default function Home() {
@@ -97,6 +78,11 @@ export default function Home() {
   }, [isScrolling]);
 
   const handleWheel = useCallback ((e: WheelEvent) => {
+    // 마지막 섹션에서 아래로 스크롤하는 경우 정상 스크롤 허용
+    if (currentSection === sections.length - 1 && e.deltaY > 0) {
+      return; // preventDefault 호출하지 않음
+    }
+
     e.preventDefault ();
 
     if (isScrolling) return;
@@ -172,7 +158,7 @@ export default function Home() {
   const CurrentSectionComponent = sections[currentSection].component;
 
   return (
-    <div style={{ width: '100%' }}>
+    <HiddenScroll style={{ width: '100%' }}>
       <Header pageType="home" mode={showSplash ? 'light' : sections[currentSection].header} />
 
       <SwitchCase
@@ -196,8 +182,8 @@ export default function Home() {
           ),
         }}
       />
-
       <Footer />
-    </div>
+
+    </HiddenScroll>
   );
 }
