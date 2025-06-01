@@ -1,0 +1,77 @@
+import { globalCommonApi } from "@/shared/api/commonApi";
+
+interface GetNoticeListParams {
+  category:
+    | "SNS"
+    | "JAEDAM_NOTICE"
+    | "PRESS_RELEASE"
+    | "MEDIA_CONTENT"
+    | "LINK_RESOURCE";
+  page: number;
+  size: number;
+  sort: string;
+}
+
+type ApiWrapped<T> = {
+  success: boolean;
+  body: T;
+};
+
+interface SortObject {
+  direction: string;
+  nullHandling: string;
+  ascending: boolean;
+  property: string;
+  ignoreCase: boolean;
+}
+
+interface PageableObject {
+  offset: number;
+  sort: SortObject[];
+  pageNumber: number;
+  pageSize: number;
+  paged: boolean;
+  unpaged: boolean;
+}
+
+interface NoticeHomeListResponse {
+  id: number;
+  important: boolean;
+  category:
+    | "SNS"
+    | "JAEDAM_NOTICE"
+    | "PRESS_RELEASE"
+    | "MEDIA_CONTENT"
+    | "LINK_RESOURCE";
+  title: string;
+  noticedAt: string;
+}
+
+interface PageNoticeHomeListResponse {
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  content: NoticeHomeListResponse[];
+  number: number;
+  sort: SortObject[];
+  first: boolean;
+  last: boolean;
+  pageable: PageableObject;
+  numberOfElements: number;
+  empty: boolean;
+}
+
+// /v1/jaedam/homepage/notice
+export async function getNoticeList({
+  category,
+  page,
+  size,
+  sort,
+}: GetNoticeListParams): Promise<ApiWrapped<PageNoticeHomeListResponse>> {
+  const res = await globalCommonApi<ApiWrapped<PageNoticeHomeListResponse>>({
+    url: `notice?category=${category}&page=${page}&size=${size}&sort=${sort}`,
+    method: "GET",
+    data: {},
+  });
+  return res;
+}
