@@ -2,54 +2,52 @@
 
 import { getLineup } from '@/api-domain/lineup';
 import { SwitchCase } from '@/components/atom/switch-case';
-import { Footer } from '@/components/molecules/footer';
 import { Header } from '@/components/molecules/header';
+import { useMainStore } from '@/store/useMainStore';
 import styled from '@emotion/styled';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
-import { AboutSection, BestSection, ContactSection, LineupSection, IntroSection, ServicesSection } from './_components';
-import { useMainStore } from '@/store/useMainStore';
-
+import { AboutSection, BestSection, ContactSection, IntroSection, LineupSection, ServicesSection } from './_components';
 
 const Container = styled.div`
-    height: 100vh;
-    overflow: hidden;
-    position: relative;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
 `;
 
-const SectionWrapper = styled (motion.div)`
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
+const SectionWrapper = styled(motion.div)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
 `;
 
 const Navigation = styled.div`
-    position: fixed;
-    right: 2rem;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  position: fixed;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 `;
 
 const NavDot = styled.button<{ active: boolean }>`
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: 2px solid white;
-    background: ${props => props.active ? 'white' : 'transparent'};
-    cursor: pointer;
-    transition: all 0.3s ease;
-    opacity: 0.7;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid white;
+  background: ${props => (props.active ? 'white' : 'transparent')};
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0.7;
 
-    &:hover {
-        opacity: 1;
-        transform: scale(1.2);
-    }
+  &:hover {
+    opacity: 1;
+    transform: scale(1.2);
+  }
 `;
 
 const sections: Array<{ id: string; component: React.ComponentType; header: 'light' | 'dark' }> = [
@@ -60,87 +58,92 @@ const sections: Array<{ id: string; component: React.ComponentType; header: 'lig
   { id: 'contact', component: ContactSection, header: 'light' },
 ];
 
-
 export default function Home() {
-  const [showSplash, setShowSplash] = useState (false);
-  const [currentSection, setCurrentSection] = useState (0);
-  const [isScrolling, setIsScrolling] = useState (false);
+  const [showSplash, setShowSplash] = useState(false);
+  const [currentSection, setCurrentSection] = useState(0);
+  const [isScrolling, setIsScrolling] = useState(false);
 
   const { hasData, setLineUpData } = useMainStore();
 
-  useEffect (() => {
+  useEffect(() => {
     const fetchLineup = async () => {
-      if (hasData) return; // 이미 데이터가 있는 경우 API 호출 생략
-
-      const { success, body } = await getLineup ();
-
+      if (hasData) return;
+      const { success, body } = await getLineup();
       if (success) {
         setLineUpData({
           focusList: body.focusList.sort((a, b) => a.orderIndex - b.orderIndex),
           highlightList: body.highlightList.sort((a, b) => a.orderIndex - b.orderIndex),
         });
       }
-    }
+    };
+    fetchLineup();
+  }, [hasData, setLineUpData]);
 
-    fetchLineup ();
-  }, []);
+  const scrollToSection = useCallback(
+    (index: number) => {
+      if (isScrolling || index < 0 || index >= sections.length) return;
 
-  const scrollToSection = useCallback ((index: number) => {
-    if (isScrolling || index < 0 || index >= sections.length) return;
+      setIsScrolling(true);
+      setCurrentSection(index);
 
-    setIsScrolling (true);
-    setCurrentSection (index);
+      setTimeout(() => {
+        setIsScrolling(false);
+      }, 1000);
+    },
+    [isScrolling],
+  );
 
-    setTimeout (() => {
-      setIsScrolling (false);
-    }, 1000);
-  }, [isScrolling]);
+  const handleWheel = useCallback(
+    (e: WheelEvent) => {
+      e.preventDefault();
 
-  const handleWheel = useCallback ((e: WheelEvent) => {
-    e.preventDefault ();
+      if (isScrolling) return;
 
-    if (isScrolling) return;
+      if (e.deltaY > 0) {
+        // 스크롤 다운
+        scrollToSection(currentSection + 1);
+      } else {
+        // 스크롤 업
+        scrollToSection(currentSection - 1);
+      }
+    },
+    [currentSection, isScrolling, scrollToSection],
+  );
 
-    if (e.deltaY > 0) {
-      // 스크롤 다운
-      scrollToSection (currentSection + 1);
-    } else {
-      // 스크롤 업
-      scrollToSection (currentSection - 1);
-    }
-  }, [currentSection, isScrolling, scrollToSection]);
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (isScrolling) return;
 
-  const handleKeyDown = useCallback ((e: KeyboardEvent) => {
-    if (isScrolling) return;
+      switch (e.key) {
+        case 'ArrowDown':
+        case ' ':
+          e.preventDefault();
+          scrollToSection(currentSection + 1);
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          scrollToSection(currentSection - 1);
+          break;
+        case 'Home':
+          e.preventDefault();
+          scrollToSection(0);
+          break;
+        case 'End':
+          e.preventDefault();
+          scrollToSection(sections.length - 1);
+          break;
+      }
+    },
+    [currentSection, isScrolling, scrollToSection],
+  );
 
-    switch (e.key) {
-      case 'ArrowDown':
-      case ' ':
-        e.preventDefault ();
-        scrollToSection (currentSection + 1);
-        break;
-      case 'ArrowUp':
-        e.preventDefault ();
-        scrollToSection (currentSection - 1);
-        break;
-      case 'Home':
-        e.preventDefault ();
-        scrollToSection (0);
-        break;
-      case 'End':
-        e.preventDefault ();
-        scrollToSection (sections.length - 1);
-        break;
-    }
-  }, [currentSection, isScrolling, scrollToSection]);
-
-  useEffect (() => {
-    window.addEventListener ('wheel', handleWheel, { passive: false });
-    window.addEventListener ('keydown', handleKeyDown);
+  useEffect(() => {
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      window.removeEventListener ('wheel', handleWheel);
-      window.removeEventListener ('keydown', handleKeyDown);
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, [handleWheel, handleKeyDown]);
 
@@ -173,32 +176,35 @@ export default function Home() {
 
   return (
     <div style={{ width: '100%' }}>
-      <Header pageType="sub" mode={showSplash ? 'light' : sections[currentSection].header} />
+      <Header
+        pageType='home'
+        mode={showSplash ? 'light' : sections[currentSection].header}
+      />
 
       <SwitchCase
-        value={showSplash.toString ()}
+        value={showSplash.toString()}
         cases={{
-          true: <IntroSection onEndSplash={() => setShowSplash (false)} />,
+          true: <IntroSection onEndSplash={() => setShowSplash(false)} />,
           false: (
             <Container>
               <AnimatePresence>
                 <SectionWrapper
                   key={currentSection}
                   variants={pageVariants}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
+                  initial='initial'
+                  animate='animate'
+                  exit='exit'
                 >
                   <CurrentSectionComponent />
                 </SectionWrapper>
               </AnimatePresence>
 
               <Navigation>
-                {sections.map ((_, index) => (
+                {sections.map((_, index) => (
                   <NavDot
                     key={index}
                     active={index === currentSection}
-                    onClick={() => scrollToSection (index)}
+                    onClick={() => scrollToSection(index)}
                     aria-label={`섹션 ${index + 1}로 이동`}
                   />
                 ))}
@@ -207,8 +213,6 @@ export default function Home() {
           ),
         }}
       />
-
-      <Footer />
     </div>
   );
 }
