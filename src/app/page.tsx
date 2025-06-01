@@ -2,13 +2,37 @@
 
 import { Footer } from "@/components/molecules/footer";
 import { Header } from "@/components/molecules/header";
+import IntroSection from "./_components/intro-section";
+import { useState } from "react";
+import { HeroSection, BestSection, ServicesSection, AboutSection, ContactSection } from "./_components";
+import { SwitchCase } from "@/components/atom/switch-case";
 
 export default function Home() {
-  return (
-    <div style={{ backgroundColor: "black", width: "100%", height: "100vh" }}>
-      <Header pageType="sub" mode="dark" />
+  const [showSplash, setShowSplash] = useState(true);
 
-      <div style={{ width: "100%", height: "150vh" }}>나는야 버튼 입니다.</div>
+  if (showSplash) {
+    return <IntroSection onEndSplash={() => setShowSplash(false)} />;
+  }
+
+  return (
+    <div style={{ width: "100%" }}>
+      <Header pageType="sub" mode="dark" />
+      
+      <SwitchCase
+        value={showSplash.toString()}
+        cases={{
+          true: <IntroSection onEndSplash={() => setShowSplash(false)} />,
+          false: (
+            <>
+      <HeroSection />
+      <BestSection />
+      <ServicesSection />
+      <AboutSection />
+            </>
+          ),
+        }}
+       />
+      <ContactSection />
 
       <Footer />
     </div>
