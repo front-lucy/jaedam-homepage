@@ -6,6 +6,7 @@ import { useRef } from 'react';
 
 interface BestSectionProps {
   className?: string;
+  onScrollNext?: () => void;
 }
 
 const Section = styled.section`

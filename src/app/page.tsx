@@ -8,7 +8,7 @@ import { useMainStore } from '@/store/useMainStore';
 import styled from '@emotion/styled';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
-import { AboutSection, BusinessSection, ContactSection, IntroSection, LineupSection, ServicesSection } from './_components';
+import { BusinessSection, ContactSection, IntroSection, LineupSection, NewsSection } from './_components';
 
 
 const Container = styled.div`
@@ -17,7 +17,7 @@ const Container = styled.div`
     position: relative;
 `;
 
-const SectionWrapper = styled (motion.div)`
+const SectionWrapper = styled(motion.div)`
     position: absolute;
     top: 0;
     left: 0;
@@ -25,12 +25,13 @@ const SectionWrapper = styled (motion.div)`
     height: 100vh;
 `;
 
-const sections: Array<{ id: string; component: React.ComponentType; header: 'light' | 'dark' }> = [
-  { id: 'lineup', component: LineupSection, header: 'dark' },
-  { id: 'business', component: BusinessSection, header: 'light' },
-  { id: 'services', component: ServicesSection, header: 'light' },
-  { id: 'about', component: AboutSection, header: 'light' },
-  { id: 'contact', component: ContactSection, header: 'light' },
+const sections: Array<{ id: string; header: 'light' | 'dark' }> = [
+  { id: 'splash', header: 'light' },
+  { id: 'best', header: 'dark' },
+  { id: 'business1', header: 'light' },
+  { id: 'business2', header: 'light' },
+  { id: 'news', header: 'light' },
+  { id: 'contact', header: 'light' },
 ];
 
 const HiddenScroll = styled.div`
@@ -43,8 +44,7 @@ const HiddenScroll = styled.div`
 
 
 export default function Home() {
-  const [showSplash, setShowSplash] = useState(false);
-  const [currentSection, setCurrentSection] = useState(0);
+  const [currentSection, setCurrentSection] = useState('splash');
   const [isScrolling, setIsScrolling] = useState(false);
 
   const { hasData, setLineUpData } = useMainStore();
@@ -70,7 +70,7 @@ export default function Home() {
     if (isScrolling || index < 0 || index >= sections.length) return;
 
     setIsScrolling (true);
-    setCurrentSection (index);
+    setCurrentSection (sections[index].id);
 
     setTimeout (() => {
       setIsScrolling (false);
@@ -82,35 +82,39 @@ export default function Home() {
 
     if (isScrolling) return;
 
+    const arr = sections.map((section) => section.id);
+
     if (e.deltaY > 0) {
       // 스크롤 다운
-      scrollToSection (currentSection + 1);
+      scrollToSection (arr.indexOf(currentSection) + 1);
     } else {
       // 스크롤 업
-      scrollToSection (currentSection - 1);
+      scrollToSection (arr.indexOf(currentSection) - 1);
     }
   }, [currentSection, isScrolling, scrollToSection]);
 
   const handleKeyDown = useCallback ((e: KeyboardEvent) => {
     if (isScrolling) return;
 
+    const arr = sections.map((section) => section.id);
+
     switch (e.key) {
       case 'ArrowDown':
       case ' ':
         e.preventDefault ();
-        scrollToSection (currentSection + 1);
+        scrollToSection(arr.indexOf(currentSection) + 1);
         break;
       case 'ArrowUp':
         e.preventDefault ();
-        scrollToSection (currentSection - 1);
+        scrollToSection(arr.indexOf(currentSection) - 1);
         break;
       case 'Home':
         e.preventDefault ();
-        scrollToSection (0);
+        scrollToSection (arr.indexOf('splash'));
         break;
       case 'End':
         e.preventDefault ();
-        scrollToSection (sections.length - 1);
+        scrollToSection (arr.indexOf('contact'));
         break;
     }
   }, [currentSection, isScrolling, scrollToSection]);
@@ -150,17 +154,15 @@ export default function Home() {
     },
   };
 
-  const CurrentSectionComponent = sections[currentSection].component;
-
   return (
     <HiddenScroll style={{ width: '100%' }}>
-      <Header pageType="home" mode={showSplash ? 'light' : sections[currentSection].header} />
+      <Header pageType="home" mode={currentSection === 'splash' ? 'light' : sections.find((section) => section.id === currentSection)?.header || 'light'} />
 
       <SwitchCase
-        value={showSplash.toString ()}
+        value={currentSection}
         cases={{
-          true: <IntroSection onEndSplash={() => setShowSplash(false)} />,
-          false: (
+          splash: <IntroSection onEndSplash={() => scrollToSection(1)} />,
+          best: (
             <Container>
               <AnimatePresence>
                 <SectionWrapper
@@ -170,10 +172,60 @@ export default function Home() {
                   animate="animate"
                   exit="exit"
                 >
-                  <CurrentSectionComponent />
+                  <LineupSection />
                 </SectionWrapper>
               </AnimatePresence>
             </Container>
+          ),
+          business1: (
+            <Container>
+              <AnimatePresence>
+                <SectionWrapper
+                  key={currentSection}
+                  variants={pageVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                >
+                  <BusinessSection step={0} />
+                </SectionWrapper>
+              </AnimatePresence>
+            </Container>
+          ),
+          business2: (
+            <Container>
+              <BusinessSection step={1} />
+            </Container>
+          ),
+          news: (
+            <Container>
+              <AnimatePresence>
+                <SectionWrapper
+                  key={currentSection}
+                  variants={pageVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                >
+                  <NewsSection />
+                </SectionWrapper>
+              </AnimatePresence>
+            </Container>
+          ),
+          contact: (
+            <Container>
+            <AnimatePresence>
+              <SectionWrapper
+                key={currentSection}
+                variants={pageVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+              >
+                <ContactSection />
+              </SectionWrapper>
+            </AnimatePresence>
+          </Container>
           ),
         }}
       />

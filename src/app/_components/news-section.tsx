@@ -3,11 +3,11 @@ import { formatDate } from '@/utils/formatDate';
 import styled from '@emotion/styled';
 import { useRef } from 'react';
 
-interface AboutSectionProps {
+interface NewsSectionProps {
   className?: string;
 }
 
-export function AboutSection({ className }: AboutSectionProps) {
+export function NewsSection({ className }: NewsSectionProps) {
   const ref = useRef(null);
   const newsList = [
     {
