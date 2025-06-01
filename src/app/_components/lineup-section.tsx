@@ -1,11 +1,12 @@
 'use client';
 
 import { motion, useInView } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { useDeviceType } from '@/hooks/useDeviceType';
 import { SwitchCase } from '@/components/atom/switch-case';
 import { useMainStore } from '@/store/useMainStore';
+import { Text } from '@/components/atom/text';
 
 interface HeroSectionProps {
   className?: string;
@@ -67,6 +68,8 @@ export function LineupSection({ className }: HeroSectionProps) {
 
   const currentFocus = focusList[focusIndex];
 
+  console.log ('Current Focus:', currentFocus);
+
   return (
     <SwitchCase
       value={device}
@@ -88,7 +91,7 @@ export function LineupSection({ className }: HeroSectionProps) {
               initial="hidden"
               animate={isInView ? "visible" : "hidden"}
             >
-              <h1>{currentFocus.title}</h1>
+              <Text typography={'headline2-bold'}>{currentFocus.title}</Text>
               <p>{currentFocus.synopsis}</p>
             </Container>
           </Section>
