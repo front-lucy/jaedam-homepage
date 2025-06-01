@@ -42,7 +42,7 @@ export const DateText = styled.p`
 
 // ▸ 제목 텍스트
 export const Title = styled.h3<{ hasBadge: boolean }>`
-  ${typography["headline4-bold"]};
+  ${typography["title2-bold"]};
   color: ${colors.gray900};
 
   display: -webkit-box;
