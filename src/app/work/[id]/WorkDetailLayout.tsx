@@ -3,7 +3,7 @@
 import IconArrowLeft from "@/assets/icons/Icon-arrow-left.svg";
 import { useDeviceType } from "@/hooks/useDeviceType";
 import { useRouter } from "next/navigation";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import * as S from "./WorkDetailLayout.styles";
 import { WorkDetailProps } from "./WorkDetailLayout.types";
 
@@ -20,21 +20,6 @@ export const WorkDetailLayout: FC<WorkDetailProps> = ({
 }) => {
   const router = useRouter();
   const deviceType = useDeviceType();
-
-  useEffect(() => {
-    console.log(
-      "🌐 thumbnailUrl",
-      title,
-      logline,
-      synopsis,
-      thumbnailUrl,
-      category,
-      genre,
-      tags,
-      writers,
-      platformList
-    );
-  }, []);
 
   return (
     <S.Wrapper>
