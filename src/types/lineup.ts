@@ -6,6 +6,7 @@ export type FocusItem = {
   backgroundUrl: string;
   mobileBackgroundUrl: string;
   orderIndex: number;
+  tags?: string[];
 }
 
 export type HighlightItem = {

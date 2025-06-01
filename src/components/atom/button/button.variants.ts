@@ -48,13 +48,13 @@ export const buttonVariants: Record<
   tertiary: {
     default: {
       background: "transparent",
-      border: `1px solid ${colors.jaedamCyan}`,
-      color: colors.jaedamCyan,
+      border: `1px solid ${colors.white}`,
+      color: colors.white,
     },
     pressed: {
-      background: "transparent",
-      border: `1px solid ${colors.jaedamCyan}`,
-      color: "#1FC1C9",
+      background: "rgba(255, 255, 255, 0.2)",
+      border: `1px solid ${colors.white}`,
+      color: colors.white,
     },
     disabled: {
       background: "transparent",

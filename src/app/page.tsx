@@ -4,11 +4,11 @@ import { getLineup } from '@/api-domain/lineup';
 import { SwitchCase } from '@/components/atom/switch-case';
 import { Footer } from '@/components/molecules/footer';
 import { Header } from '@/components/molecules/header';
+import { useMainStore } from '@/store/useMainStore';
 import styled from '@emotion/styled';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
-import { AboutSection, BestSection, ContactSection, LineupSection, IntroSection, ServicesSection } from './_components';
-import { useMainStore } from '@/store/useMainStore';
+import { AboutSection, BestSection, ContactSection, IntroSection, LineupSection, ServicesSection } from './_components';
 
 
 const Container = styled.div`
@@ -53,7 +53,7 @@ const NavDot = styled.button<{ active: boolean }>`
 `;
 
 const sections: Array<{ id: string; component: React.ComponentType; header: 'light' | 'dark' }> = [
-  { id: 'hero', component: LineupSection, header: 'light' },
+  { id: 'lineup', component: LineupSection, header: 'dark' },
   { id: 'best', component: BestSection, header: 'light' },
   { id: 'services', component: ServicesSection, header: 'light' },
   { id: 'about', component: AboutSection, header: 'light' },
@@ -62,9 +62,9 @@ const sections: Array<{ id: string; component: React.ComponentType; header: 'lig
 
 
 export default function Home() {
-  const [showSplash, setShowSplash] = useState (false);
-  const [currentSection, setCurrentSection] = useState (0);
-  const [isScrolling, setIsScrolling] = useState (false);
+  const [showSplash, setShowSplash] = useState(false);
+  const [currentSection, setCurrentSection] = useState(0);
+  const [isScrolling, setIsScrolling] = useState(false);
 
   const { hasData, setLineUpData } = useMainStore();
 
@@ -173,12 +173,12 @@ export default function Home() {
 
   return (
     <div style={{ width: '100%' }}>
-      <Header pageType="sub" mode={showSplash ? 'light' : sections[currentSection].header} />
+      <Header pageType="home" mode={showSplash ? 'light' : sections[currentSection].header} />
 
       <SwitchCase
         value={showSplash.toString ()}
         cases={{
-          true: <IntroSection onEndSplash={() => setShowSplash (false)} />,
+          true: <IntroSection onEndSplash={() => setShowSplash(false)} />,
           false: (
             <Container>
               <AnimatePresence>
@@ -192,17 +192,6 @@ export default function Home() {
                   <CurrentSectionComponent />
                 </SectionWrapper>
               </AnimatePresence>
-
-              <Navigation>
-                {sections.map ((_, index) => (
-                  <NavDot
-                    key={index}
-                    active={index === currentSection}
-                    onClick={() => scrollToSection (index)}
-                    aria-label={`섹션 ${index + 1}로 이동`}
-                  />
-                ))}
-              </Navigation>
             </Container>
           ),
         }}

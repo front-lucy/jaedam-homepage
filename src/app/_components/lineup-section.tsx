@@ -1,111 +1,211 @@
 'use client';
 
+import NavArrowRightIcon from '@/assets/icons/Icon-nav-arrow-right.svg';
 import { SwitchCase } from '@/components/atom/switch-case';
 import { Text } from '@/components/atom/text';
 import { useDeviceType } from '@/hooks/useDeviceType';
-import { useMainStore } from '@/store/useMainStore';
+import { colors, radius, spacing } from '@/tokens';
 import styled from '@emotion/styled';
 import { motion, useInView } from 'framer-motion';
+import Image from 'next/image';
 import { useRef, useState } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+import { useMainStore } from '@/store/useMainStore';
+import 'swiper/css';
+import { Navigation, Pagination } from 'swiper/modules';
 
 interface HeroSectionProps {
   className?: string;
 }
 
-const Section = styled.section<{ backgroundUrl: string }>`
+const SectionWrapper = styled.div`
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+`;
+
+const BackgroundImage = styled(motion.div)<{ imageUrl: string }>`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(${props => props.imageUrl || 'https://source.unsplash.com/random/1920x1080'});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+`;
+
+const Section = styled.section`
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url(${props => props.backgroundUrl || 'https://source.unsplash.com/random/1920x1080'});
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  position: relative;
+  z-index: 1;
   color: white;
+  background: linear-gradient(287.56deg, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0.8) 100%);
 `;
 
-const Container = styled(motion.div)`
-  & .navigation-container {
-    width: 160px;
-    
-  }
-  
-  & .content-container {
-    
-  }
-  
+const HashtagItem = styled.div`
+  padding: ${spacing.XS};
+  border-radius: ${radius.r100};
+  background-color: #ffffff33;
+`;
+
+const Container = styled.div<{ device: ReturnType<typeof useDeviceType> }>`
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: start;
-  gap: 40px;
-  
+
+  & .navigation-container {
+    ${({ device }) => device === 'mobile' && 'width: 0px;'}
+    ${({ device }) => device === 'tablet' && 'width: 40px;'}
+    ${({ device }) => device === 'desktop' && 'width: 160px;'}
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+
+    & .navigation-button {
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #ffffff33;
+      border-radius: 9999px;
+    }
+
+    &.prev {
+      justify-content: flex-start;
+      padding-left: 32px;
+    }
+
+    &.next {
+      justify-content: flex-end;
+      padding-right: 32px;
+    }
+    
+    @media (max-width: 1260px) {
+      & {
+        width: 40px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      & {
+        display: none;
+      }
+    }
+  }
+
   & .content-container {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    align-items: start;
+    gap: 40px;
+    flex: 1;
+
+    & .header-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    & .hashtag-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    @media (max-width: 1260px) {
+      & {
+        padding: 0 40px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      & {
+        padding: 0 40px;
+        gap: 32px;
+      }
+    }
   }
-  
-  & .hashtag-container { 
+
+  & .lineup-preview-list-container {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+    flex: 1;
+    gap: 12px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
   }
 `;
 
-const pageVariants = {
+const StyledButton = styled.button<{ device: ReturnType<typeof useDeviceType> }>`
+  width: ${({ device }) => (device === 'mobile' ? '180px' : '200px')};
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 9999px;
+  border: 1px solid ${colors.white};
+
+  & .icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+
+    svg {
+      width: 100%;
+      height: 100%;
+      color: ${colors.white};
+
+      path {
+        fill: ${colors.white};
+      }
+    }
+  }
+`;
+
+const backgroundVariants = {
   hidden: {
-    y: 100,
-    opacity: 0,
+    scale: 1,
   },
   visible: {
-    y: 0,
-    opacity: 1,
+    scale: 1.25,
     transition: {
-      type: 'spring',
-      stiffness: 60,
-      damping: 15,
-      duration: 1.2,
+      duration: 10,
+      ease: 'linear',
     },
   },
 };
 
-const mockFocusList =  [
-    {
-      "contentId": 25,
-      "title": "성수기",
-      "subTitle": "돌아온 두 번째 삶. 내가 암살자 가문의 수양딸?",
-      "synopsis": "신의 자비일까? 두 번째 삶, 암살자의 딸?!",
-      "backgroundUrl": "https://s3.ap-northeast-2.amazonaws.com/shortz-dev-s3-resource/jaedam_content/17cbfeb8-7520-4141-bc06-b73b886b61b9-L-image.jpg",
-      "mobileBackgroundUrl": "https://s3.ap-northeast-2.amazonaws.com/shortz-dev-s3-resource/jaedam_content/9e65da01-f4e2-4c51-8b3f-b8fa9faa65ab-S-image.jpg",
-      "orderIndex": 1,
-      "tags": [
-        "#드라마",
-        "#요양원",
-        "#삶",
-        "#죽음"
-      ],
-      "writers": [
-        {
-          "id": 3,
-          "name": "테스트",
-          "nickname": "닉넴"
-        },
-        {
-          "id": 2,
-          "name": "김작가투",
-          "nickname": "닉넴"
-        },
-        ]
-    }
-  ]
+const SlideImage = styled(Image)<{ isActive: boolean }>`
+  border-radius: 8px;
+  border: ${props => (props.isActive ? '3px solid #22D4DD' : '3px solid transparent')};
+  transition: border-color 0.3s ease;
+  cursor: pointer;
 
+  &:hover {
+    border-color: ${props => (props.isActive ? '#22D4DD' : 'rgba(255, 255, 255, 0.5)')};
+  }
+`;
 
-  export function LineupSection({ className }: HeroSectionProps) {
+export function LineupSection({ className }: HeroSectionProps) {
   const ref = useRef(null);
   const [focusIndex, setFocusIndex] = useState(0);
   const device = useDeviceType();
 
-  // const { focusList } = useMainStore();
+  const { focusList } = useMainStore();
 
   const isInView = useInView(ref, {
     once: true,
@@ -113,58 +213,353 @@ const mockFocusList =  [
     margin: '-50px',
   });
 
-  // if (!focusList.length) return null; // 데이터가 없으면 아무것도 렌더링하지 않음
+  if (!focusList.length) return null; // 데이터가 없으면 아무것도 렌더링하지 않음
 
-  const currentFocus = mockFocusList[focusIndex];
+  const handleNavigation = (direction: 'prev' | 'next') => {
+    const maxIndex = focusList.length - 1;
 
-  console.log ('Current Focus:', currentFocus);
+    if (direction === 'prev') {
+      setFocusIndex(prev => (prev === 0 ? maxIndex : prev - 1));
+    } else {
+      setFocusIndex(prev => (prev === maxIndex ? 0 : prev + 1));
+    }
+  };
+
+  const currentFocusItem = focusList[focusIndex];
+
+  console.log(currentFocusItem);
+  console.log(device, 'device type');
 
   return (
     <SwitchCase
       value={device}
       cases={{
-        mobile: <div>test</div>,
-        tablet: <div>test</div>,
-        desktop: (
-          <Section
-            ref={ref}
-            backgroundUrl={currentFocus.backgroundUrl}
-            className={className}
-          >
-            <Container
-              variants={pageVariants}
+        mobile: (
+          <SectionWrapper>
+            <BackgroundImage
+              imageUrl={currentFocusItem.mobileBackgroundUrl}
+              variants={backgroundVariants}
               initial='hidden'
               animate={isInView ? 'visible' : 'hidden'}
+            />
+            <Section
+              ref={ref}
+              className={className}
             >
-              <div className="hashtag-container">
-                {currentFocus.tags.map((tag, index) => (
+              <Container device={device}>
+                <div className='content-container'>
+                  {currentFocusItem.tags && currentFocusItem?.tags?.length > 0 && (
+                    <div className='hashtag-container'>
+                      {currentFocusItem.tags?.map((tag, index) => (
+                        <HashtagItem key={index}>
+                          <Text
+                            typography={'body-medium'}
+                            color='white'
+                          >
+                            {tag}
+                          </Text>
+                        </HashtagItem>
+                      ))}
+                    </div>
+                  )}
+                  <div className={'header-container'}>
+                    <Text
+                      typography={'body-bold'}
+                      color='jaedamCyan'
+                    >
+                      {currentFocusItem.subTitle}
+                    </Text>
+                    <Text
+                      typography={'title1-bold'}
+                      color='white'
+                    >
+                      {currentFocusItem.title}
+                    </Text>
+                    <Text
+                      typography={'body-regular'}
+                      color='white'
+                    >
+                      &copy; {currentFocusItem.title}
+                    </Text>
+                  </div>
                   <Text
-                    key={index}
-                    typography={'body-regular'}
-                    color='jaedamCyan'
-                    style={{ marginRight: '8px' }}
+                    typography={'title3-medium'}
+                    color='white'
                   >
-                    {tag}
+                    {currentFocusItem.synopsis}
                   </Text>
-                ))}
-              </div>
-              <Text
-                typography={'title2-bold'}
-                color='jaedamCyan'
-                style={{ textAlign: 'center', marginBottom: '20px' }}
+                  <StyledButton device={device}>
+                    <Text
+                      typography={'button-medium'}
+                      color='white'
+                    >
+                      자세히 보기
+                    </Text>
+                    <span className='icon-container'>
+                      <NavArrowRightIcon />
+                    </span>
+                  </StyledButton>
+                </div>
+              </Container>
+
+              <Container
+                style={{
+                  position: 'absolute',
+                  bottom: 60,
+                }}
+                device={device}
               >
-                {currentFocus.subTitle}
-              </Text>
-              <Text
-                typography={'display2-bold'}
-                color='white'
-                style={{ textAlign: 'center', marginBottom: '20px' }}
+
+              </Container>
+            </Section>
+          </SectionWrapper>
+        ),
+        tablet: (
+          <SectionWrapper>
+            <BackgroundImage
+              imageUrl={currentFocusItem.backgroundUrl}
+              variants={backgroundVariants}
+              initial='hidden'
+              animate={isInView ? 'visible' : 'hidden'}
+            />
+            <Section
+              ref={ref}
+              className={className}
+            >
+              <Container device={device}>
+                <div className='content-container'>
+                  {currentFocusItem.tags && currentFocusItem?.tags?.length > 0 && (
+                    <div className='hashtag-container'>
+                      {currentFocusItem.tags?.map((tag, index) => (
+                        <HashtagItem key={index}>
+                          <Text
+                            typography={'body-medium'}
+                            color='white'
+                          >
+                            {tag}
+                          </Text>
+                        </HashtagItem>
+                      ))}
+                    </div>
+                  )}
+                  <Text
+                    typography={'title2-bold'}
+                    color='jaedamCyan'
+                    style={{ textAlign: 'center', marginBottom: '20px' }}
+                  >
+                    {currentFocusItem.subTitle}
+                  </Text>
+                  <Text
+                    typography={'display2-bold'}
+                    color='white'
+                    style={{ textAlign: 'center', marginBottom: '20px' }}
+                  >
+                    {currentFocusItem.title}
+                  </Text>
+                  <Text
+                    typography={'headline3-medium'}
+                    color='white'
+                  >
+                    {currentFocusItem.synopsis}
+                  </Text>
+                  <StyledButton device={device}>
+                    <Text
+                      typography={'button-medium'}
+                      color='white'
+                    >
+                      자세히 보기
+                    </Text>
+                    <span className='icon-container'>
+                      <NavArrowRightIcon />
+                    </span>
+                  </StyledButton>
+                </div>
+              </Container>
+
+              <Container
+                style={{
+                  position: 'absolute',
+                  bottom: 60,
+                }}
+                device={device}
               >
-                {currentFocus.title}
-              </Text>
-              <p>{currentFocus.synopsis}</p>
-            </Container>
-          </Section>
+                <div className='navigation-container' />
+                <Swiper
+                  slidesPerView={5}
+                  spaceBetween={12}
+                  loop={true}
+                  pagination={{
+                    clickable: true,
+                  }}
+                  navigation={true}
+                  modules={[Pagination, Navigation]}
+                  className='mySwiper'
+                >
+                  {focusList?.map((item, index) => (
+                    <SwiperSlide key={index}>
+                      {({ isActive }) => (
+                        <SlideImage
+                          src={item.backgroundUrl}
+                          alt='slide'
+                          width={180}
+                          height={100}
+                          isActive={isActive}
+                        />
+                      )}
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+
+                <div className='navigation-container next' />
+              </Container>
+            </Section>
+          </SectionWrapper>
+        ),
+        desktop: (
+          <SectionWrapper>
+            <BackgroundImage
+              imageUrl={currentFocusItem.backgroundUrl}
+              variants={backgroundVariants}
+              initial='hidden'
+              animate={isInView ? 'visible' : 'hidden'}
+            />
+            <Section
+              ref={ref}
+              className={className}
+            >
+              <Container device={device}>
+                <div className='navigation-container prev'>
+                  <button
+                    className='navigation-button'
+                    onClick={() => handleNavigation('next')}
+                  >
+                    <svg
+                      width='40'
+                      height='40'
+                      viewBox='0 0 40 40'
+                      fill='none'
+                      xmlns='http://www.w3.org/2000/svg'
+                    >
+                      <path
+                        fillRule='evenodd'
+                        clipRule='evenodd'
+                        d='M28.8935 5.71239L13.02 19.9985L28.8935 34.2847L26.7521 36.6641L9.55671 21.1882C9.21938 20.8847 9.02686 20.4523 9.02686 19.9985C9.02686 19.5448 9.21938 19.1124 9.55671 18.8088L26.7521 3.33301L28.8935 5.71239Z'
+                        fill='white'
+                        fillOpacity='0.7'
+                      />
+                    </svg>
+                  </button>
+                </div>
+                <div className='content-container'>
+                  {currentFocusItem.tags && currentFocusItem.tags.length > 0 && (
+                    <div className='hashtag-container'>
+                      {currentFocusItem.tags?.map((tag, index) => (
+                        <HashtagItem key={index}>
+                          <Text
+                            typography={'body-regular'}
+                            color='white'
+                          >
+                            {tag}
+                          </Text>
+                        </HashtagItem>
+                      ))}
+                    </div>
+                  )}
+                  <Text
+                    typography={'title2-bold'}
+                    color='jaedamCyan'
+                    style={{ textAlign: 'center', marginBottom: '20px' }}
+                  >
+                    {currentFocusItem.subTitle}
+                  </Text>
+                  <Text
+                    typography={'display2-bold'}
+                    color='white'
+                    style={{ textAlign: 'center', marginBottom: '20px' }}
+                  >
+                    {currentFocusItem.title}
+                  </Text>
+                  <Text
+                    typography={'headline3-medium'}
+                    color='white'
+                  >
+                    {currentFocusItem.synopsis}
+                  </Text>
+                  <StyledButton device={device}>
+                    <Text
+                      typography={'button-medium'}
+                      color='white'
+                    >
+                      자세히 보기
+                    </Text>
+                    <span className='icon-container'>
+                      <NavArrowRightIcon />
+                    </span>
+                  </StyledButton>
+                </div>
+                <div className='navigation-container next'>
+                  <button
+                    className='navigation-button'
+                    onClick={() => handleNavigation('prev')}
+                  >
+                    <svg
+                      width='40'
+                      height='40'
+                      viewBox='0 0 40 40'
+                      fill='none'
+                      xmlns='http://www.w3.org/2000/svg'
+                    >
+                      <path
+                        fillRule='evenodd'
+                        clipRule='evenodd'
+                        d='M11.1065 5.71239L26.98 19.9985L11.1065 34.2847L13.2479 36.6641L30.4433 21.1882C30.7806 20.8847 30.9731 20.4523 30.9731 19.9985C30.9731 19.5448 30.7806 19.1124 30.4433 18.8088L13.2479 3.33301L11.1065 5.71239Z'
+                        fill='white'
+                        fillOpacity='0.7'
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </Container>
+
+              <Container
+                device={device}
+                style={{
+                  position: 'absolute',
+                  bottom: 80,
+                }}
+              >
+                <div className='navigation-container' />
+
+                <Swiper
+                  slidesPerView={10}
+                  spaceBetween={12}
+                  loop={true}
+                  pagination={{
+                    clickable: true,
+                  }}
+                  navigation={true}
+                  modules={[Pagination, Navigation]}
+                  className='mySwiper'
+                >
+                  {focusList?.map((item, index) => (
+                    <SwiperSlide key={index}>
+                      {({ isActive }) => (
+                        <SlideImage
+                          src={item.backgroundUrl}
+                          alt='slide'
+                          width={180}
+                          height={100}
+                          isActive={isActive}
+                        />
+                      )}
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+
+                <div className='navigation-container next' />
+              </Container>
+            </Section>
+          </SectionWrapper>
         ),
       }}
     />
