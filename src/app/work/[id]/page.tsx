@@ -10,6 +10,7 @@ interface Props {
 
 export default async function WorkDetailPage({ params }: Props) {
   const data = await getContentDetail(params.id);
+  console.log("🌐 data", data);
   if (!data) return notFound();
 
   const parsedData = {

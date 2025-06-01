@@ -20,10 +20,10 @@ export type BadgeType = Exclude<TabKey, "ALL">;
 
 // 뉴스 카드 Props 정의
 export interface NewsCardProps {
-  date: string; // YYYY.MM.DD 형식
+  noticedAt: string; // YYYY.MM.DD 형식
   title: string;
-  badgeType?: BadgeType; // 'ALL' 제외한 탭만 가능
-  isActive?: boolean; // 활성 카드 여부 (선택 시 강조)
+  category: BadgeType;
+  important: boolean;
   onClick?: () => void;
   className?: string;
 }
