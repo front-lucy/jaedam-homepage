@@ -1,12 +1,14 @@
 'use client';
 
+import { getLineup } from '@/api-domain/lineup';
 import { SwitchCase } from '@/components/atom/switch-case';
 import { Footer } from '@/components/molecules/footer';
 import { Header } from '@/components/molecules/header';
 import styled from '@emotion/styled';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
-import { AboutSection, BestSection, ContactSection, HeroSection, ServicesSection, IntroSection } from './_components';
+import { AboutSection, BestSection, ContactSection, LineupSection, IntroSection, ServicesSection } from './_components';
+import { useMainStore } from '@/store/useMainStore';
 
 
 const Container = styled.div`
@@ -50,19 +52,38 @@ const NavDot = styled.button<{ active: boolean }>`
     }
 `;
 
-const sections = [
-  { id: 'hero', component: HeroSection },
-  { id: 'best', component: BestSection },
-  { id: 'services', component: ServicesSection },
-  { id: 'about', component: AboutSection },
-  { id: 'contact', component: ContactSection },
+const sections: Array<{ id: string; component: React.ComponentType; header: 'light' | 'dark' }> = [
+  { id: 'hero', component: LineupSection, header: 'light' },
+  { id: 'best', component: BestSection, header: 'light' },
+  { id: 'services', component: ServicesSection, header: 'light' },
+  { id: 'about', component: AboutSection, header: 'light' },
+  { id: 'contact', component: ContactSection, header: 'light' },
 ];
 
 
 export default function Home() {
-  const [showSplash, setShowSplash] = useState (true);
+  const [showSplash, setShowSplash] = useState (false);
   const [currentSection, setCurrentSection] = useState (0);
   const [isScrolling, setIsScrolling] = useState (false);
+
+  const { hasData, setLineUpData } = useMainStore();
+
+  useEffect (() => {
+    const fetchLineup = async () => {
+      if (hasData) return; // 이미 데이터가 있는 경우 API 호출 생략
+
+      const { success, body } = await getLineup ();
+
+      if (success) {
+        setLineUpData({
+          focusList: body.focusList.sort((a, b) => a.orderIndex - b.orderIndex),
+          highlightList: body.highlightList.sort((a, b) => a.orderIndex - b.orderIndex),
+        });
+      }
+    }
+
+    fetchLineup ();
+  }, []);
 
   const scrollToSection = useCallback ((index: number) => {
     if (isScrolling || index < 0 || index >= sections.length) return;
@@ -124,10 +145,10 @@ export default function Home() {
   }, [handleWheel, handleKeyDown]);
 
   const pageVariants = {
-    initial: (direction: number) => ({
-      y: direction > 0 ? '100%' : '-100%',
-      opacity: 0,
-    }),
+    initial: {
+      y: '100%',
+      opacity: 1,
+    },
     animate: {
       y: 0,
       opacity: 1,
@@ -138,23 +159,21 @@ export default function Home() {
         duration: 0.8,
       },
     },
-    exit: (direction: number) => ({
-      y: direction > 0 ? '-100%' : '100%',
+    exit: {
+      y: 0,
       opacity: 0,
       transition: {
-        type: 'spring',
-        stiffness: 80,
-        damping: 20,
-        duration: 0.8,
+        duration: 0.3,
+        ease: 'easeOut',
       },
-    }),
+    },
   };
 
   const CurrentSectionComponent = sections[currentSection].component;
 
   return (
     <div style={{ width: '100%' }}>
-      <Header pageType="sub" mode="dark" />
+      <Header pageType="sub" mode={showSplash ? 'light' : sections[currentSection].header} />
 
       <SwitchCase
         value={showSplash.toString ()}
@@ -162,10 +181,9 @@ export default function Home() {
           true: <IntroSection onEndSplash={() => setShowSplash (false)} />,
           false: (
             <Container>
-              <AnimatePresence mode="wait" custom={1}>
+              <AnimatePresence>
                 <SectionWrapper
                   key={currentSection}
-                  custom={1}
                   variants={pageVariants}
                   initial="initial"
                   animate="animate"

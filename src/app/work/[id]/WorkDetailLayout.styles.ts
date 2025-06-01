@@ -1,4 +1,4 @@
-import { colors, typography } from "@/tokens";
+import { colors } from "@/tokens";
 import styled from "@emotion/styled";
 import Image from "next/image";
 
@@ -93,7 +93,6 @@ export const Title = styled.h1`
   font-weight: 700;
   line-height: normal;
   margin-bottom: 16px;
-  font-family: ${typography.fontFamily};
   font-size: 44px;
 
   @media (max-width: 799px) {
