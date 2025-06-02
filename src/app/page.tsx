@@ -1,13 +1,12 @@
 'use client';
 
 import { getLineup } from '@/api-domain/lineup';
-import { SwitchCase } from '@/components/atom/switch-case';
 import { Footer } from '@/components/molecules/footer';
 import { Header } from '@/components/molecules/header';
 import { useMainStore } from '@/store/useMainStore';
 import styled from '@emotion/styled';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { BusinessSection, ContactSection, IntroSection, LineupSection, NewsSection, WorkSection } from './_components';
 
 const Container = styled.div`
@@ -47,6 +46,8 @@ const HiddenScroll = styled.div`
 export default function Home() {
   const [currentSection, setCurrentSection] = useState('splash');
   const [isScrolling, setIsScrolling] = useState(false);
+  const lastScrollTime = useRef(0);
+  const accumulatedDelta = useRef(0);
 
   const { hasData, setLineUpData } = useMainStore();
 
@@ -87,15 +88,35 @@ export default function Home() {
 
       if (isScrolling) return;
 
+      const now = Date.now();
+      const timeDiff = now - lastScrollTime.current;
+
+      // 100ms 이내의 연속된 스크롤은 누적
+      if (timeDiff < 100) {
+        accumulatedDelta.current += e.deltaY;
+      } else {
+        accumulatedDelta.current = e.deltaY;
+      }
+
+      lastScrollTime.current = now;
+
+      // 임계값 설정 (Mac의 부드러운 스크롤 대응)
+      const threshold = 50;
+      
+      if (Math.abs(accumulatedDelta.current) < threshold) return;
+
       const arr = sections.map(section => section.id);
 
-      if (e.deltaY > 0) {
+      if (accumulatedDelta.current > 0) {
         // 스크롤 다운
         scrollToSection(arr.indexOf(currentSection) + 1);
       } else {
         // 스크롤 업
         scrollToSection(arr.indexOf(currentSection) - 1);
       }
+
+      // 누적값 초기화
+      accumulatedDelta.current = 0;
     },
     [currentSection, isScrolling, scrollToSection],
   );
@@ -149,9 +170,9 @@ export default function Home() {
       opacity: 1,
       transition: {
         type: 'spring',
-        stiffness: 80,
-        damping: 20,
-        duration: 0.8,
+        stiffness: 100,
+        damping: 25,
+        duration: 0.6,
       },
     },
     exit: {
@@ -179,97 +200,76 @@ export default function Home() {
         }
       />
 
-      <SwitchCase
-        value={currentSection}
-        cases={{
-          splash: <IntroSection onEndSplash={() => scrollToSection(1)} />,
-          best: (
-            <Container>
-              <AnimatePresence>
-                <SectionWrapper
-                  key={currentSection}
-                  variants={pageVariants}
-                  initial='initial'
-                  animate='animate'
-                  exit='exit'
-                >
-                  <LineupSection />
-                </SectionWrapper>
-              </AnimatePresence>
-            </Container>
-          ),
-          business1: (
-            <Container>
-              <AnimatePresence>
-                <SectionWrapper
-                  key={currentSection}
-                  variants={pageVariants}
-                  initial='initial'
-                  animate='animate'
-                  exit='exit'
-                >
-                  <BusinessSection step={0} />
-                </SectionWrapper>
-              </AnimatePresence>
-            </Container>
-          ),
-          business2: (
-            <Container>
-              <BusinessSection step={1} />
-            </Container>
-          ),
-          work1: (
-            <Container>
-              <AnimatePresence>
-                <SectionWrapper
-                  key={currentSection}
-                  variants={pageVariants}
-                  initial='initial'
-                  animate='animate'
-                  exit='exit'
-                >
-                  <WorkSection step={0} />
-                </SectionWrapper>
-              </AnimatePresence>
-            </Container>
-          ),
-          work2: (
-            <Container>
-              <WorkSection step={1} />
-            </Container>
-          ),
-          news: (
-            <Container>
-              <AnimatePresence>
-                <SectionWrapper
-                  key={currentSection}
-                  variants={pageVariants}
-                  initial='initial'
-                  animate='animate'
-                  exit='exit'
-                >
-                  <NewsSection />
-                </SectionWrapper>
-              </AnimatePresence>
-            </Container>
-          ),
-          contact: (
-            <Container>
-              <AnimatePresence>
-                <SectionWrapper
-                  key={currentSection}
-                  variants={pageVariants}
-                  initial='initial'
-                  animate='animate'
-                  exit='exit'
-                >
-                  <ContactSection />
-                </SectionWrapper>
-              </AnimatePresence>
-            </Container>
-          ),
-        }}
-      />
+      <Container>
+        <AnimatePresence>
+          {currentSection === 'splash' && (
+            <SectionWrapper
+              key="splash"
+              variants={pageVariants}
+              initial='initial'
+              animate='animate'
+              exit='exit'
+            >
+              <IntroSection onEndSplash={() => scrollToSection(1)} />
+            </SectionWrapper>
+          )}
+          {currentSection === 'best' && (
+            <SectionWrapper
+              key="best"
+              variants={pageVariants}
+              initial='initial'
+              animate='animate'
+              exit='exit'
+            >
+              <LineupSection />
+            </SectionWrapper>
+          )}
+          {(currentSection === 'business1' || currentSection === 'business2') && (
+            <SectionWrapper
+              key="business"
+              variants={pageVariants}
+              initial='initial'
+              animate='animate'
+              exit='exit'
+            >
+              <BusinessSection step={currentSection === 'business1' ? 0 : 1} />
+            </SectionWrapper>
+          )}
+          {(currentSection === 'work1' || currentSection === 'work2') && (
+            <SectionWrapper
+              key="work"
+              variants={pageVariants}
+              initial='initial'
+              animate='animate'
+              exit='exit'
+            >
+              <WorkSection step={currentSection === 'work1' ? 0 : 1} />
+            </SectionWrapper>
+          )}
+          {currentSection === 'news' && (
+            <SectionWrapper
+              key="news"
+              variants={pageVariants}
+              initial='initial'
+              animate='animate'
+              exit='exit'
+            >
+              <NewsSection />
+            </SectionWrapper>
+          )}
+          {currentSection === 'contact' && (
+            <SectionWrapper
+              key="contact"
+              variants={pageVariants}
+              initial='initial'
+              animate='animate'
+              exit='exit'
+            >
+              <ContactSection />
+            </SectionWrapper>
+          )}
+        </AnimatePresence>
+      </Container>
       <Footer />
     </HiddenScroll>
   );

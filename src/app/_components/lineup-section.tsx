@@ -18,9 +18,10 @@ interface HeroSectionProps {
 }
 
 const SectionWrapper = styled.div`
-  min-height: 100vh;
+  min-height: 100dvh;
   position: relative;
   overflow: hidden;
+  background-color: ${colors.white};
 `;
 
 const BackgroundImage = styled(motion.div, {

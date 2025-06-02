@@ -2,12 +2,14 @@ import { Text } from '@/components/atom/text';
 import styled from '@emotion/styled';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { colors } from '@/tokens';
 
 const Container = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   position: relative;
+  background-color: ${colors.white};
 `;
 
 const StyledBusinessContent = styled.div`
