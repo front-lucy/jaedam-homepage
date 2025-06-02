@@ -223,6 +223,13 @@ export const typography = {
     letterSpacing: "normal",
     textDecoration: "none",
   },
+  'title3-regular': {
+    fontSize: 18,
+    lineHeight: "100%",
+    fontWeight: fontWeightRegular,
+    letterSpacing: "normal",
+    textDecoration: "none",
+  },
   'body-bold': {
     fontSize: 16,
     lineHeight: "26px",

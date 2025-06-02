@@ -5,3 +5,4 @@ export { NewsSection } from './news-section';
 export { ServicesSection } from './services-section';
 export { IntroSection } from './intro-section'
 export { BusinessSection } from './business-section'
+export { WorkSection } from './work-section'

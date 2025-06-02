@@ -8,21 +8,20 @@ import { useMainStore } from '@/store/useMainStore';
 import styled from '@emotion/styled';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
-import { BusinessSection, ContactSection, IntroSection, LineupSection, NewsSection } from './_components';
-
+import { BusinessSection, ContactSection, IntroSection, LineupSection, NewsSection, WorkSection } from './_components';
 
 const Container = styled.div`
-    height: 100vh;
-    overflow: hidden;
-    position: relative;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
 `;
 
 const SectionWrapper = styled(motion.div)`
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
 `;
 
 const sections: Array<{ id: string; header: 'light' | 'dark' }> = [
@@ -30,6 +29,8 @@ const sections: Array<{ id: string; header: 'light' | 'dark' }> = [
   { id: 'best', header: 'dark' },
   { id: 'business1', header: 'light' },
   { id: 'business2', header: 'light' },
+  { id: 'work1', header: 'dark' },
+  { id: 'work2', header: 'dark' },
   { id: 'news', header: 'light' },
   { id: 'contact', header: 'light' },
 ];
@@ -37,11 +38,11 @@ const sections: Array<{ id: string; header: 'light' | 'dark' }> = [
 const HiddenScroll = styled.div`
   height: 100dvh;
   overflow: auto;
+
   &::-webkit-scrollbar {
     display: none;
   }
 `;
-
 
 export default function Home() {
   const [currentSection, setCurrentSection] = useState('splash');
@@ -49,11 +50,11 @@ export default function Home() {
 
   const { hasData, setLineUpData } = useMainStore();
 
-  useEffect (() => {
+  useEffect(() => {
     const fetchLineup = async () => {
       if (hasData) return; // 이미 데이터가 있는 경우 API 호출 생략
 
-      const { success, body } = await getLineup ();
+      const { success, body } = await getLineup();
 
       if (success) {
         setLineUpData({
@@ -61,71 +62,80 @@ export default function Home() {
           highlightList: body.highlightList.sort((a, b) => a.orderIndex - b.orderIndex),
         });
       }
-    }
+    };
 
-    fetchLineup ();
+    fetchLineup();
   }, []);
 
-  const scrollToSection = useCallback ((index: number) => {
-    if (isScrolling || index < 0 || index >= sections.length) return;
+  const scrollToSection = useCallback(
+    (index: number) => {
+      if (isScrolling || index < 0 || index >= sections.length) return;
 
-    setIsScrolling (true);
-    setCurrentSection (sections[index].id);
+      setIsScrolling(true);
+      setCurrentSection(sections[index].id);
 
-    setTimeout (() => {
-      setIsScrolling (false);
-    }, 1000);
-  }, [isScrolling]);
+      setTimeout(() => {
+        setIsScrolling(false);
+      }, 1000);
+    },
+    [isScrolling],
+  );
 
-  const handleWheel = useCallback ((e: WheelEvent) => {
-    e.preventDefault ();
+  const handleWheel = useCallback(
+    (e: WheelEvent) => {
+      e.preventDefault();
 
-    if (isScrolling) return;
+      if (isScrolling) return;
 
-    const arr = sections.map((section) => section.id);
+      const arr = sections.map(section => section.id);
 
-    if (e.deltaY > 0) {
-      // 스크롤 다운
-      scrollToSection (arr.indexOf(currentSection) + 1);
-    } else {
-      // 스크롤 업
-      scrollToSection (arr.indexOf(currentSection) - 1);
-    }
-  }, [currentSection, isScrolling, scrollToSection]);
-
-  const handleKeyDown = useCallback ((e: KeyboardEvent) => {
-    if (isScrolling) return;
-
-    const arr = sections.map((section) => section.id);
-
-    switch (e.key) {
-      case 'ArrowDown':
-      case ' ':
-        e.preventDefault ();
+      if (e.deltaY > 0) {
+        // 스크롤 다운
         scrollToSection(arr.indexOf(currentSection) + 1);
-        break;
-      case 'ArrowUp':
-        e.preventDefault ();
+      } else {
+        // 스크롤 업
         scrollToSection(arr.indexOf(currentSection) - 1);
-        break;
-      case 'Home':
-        e.preventDefault ();
-        scrollToSection (arr.indexOf('splash'));
-        break;
-      case 'End':
-        e.preventDefault ();
-        scrollToSection (arr.indexOf('contact'));
-        break;
-    }
-  }, [currentSection, isScrolling, scrollToSection]);
+      }
+    },
+    [currentSection, isScrolling, scrollToSection],
+  );
 
-  useEffect (() => {
-    window.addEventListener ('wheel', handleWheel, { passive: false });
-    window.addEventListener ('keydown', handleKeyDown);
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (isScrolling) return;
+
+      const arr = sections.map(section => section.id);
+
+      switch (e.key) {
+        case 'ArrowDown':
+        case ' ':
+          e.preventDefault();
+          scrollToSection(arr.indexOf(currentSection) + 1);
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          scrollToSection(arr.indexOf(currentSection) - 1);
+          break;
+        case 'Home':
+          e.preventDefault();
+          scrollToSection(arr.indexOf('splash'));
+          break;
+        case 'End':
+          e.preventDefault();
+          scrollToSection(arr.indexOf('contact'));
+          break;
+      }
+    },
+    [currentSection, isScrolling, scrollToSection],
+  );
+
+  useEffect(() => {
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      window.removeEventListener ('wheel', handleWheel);
-      window.removeEventListener ('keydown', handleKeyDown);
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, [handleWheel, handleKeyDown]);
 
@@ -154,9 +164,20 @@ export default function Home() {
     },
   };
 
+  useEffect(() => {
+    console.log(currentSection);
+  }, [currentSection]);
+
   return (
     <HiddenScroll style={{ width: '100%' }}>
-      <Header pageType="home" mode={currentSection === 'splash' ? 'light' : sections.find((section) => section.id === currentSection)?.header || 'light'} />
+      <Header
+        pageType='home'
+        mode={
+          currentSection === 'splash'
+            ? 'light'
+            : sections.find(section => section.id === currentSection)?.header || 'light'
+        }
+      />
 
       <SwitchCase
         value={currentSection}
@@ -168,9 +189,9 @@ export default function Home() {
                 <SectionWrapper
                   key={currentSection}
                   variants={pageVariants}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
+                  initial='initial'
+                  animate='animate'
+                  exit='exit'
                 >
                   <LineupSection />
                 </SectionWrapper>
@@ -183,9 +204,9 @@ export default function Home() {
                 <SectionWrapper
                   key={currentSection}
                   variants={pageVariants}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
+                  initial='initial'
+                  animate='animate'
+                  exit='exit'
                 >
                   <BusinessSection step={0} />
                 </SectionWrapper>
@@ -197,15 +218,35 @@ export default function Home() {
               <BusinessSection step={1} />
             </Container>
           ),
+          work1: (
+            <Container>
+              <AnimatePresence>
+                <SectionWrapper
+                  key={currentSection}
+                  variants={pageVariants}
+                  initial='initial'
+                  animate='animate'
+                  exit='exit'
+                >
+                  <WorkSection step={0} />
+                </SectionWrapper>
+              </AnimatePresence>
+            </Container>
+          ),
+          work2: (
+            <Container>
+              <WorkSection step={1} />
+            </Container>
+          ),
           news: (
             <Container>
               <AnimatePresence>
                 <SectionWrapper
                   key={currentSection}
                   variants={pageVariants}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
+                  initial='initial'
+                  animate='animate'
+                  exit='exit'
                 >
                   <NewsSection />
                 </SectionWrapper>
@@ -214,23 +255,22 @@ export default function Home() {
           ),
           contact: (
             <Container>
-            <AnimatePresence>
-              <SectionWrapper
-                key={currentSection}
-                variants={pageVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-              >
-                <ContactSection />
-              </SectionWrapper>
-            </AnimatePresence>
-          </Container>
+              <AnimatePresence>
+                <SectionWrapper
+                  key={currentSection}
+                  variants={pageVariants}
+                  initial='initial'
+                  animate='animate'
+                  exit='exit'
+                >
+                  <ContactSection />
+                </SectionWrapper>
+              </AnimatePresence>
+            </Container>
           ),
         }}
       />
       <Footer />
-
     </HiddenScroll>
   );
 }
