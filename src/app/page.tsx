@@ -172,22 +172,18 @@ export default function Home() {
         type: 'spring',
         stiffness: 100,
         damping: 25,
-        duration: 0.6,
+        duration: 0.2,
       },
     },
     exit: {
       y: 0,
-      opacity: 0,
+      opacity: 0.4,
       transition: {
-        duration: 0.3,
+        duration: 1,
         ease: 'easeOut',
       },
     },
   };
-
-  useEffect(() => {
-    console.log(currentSection);
-  }, [currentSection]);
 
   return (
     <HiddenScroll style={{ width: '100%' }}>
@@ -235,15 +231,26 @@ export default function Home() {
               <BusinessSection step={currentSection === 'business1' ? 0 : 1} />
             </SectionWrapper>
           )}
-          {(currentSection === 'work1' || currentSection === 'work2') && (
+          {(currentSection === 'work1') && (
             <SectionWrapper
-              key="work"
+              key="work1"
               variants={pageVariants}
               initial='initial'
               animate='animate'
               exit='exit'
             >
-              <WorkSection step={currentSection === 'work1' ? 0 : 1} />
+              <WorkSection step={0} />
+            </SectionWrapper>
+          )}
+          {currentSection === 'work2' && (
+            <SectionWrapper
+              key="work2"
+              variants={pageVariants}
+              initial='initial'
+              animate='animate'
+              exit='exit'
+            >
+              <WorkSection step={1} />
             </SectionWrapper>
           )}
           {currentSection === 'news' && (

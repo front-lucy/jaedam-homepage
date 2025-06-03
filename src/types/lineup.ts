@@ -14,6 +14,7 @@ export type HighlightItem = {
   thumbnailUrl: string;
   orderIndex: number;
   title: string;
+  writerNames?: string[];
 }
 
 export type LineUpResponse = {

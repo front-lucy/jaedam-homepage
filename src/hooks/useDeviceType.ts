@@ -1,5 +1,6 @@
 import { useMediaQuery } from "./useMediaQuery";
 
+
 export function useDeviceType(): "desktop" | "tablet" | "mobile" {
   const isDesktop = useMediaQuery("(min-width: 1280px)");
   const isTablet = useMediaQuery("(min-width: 800px) and (max-width: 1279px)");
@@ -10,3 +11,5 @@ export function useDeviceType(): "desktop" | "tablet" | "mobile" {
   if (isMobile) return "mobile";
   return 'desktop';
 }
+
+export type DeviceType = ReturnType<typeof useDeviceType>;
