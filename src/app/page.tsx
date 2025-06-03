@@ -106,13 +106,19 @@ export default function Home() {
       if (Math.abs(accumulatedDelta.current) < threshold) return;
 
       const arr = sections.map(section => section.id);
+      const currentIndex = arr.indexOf(currentSection);
 
       if (accumulatedDelta.current > 0) {
         // 스크롤 다운
-        scrollToSection(arr.indexOf(currentSection) + 1);
+        scrollToSection(currentIndex + 1);
       } else {
         // 스크롤 업
-        scrollToSection(arr.indexOf(currentSection) - 1);
+        // work1에서 이전으로 갈 때 business2를 건너뛰고 business1로 이동
+        if (currentSection === 'work1') {
+          scrollToSection(arr.indexOf('business1'));
+        } else {
+          scrollToSection(currentIndex - 1);
+        }
       }
 
       // 누적값 초기화
