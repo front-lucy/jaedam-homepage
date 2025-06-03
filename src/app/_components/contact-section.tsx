@@ -152,7 +152,7 @@ export function ContactSection({ className }: ContactSectionProps) {
             display: 'flex',
             width: '100%',
             justifyContent: 'center',
-            alignItems: 'center',
+            alignItems: 'start',
             position: 'relative',
             height: device === 'desktop' ? '360px' : device === 'tablet' ? '380px' : '460px', // 카드들이 퍼질 공간 확보
           }}
@@ -167,35 +167,45 @@ export function ContactSection({ className }: ContactSectionProps) {
                 const startX = -totalWidth / 2 + 200; // 중앙 기준으로 시작점
                 return { x: startX + index * cardWidth, y: 0 };
               } else if (device === 'tablet') {
-                // 2x2 grid
+                // 2x2 grid - 상단 기준으로 아래로 배치
                 const cardWidth = 320 + 20;
                 const cardHeight = 180 + 20;
                 const col = index % 2;
                 const row = Math.floor(index / 2);
-                const startX = -cardWidth / 2 - 10;
-                const startY = -cardHeight / 2 - 10;
+                const startX = -cardWidth / 2 - 10; // 중앙 기준 x
+                const startY = 0; // 상단 기준으로 시작
                 return {
                   x: startX + col * cardWidth,
                   y: startY + row * cardHeight
                 };
               } else {
-                // mobile: 1열로 배치
+                // mobile: 1열로 배치 - 상단 기준으로 아래로 배치
                 const cardHeight = 108 + 8;
-                const totalHeight = cardHeight * 4 - 8;
-                const startY = -totalHeight / 2 + 54;
+                const startY = 0; // 상단 기준으로 시작
                 return { x: 0, y: startY + index * cardHeight };
               }
             };
 
+            // 초기 위치 계산 (디바이스별로 다름)
+            const getInitialPosition = () => {
+              if (device === 'desktop') {
+                return { x: 0, y: 0 }; // 중앙에서 시작
+              } else {
+                // tablet, mobile은 상단(y: 0)에서 시작
+                return { x: 0, y: 0 }; 
+              }
+            };
+
             const finalPosition = getFinalPosition();
+            const initialPosition = getInitialPosition();
 
             return (
               <motion.div
                 className='card-container'
                 key={index}
                 initial={{ 
-                  x: 0, // 모든 카드가 완전히 동일한 위치에서 시작
-                  y: 0, // 모든 카드가 완전히 동일한 위치에서 시작
+                  x: initialPosition.x,
+                  y: initialPosition.y,
                   opacity: 1
                 }}
                 animate={{ 
