@@ -1,8 +1,9 @@
 import { Text } from '@/components/atom/text';
 import styled from '@emotion/styled';
-import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { colors } from '@/tokens';
+import { colors, radius } from '@/tokens';
+import { useDeviceType } from '@/hooks/useDeviceType';
+import { useWindowSize } from '@/hooks/useWindowSize';
 
 const Container = styled.div`
   width: 100%;
@@ -24,6 +25,7 @@ const StyledBusinessContent = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  background-color: ${colors.white};
 `;
 
 const CardContainer = styled.div`
@@ -35,12 +37,15 @@ const CardContainer = styled.div`
   pointer-events: none;
 `;
 
-const StyledRandomCard = styled(motion.div)`
-  width: 80px;
-  height: 120px;
-  border-radius: 8px;
+const StyledRandomCard = styled(motion.div)<{
+  width?: number;
+  height?: number;
+}>`
+  width: ${({ width }) => (width ? `${width}px` : '136px')};
+  height: ${({ height }) => (height ? `${height}px` : '136px')};
+  border-radius: ${radius.r500};
   background-color: #fff;
-  box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.08);
+  box-shadow: 10px 10px 40px 0px #0000001A;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -59,82 +64,180 @@ interface CardPosition {
   y: number;
 }
 
-// 카드들의 특정 위치를 정의
-const generateCardPositions = () => {
-  const positions = [];
-  const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1200;
-  const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
-
-  // 특정 위치들을 미리 정의 (그리드 형태로 배치)
-  const gridCols = 5;
-  const gridRows = 2;
-  const cardWidth = 80;
-  const cardHeight = 120;
-
-  const startX = (viewportWidth - (gridCols * cardWidth + (gridCols - 1) * 40)) / 2;
-  const startY = (viewportHeight - (gridRows * cardHeight + (gridRows - 1) * 40)) / 2 + 100;
-
-  for (let i = 0; i < 10; i++) {
-    const col = i % gridCols;
-    const row = Math.floor(i / gridCols);
-
-    const x = startX + col * (cardWidth + 40);
-    const y = startY + row * (cardHeight + 40);
-
-    positions.push({
-      x,
-      y,
-    });
-  }
-
-  return positions;
+const itemPosition = {
+  desktop: [
+    {
+      x: 0.2552, // 490
+      y: 0.0778, // 84
+      width: 136,
+      height: 136,
+    },
+    {
+      x: 0.1146, // 220
+      y: 0.1722, // 186
+      width: 252,
+      height: 360,
+    },
+    {
+      x: 0.1797, // 345
+      y: 0.5741, // 620
+      width: 252,
+      height: 360,
+    },
+    {
+      x: 0.6276, // 1205
+      y: 0.6389, // 690
+      width: 138,
+      height: 92,
+    },
+    {
+      x: 0.6823, // 1310
+      y: 0.7157, // 773
+      width: 136,
+      height: 136,
+    },
+    {
+      x: 0.7698, // 1478
+      y: 0.4241, // 458
+      width: 252,
+      height: 360,
+    },
+    {
+      x: 0.6875, // 1320
+      y: 0.1111, // 120
+      width: 252,
+      height: 360,
+    },
+  ],
+  tablet: [
+    {
+      x: 0.325, // 260/800
+      y: 0.0739, // 60/812
+      width: 86,
+      height: 86,
+    },
+    {
+      x: -0.01375, // -11/800
+      y: 0.1502, // 122/812
+      width: 160,
+      height: 227,
+    },
+    {
+      x: 0.105, // 84/800
+      y: 0.7401, // 601/812
+      width: 160,
+      height: 227,
+    },
+    {
+      x: 0.53375, // 427/800
+      y: 0.6613, // 537/812
+      width: 86,
+      height: 58,
+    },
+    {
+      x: 0.5925, // 474/800
+      y: 0.7143, // 580/812
+      width: 86,
+      height: 86,
+    },
+    {
+      x: 0.835, // 668/800
+      y: 0.649, // 527/812
+      width: 160,
+      height: 227,
+    },
+    {
+      x: 0.7825, // 626/800
+      y: 0.2228, // 181/812
+      width: 160,
+      height: 227,
+    },
+  ],
+  mobile: [
+    {
+      x: 0.352, // 132/375
+      y: 0.0394, // 32/812
+      width: 67,
+      height: 67,
+    },
+    {
+      x: 0.0453, // 17/375
+      y: 0.1502, // 122/812
+      width: 124,
+      height: 176,
+    },
+    {
+      x: -0.048, // -18/375
+      y: 0.7216, // 586/812
+      width: 124,
+      height: 176,
+    },
+    {
+      x: 0.2, // 75/375
+      y: 0.6244, // 507/812
+      width: 67,
+      height: 45,
+    },
+    {
+      x: 0.3147, // 118/375
+      y: 0.681, // 553/812
+      width: 67,
+      height: 67,
+    },
+    {
+      x: 0.6187, // 232/375
+      y: 0.6478, // 526/812
+      width: 124,
+      height: 176,
+    },
+    {
+      x: 0.7067, // 265/375
+      y: 0.0382, // 31/812
+      width: 124,
+      height: 176,
+    }
+  ],
 };
 
 export const BusinessSection = ({ step }: BusinessSectionProps) => {
-  const [cardPositions, setCardPositions] = useState(generateCardPositions());
-
-  useEffect(() => {
-    const handleResize = () => {
-      setCardPositions(generateCardPositions());
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const device = useDeviceType();
+  const windowSize = useWindowSize();
 
   const cardVariants = {
     initial: (custom: CardPosition) => ({
-      x: custom.x,
-      y: custom.y,
-      scale: 0,
+      x: custom.x * windowSize.width,
+      y: custom.y * windowSize.height,
       opacity: 0,
     }),
     bounce: (custom: CardPosition) => ({
-      x: custom.x,
-      y: custom.y,
-      scale: [0, 1.2, 0.9, 1.1, 1],
+      x: custom.x * windowSize.width,
+      y: [
+        custom.y * windowSize.height,
+        custom.y * windowSize.height - 20, // 위로 20px
+        custom.y * windowSize.height,
+        custom.y * windowSize.height - 10, // 작은 bounce
+        custom.y * windowSize.height,
+      ],
       opacity: 1,
       transition: {
-        duration: 0.8,
-        ease: 'easeOut',
-        delay: Math.random() * 0.3,
-        repeat: Infinity,
-        repeatDelay: 1.5,
-        repeatType: 'loop' as const,
+        x: {
+          duration: 0.5,
+          ease: "easeOut"
+        },
+        y: {
+          duration: 2 + Math.random() * 1, // 2-3초 랜덤 duration
+          ease: "easeInOut",
+          repeat: Infinity,
+          repeatType: "loop" as const,
+          delay: Math.random() * 2, // 0-2초 랜덤 딜레이
+        },
+        opacity: {
+          duration: 0.5,
+          ease: "easeOut"
+        }
       },
     }),
   };
-
-  const [animationState, setAnimationState] = useState<'initial' | 'bounce'>('initial');
-
-  useEffect(() => {
-    if (step === 1) {
-      // 바로 바운스 시작
-      setAnimationState('bounce');
-    } else {
-      setAnimationState('initial');
-    }
-  }, [step]);
 
   return (
     <>
@@ -173,13 +276,15 @@ export const BusinessSection = ({ step }: BusinessSectionProps) => {
           </StyledBusinessContent>
 
           <CardContainer>
-            {cardPositions.map((position, index) => (
+            {itemPosition[device].map((position, index) => (
               <StyledRandomCard
                 key={index}
                 custom={position}
                 variants={cardVariants}
                 initial='initial'
-                animate={animationState}
+                animate={'bounce'}
+                width={position.width}
+                height={position.height}
               >
                 카드 {index + 1}
               </StyledRandomCard>

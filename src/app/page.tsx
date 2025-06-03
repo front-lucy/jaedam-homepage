@@ -46,8 +46,10 @@ const HiddenScroll = styled.div`
 export default function Home() {
   const [currentSection, setCurrentSection] = useState('splash');
   const [isScrolling, setIsScrolling] = useState(false);
+  const [splashEnded, setSplashEnded] = useState(false);
   const lastScrollTime = useRef(0);
   const accumulatedDelta = useRef(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const { hasData, setLineUpData } = useMainStore();
 
@@ -72,6 +74,9 @@ export default function Home() {
     (index: number) => {
       if (isScrolling || index < 0 || index >= sections.length) return;
 
+      // 스플래시가 끝난 후에는 스플래시(index 0)로 돌아갈 수 없도록 제한
+      if (splashEnded && index === 0) return;
+
       setIsScrolling(true);
       setCurrentSection(sections[index].id);
 
@@ -79,12 +84,15 @@ export default function Home() {
         setIsScrolling(false);
       }, 1000);
     },
-    [isScrolling],
+    [isScrolling, splashEnded],
   );
 
   const handleWheel = useCallback(
     (e: WheelEvent) => {
-      e.preventDefault();
+      console.log(currentSection);
+      if (currentSection !== 'contact') {
+        e.preventDefault();
+      }
 
       if (isScrolling) return;
 
@@ -102,7 +110,7 @@ export default function Home() {
 
       // 임계값 설정 (Mac의 부드러운 스크롤 대응)
       const threshold = 50;
-      
+
       if (Math.abs(accumulatedDelta.current) < threshold) return;
 
       const arr = sections.map(section => section.id);
@@ -113,6 +121,9 @@ export default function Home() {
         scrollToSection(currentIndex + 1);
       } else {
         // 스크롤 업
+        // 스플래시가 끝났고 현재가 첫 번째 섹션(best)이면 더 이상 위로 갈 수 없음
+        if (splashEnded && currentIndex === 1) return;
+
         // work1에서 이전으로 갈 때 business2를 건너뛰고 business1로 이동
         if (currentSection === 'work1') {
           scrollToSection(arr.indexOf('business1'));
@@ -124,7 +135,7 @@ export default function Home() {
       // 누적값 초기화
       accumulatedDelta.current = 0;
     },
-    [currentSection, isScrolling, scrollToSection],
+    [currentSection, isScrolling, scrollToSection, splashEnded],
   );
 
   const handleKeyDown = useCallback(
@@ -132,20 +143,28 @@ export default function Home() {
       if (isScrolling) return;
 
       const arr = sections.map(section => section.id);
+      const currentIndex = arr.indexOf(currentSection);
 
       switch (e.key) {
         case 'ArrowDown':
         case ' ':
           e.preventDefault();
-          scrollToSection(arr.indexOf(currentSection) + 1);
+          scrollToSection(currentIndex + 1);
           break;
         case 'ArrowUp':
           e.preventDefault();
-          scrollToSection(arr.indexOf(currentSection) - 1);
+          // 스플래시가 끝났고 현재가 첫 번째 섹션(best)이면 더 이상 위로 갈 수 없음
+          if (splashEnded && currentIndex === 1) return;
+          scrollToSection(currentIndex - 1);
           break;
         case 'Home':
           e.preventDefault();
-          scrollToSection(arr.indexOf('splash'));
+          // 스플래시가 끝났으면 Home 키로도 스플래시로 갈 수 없음
+          if (splashEnded) {
+            scrollToSection(1); // best 섹션으로 이동
+          } else {
+            scrollToSection(0); // splash 섹션으로 이동
+          }
           break;
         case 'End':
           e.preventDefault();
@@ -153,15 +172,19 @@ export default function Home() {
           break;
       }
     },
-    [currentSection, isScrolling, scrollToSection],
+    [currentSection, isScrolling, scrollToSection, splashEnded],
   );
 
   useEffect(() => {
-    window.addEventListener('wheel', handleWheel, { passive: false });
+    if (!containerRef.current) return;
+
+    containerRef.current.addEventListener('wheel', handleWheel, { passive: false });
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      window.removeEventListener('wheel', handleWheel);
+      if (containerRef.current) {
+        containerRef.current.removeEventListener('wheel', handleWheel);
+      }
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [handleWheel, handleKeyDown]);
@@ -202,22 +225,27 @@ export default function Home() {
         }
       />
 
-      <Container>
+      <Container ref={containerRef}>
         <AnimatePresence>
           {currentSection === 'splash' && (
             <SectionWrapper
-              key="splash"
+              key='splash'
               variants={pageVariants}
               initial='initial'
               animate='animate'
               exit='exit'
             >
-              <IntroSection onEndSplash={() => scrollToSection(1)} />
+              <IntroSection
+                onEndSplash={() => {
+                  setSplashEnded(true);
+                  scrollToSection(1);
+                }}
+              />
             </SectionWrapper>
           )}
           {currentSection === 'best' && (
             <SectionWrapper
-              key="best"
+              key='best'
               variants={pageVariants}
               initial='initial'
               animate='animate'
@@ -228,7 +256,7 @@ export default function Home() {
           )}
           {(currentSection === 'business1' || currentSection === 'business2') && (
             <SectionWrapper
-              key="business"
+              key='business'
               variants={pageVariants}
               initial='initial'
               animate='animate'
@@ -237,9 +265,9 @@ export default function Home() {
               <BusinessSection step={currentSection === 'business1' ? 0 : 1} />
             </SectionWrapper>
           )}
-          {(currentSection === 'work1') && (
+          {currentSection === 'work1' && (
             <SectionWrapper
-              key="work1"
+              key='work1'
               variants={pageVariants}
               initial='initial'
               animate='animate'
@@ -250,7 +278,7 @@ export default function Home() {
           )}
           {currentSection === 'work2' && (
             <SectionWrapper
-              key="work2"
+              key='work2'
               variants={pageVariants}
               initial='initial'
               animate='animate'
@@ -261,7 +289,7 @@ export default function Home() {
           )}
           {currentSection === 'news' && (
             <SectionWrapper
-              key="news"
+              key='news'
               variants={pageVariants}
               initial='initial'
               animate='animate'
@@ -272,7 +300,7 @@ export default function Home() {
           )}
           {currentSection === 'contact' && (
             <SectionWrapper
-              key="contact"
+              key='contact'
               variants={pageVariants}
               initial='initial'
               animate='animate'

@@ -254,8 +254,6 @@ export function LineupSection({ className }: HeroSectionProps) {
 
   const currentFocusItem = focusList[focusIndex];
 
-  console.log (focusList, currentFocusItem, focusIndex);
-
   return (
     <SwitchCase
       value={device}

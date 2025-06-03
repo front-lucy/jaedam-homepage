@@ -18,7 +18,6 @@ export const WorkGrid: FC<WorkGridProps> = ({ items }) => {
   function handleItemClick(id: number) {
     setScrollY(window.scrollY);
     router.push(`/work/${id}`);
-    console.log(id);
   }
 
   return (
