@@ -178,12 +178,14 @@ export default function Home() {
   useEffect(() => {
     if (!containerRef.current) return;
 
-    containerRef.current.addEventListener('wheel', handleWheel, { passive: false });
+    const ref = containerRef.current;
+
+    ref.addEventListener('wheel', handleWheel, { passive: false });
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      if (containerRef.current) {
-        containerRef.current.removeEventListener('wheel', handleWheel);
+      if (ref) {
+        ref.removeEventListener('wheel', handleWheel);
       }
       window.removeEventListener('keydown', handleKeyDown);
     };
