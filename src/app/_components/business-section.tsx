@@ -1,9 +1,10 @@
 import { Text } from '@/components/atom/text';
 import styled from '@emotion/styled';
 import { motion, AnimatePresence } from 'framer-motion';
-import { colors, radius } from '@/tokens';
-import { useDeviceType } from '@/hooks/useDeviceType';
+import { colors, radius, TypographyType } from '@/tokens';
+import { DeviceType, useDeviceType } from '@/hooks/useDeviceType';
 import { useWindowSize } from '@/hooks/useWindowSize';
+import { CSSProperties } from 'react';
 
 const Container = styled.div`
   width: 100%;
@@ -199,6 +200,27 @@ const itemPosition = {
   ],
 };
 
+const styleVariants: Record<DeviceType, Record<'contents', CSSProperties & { titleTypography: TypographyType, descriptionTypography: TypographyType }>> = {
+  desktop: {
+    contents: {
+      titleTypography: 'display2-black',
+      descriptionTypography: 'headline2-regular',
+    },
+  },
+  tablet: {
+    contents: {
+      titleTypography: 'display2-black',
+      descriptionTypography: 'title1-regular',
+    }
+  },
+  mobile: {
+    contents: {
+      titleTypography: 'headline1-black',
+      descriptionTypography: 'title3-regular',
+    }
+  },
+}
+
 export const BusinessSection = ({ step }: BusinessSectionProps) => {
   const device = useDeviceType();
   const windowSize = useWindowSize();
@@ -246,9 +268,9 @@ export const BusinessSection = ({ step }: BusinessSectionProps) => {
           <AnimatePresence mode='wait'>
             {step === 0 && (
               <StyledBusinessContent>
-                <Text typography='display2-bold'>BUSINESS</Text>
+                <Text typography={styleVariants[device].contents.titleTypography}>BUSINESS</Text>
                 <Text
-                  typography='headline2-regular'
+                  typography={styleVariants[device].contents.descriptionTypography}
                   align='center'
                 >
                   우리는 즐거움을 만들어요.
@@ -264,9 +286,9 @@ export const BusinessSection = ({ step }: BusinessSectionProps) => {
       {step === 1 && (
         <>
           <StyledBusinessContent>
-            <Text typography='display2-bold'>BUSINESS</Text>
+            <Text typography={styleVariants[device].contents.titleTypography}>BUSINESS</Text>
             <Text
-              typography='headline2-regular'
+              typography={styleVariants[device].contents.descriptionTypography}
               align='center'
             >
               우리는 즐거움을 만들어요.

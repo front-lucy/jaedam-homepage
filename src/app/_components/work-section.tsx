@@ -18,7 +18,7 @@ const variants: Record<
 > = {
   desktop: {
     container: {
-      title: 'display2-bold',
+      title: 'display2-black',
       writers: 'headline2-regular',
     },
     slider: {
@@ -30,7 +30,7 @@ const variants: Record<
   },
   tablet: {
     container: {
-      title: 'display2-bold',
+      title: 'display2-black',
       writers: 'title1-regular',
     },
     slider: {
@@ -41,7 +41,7 @@ const variants: Record<
   },
   mobile: {
     container: {
-      title: 'headline1-bold',
+      title: 'headline1-black',
       writers: 'title3-regular',
     },
     slider: {
