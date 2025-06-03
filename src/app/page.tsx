@@ -31,7 +31,7 @@ const sections: Array<{ id: string; header: 'light' | 'dark' }> = [
   { id: 'work1', header: 'dark' },
   { id: 'work2', header: 'dark' },
   { id: 'news', header: 'light' },
-  { id: 'contact', header: 'light' },
+  { id: 'contact', header: 'dark' },
 ];
 
 const HiddenScroll = styled.div`

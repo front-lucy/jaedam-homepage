@@ -4,8 +4,16 @@ export const fontWeightRegular = 400;
 export const fontWeightMedium = 500;
 export const fontWeightSemibold = 600;
 export const fontWeightBold = 700;
+export const fontWeightBlack = 900;
 
 export const typography = {
+  'display2-black': {
+    fontSize: 64,
+    lineHeight: "100%",
+    fontWeight: fontWeightBlack,
+    letterSpacing: "normal",
+    textDecoration: "none",
+  },
   'display2-bold': {
     fontSize: 64,
     lineHeight: "100%",
@@ -31,6 +39,13 @@ export const typography = {
     fontSize: 64,
     lineHeight: "100%",
     fontWeight: fontWeightRegular,
+    letterSpacing: "normal",
+    textDecoration: "none",
+  },
+  'headline1-black': {
+    fontSize: 44,
+    lineHeight: "100%",
+    fontWeight: fontWeightBlack,
     letterSpacing: "normal",
     textDecoration: "none",
   },

@@ -73,6 +73,7 @@ const Wrapper = styled.section`
   padding: 0px 64px;
   margin: 0 auto;
   height: 100%;
+  background-color: ${colors.white};
 
   @media (min-width: 800px) {
     flex-direction: row;
