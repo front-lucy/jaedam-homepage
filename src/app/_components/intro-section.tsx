@@ -119,10 +119,33 @@ export function IntroSection({ onEndSplash }: IntroSectionProps) {
     // };
     // window.addEventListener("wheel", handleScroll, { passive: false });
     // return () => window.removeEventListener("wheel", handleScroll);
-    // TODO: 애니메이션 step 조절 필요
-    setInterval(() => {
-      setStep((prev) => Math.min(prev + 1, 5));
-    }, 1500);
+    
+    // 각 애니메이션의 duration에 맞춰서 단계 진행
+    const timeouts: NodeJS.Timeout[] = [];
+    
+    // step 1 → step 2: 텍스트 애니메이션 완료 후 (0.8초)
+    timeouts.push(setTimeout(() => {
+      setStep(2);
+    }, 1800));
+    
+    // step 2 → step 3: 태그 애니메이션 완료 후 (0.8 + 0.3 = 1.1초)
+    timeouts.push(setTimeout(() => {
+      setStep(3);
+    }, 2100));
+    
+    // step 3 → step 4: 말풍선 들어오는 애니메이션 완료 후 (1.1 + 1.0 = 2.1초)
+    timeouts.push(setTimeout(() => {
+      setStep(4);
+    }, 3100));
+    
+    // step 4 → step 5: 로고 애니메이션 완료 후 (2.1 + 2.3 = 4.4초)
+    timeouts.push(setTimeout(() => {
+      setStep(5);
+    }, 5400));
+    
+    return () => {
+      timeouts.forEach(timeout => clearTimeout(timeout));
+    };
   }, []);
 
   useEffect(() => {
