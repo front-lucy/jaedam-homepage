@@ -1,7 +1,7 @@
 // src/app/news/[id]/NewsDetail.styles.ts
-import { colors, spacing } from "@/tokens";
-import { typography } from "@/tokens/typography";
-import styled from "@emotion/styled";
+import { colors, spacing } from '@/tokens';
+import { typography } from '@/tokens/typography';
+import styled from '@emotion/styled';
 
 export const Wrapper = styled.main`
   width: 100%;
@@ -9,24 +9,21 @@ export const Wrapper = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
-  
 `;
 
 export const ContentWrapper = styled.section`
   width: 100%;
   max-width: 800px;
-  padding: ${spacing["5XL"]} 0;
+  padding: ${spacing['5XL']} 0;
   display: flex;
   flex-direction: column;
-  justify-content: center; 
-
- 
+  justify-content: center;
 `;
 
 export const Inner = styled.div`
   font-size: 16px;
   color: ${colors.gray800};
-  line-height: 1.75;
+  line-height: 26px;
 
   .ql-align-center {
     text-align: center;
@@ -48,7 +45,7 @@ export const Inner = styled.div`
   em {
     font-style: italic;
   }
-/* 
+  /* 
   p {
     margin-bottom: 1em;
   } */
@@ -63,25 +60,25 @@ export const TitleSection = styled.section`
   align-items: center;
   justify-content: center;
   text-align: center;
-  overflow: hidden; 
-  gap: ${spacing["3XL"]};
+  overflow: hidden;
+  gap: ${spacing['3XL']};
 `;
 
 export const BackgroundImage = styled.div`
   position: absolute;
-  bottom: 0; 
-  left: 50%;  
-  transform: translate(-50%, 0%);  
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 0%);
   height: auto;
-  z-index: 0; 
+  z-index: 0;
   overflow: hidden;
   object-fit: contain;
   img {
     width: 667px;
-    height: auto; object-fit: cover;
+    height: auto;
+    object-fit: cover;
     display: block;
   }
- 
 `;
 
 export const Category = styled.p`
@@ -98,27 +95,25 @@ export const Category = styled.p`
 
 export const Title = styled.h1`
   position: relative;
-  z-index: 1; 
+  z-index: 1;
   color: ${colors.black};
   max-width: 920px;
-  ${typography["headline2-bold"]};
+  ${typography['headline2-bold']};
 
   @media (max-width: 1279px) {
-    ${typography["headline3-bold"]};
+    ${typography['headline3-bold']};
   }
   @media (max-width: 799px) {
-    ${typography["headline4-bold"]};
+    ${typography['headline4-bold']};
   }
 `;
 
 export const Date = styled.p`
   position: relative;
-  z-index: 1; 
+  z-index: 1;
   color: ${colors.gray500};
-  ${typography["body-bold"]};
+  ${typography['body-bold']};
 `;
-
-
 
 // ✅ 첨부파일 섹션
 export const AttachmentSection = styled.section`
@@ -130,15 +125,15 @@ export const AttachmentSection = styled.section`
 `;
 
 export const AttachmentTitle = styled.h3`
-  ${typography["body-bold"]};
-  color: ${colors.gray900}; 
+  ${typography['body-bold']};
+  color: ${colors.gray900};
   margin-bottom: 16px;
 `;
 
 export const AttachmentList = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 12px; 
+  gap: 12px;
 `;
 
 export const AttachmentItem = styled.li`
@@ -156,8 +151,8 @@ export const AttachmentItem = styled.li`
     gap: 8px;
     text-decoration: none;
     color: inherit;
-word-break: break-all;
-cursor: pointer;
+    word-break: break-all;
+    cursor: pointer;
     &:hover {
       color: ${colors.jaedamCyan};
       text-decoration: underline;
@@ -165,7 +160,6 @@ cursor: pointer;
       svg {
         color: ${colors.jaedamCyan};
       }
-      
     }
 
     svg {
