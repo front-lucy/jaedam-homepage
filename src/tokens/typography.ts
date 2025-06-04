@@ -4,8 +4,16 @@ export const fontWeightRegular = 400;
 export const fontWeightMedium = 500;
 export const fontWeightSemibold = 600;
 export const fontWeightBold = 700;
+export const fontWeightBlack = 900;
 
 export const typography = {
+  'display2-black': {
+    fontSize: 64,
+    lineHeight: "100%",
+    fontWeight: fontWeightBlack,
+    letterSpacing: "normal",
+    textDecoration: "none",
+  },
   'display2-bold': {
     fontSize: 64,
     lineHeight: "100%",
@@ -31,6 +39,13 @@ export const typography = {
     fontSize: 64,
     lineHeight: "100%",
     fontWeight: fontWeightRegular,
+    letterSpacing: "normal",
+    textDecoration: "none",
+  },
+  'headline1-black': {
+    fontSize: 44,
+    lineHeight: "100%",
+    fontWeight: fontWeightBlack,
     letterSpacing: "normal",
     textDecoration: "none",
   },
@@ -146,6 +161,34 @@ export const typography = {
     letterSpacing: "normal",
     textDecoration: "none",
   },
+  'title1-bold': {
+    fontSize: 28,
+    lineHeight: "100%",
+    fontWeight: fontWeightBold,
+    letterSpacing: "normal",
+    textDecoration: "none",
+  },
+  'title1-semibold': {
+    fontSize: 28,
+    lineHeight: "100%",
+    fontWeight: fontWeightSemibold,
+    letterSpacing: "normal",
+    textDecoration: "none",
+  },
+  'title1-medium': {
+    fontSize: 28,
+    lineHeight: "100%",
+    fontWeight: fontWeightMedium,
+    letterSpacing: "normal",
+    textDecoration: "none",
+  },
+  'title1-regular': {
+    fontSize: 28,
+    lineHeight: "100%",
+    fontWeight: fontWeightRegular,
+    letterSpacing: "normal",
+    textDecoration: "none",
+  },
   'title2-bold': {
     fontSize: 20,
     lineHeight: "normal",
@@ -174,28 +217,84 @@ export const typography = {
     letterSpacing: "normal",
     textDecoration: "none",
   },
+  'title3-bold': {
+    fontSize: 18,
+    lineHeight: "100%",
+    fontWeight: fontWeightBold,
+    letterSpacing: "normal",
+    textDecoration: "none",
+  },
+  'title3-semibold': {
+    fontSize: 18,
+    lineHeight: "100%",
+    fontWeight: fontWeightSemibold,
+    letterSpacing: "normal",
+    textDecoration: "none",
+  },
+  'title3-medium': {
+    fontSize: 18,
+    lineHeight: "100%",
+    fontWeight: fontWeightMedium,
+    letterSpacing: "normal",
+    textDecoration: "none",
+  },
+  'title3-regular': {
+    fontSize: 18,
+    lineHeight: "100%",
+    fontWeight: fontWeightRegular,
+    letterSpacing: "normal",
+    textDecoration: "none",
+  },
   'body-bold': {
     fontSize: 16,
-    lineHeight: "100%",
+    lineHeight: "26px",
     fontWeight: fontWeightBold,
     letterSpacing: "normal",
     textDecoration: "none",
   },
   'body-semibold': {
     fontSize: 16,
-    lineHeight: "100%",
+    lineHeight: "26px",
     fontWeight: fontWeightSemibold,
     letterSpacing: "normal",
     textDecoration: "none",
   },
   'body-medium': {
     fontSize: 16,
-    lineHeight: "100%",
+    lineHeight: "26px",
     fontWeight: fontWeightMedium,
     letterSpacing: "normal",
     textDecoration: "none",
   },
   'body-regular': {
+    fontSize: 16,
+    lineHeight: "26px",
+    fontWeight: fontWeightRegular,
+    letterSpacing: "normal",
+    textDecoration: "none",
+  },
+  'button-bold': {
+    fontSize: 16,
+    lineHeight: "100%",
+    fontWeight: fontWeightBold,
+    letterSpacing: "normal",
+    textDecoration: "none",
+  },
+  'button-semibold': {
+    fontSize: 16,
+    lineHeight: "100%",
+    fontWeight: fontWeightSemibold,
+    letterSpacing: "normal",
+    textDecoration: "none",
+  },
+  'button-medium': {
+    fontSize: 16,
+    lineHeight: "100%",
+    fontWeight: fontWeightMedium,
+    letterSpacing: "normal",
+    textDecoration: "none",
+  },
+  'button-regular': {
     fontSize: 16,
     lineHeight: "100%",
     fontWeight: fontWeightRegular,

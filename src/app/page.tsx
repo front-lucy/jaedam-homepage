@@ -1,13 +1,13 @@
 'use client';
 
 import { getLineup } from '@/api-domain/lineup';
-import { SwitchCase } from '@/components/atom/switch-case';
+import { Footer } from '@/components/molecules/footer';
 import { Header } from '@/components/molecules/header';
 import { useMainStore } from '@/store/useMainStore';
 import styled from '@emotion/styled';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useCallback, useEffect, useState } from 'react';
-import { AboutSection, BestSection, ContactSection, IntroSection, LineupSection, ServicesSection } from './_components';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { BusinessSection, ContactSection, IntroSection, LineupSection, NewsSection, WorkSection } from './_components';
 
 const Container = styled.div`
   height: 100vh;
@@ -23,52 +23,42 @@ const SectionWrapper = styled(motion.div)`
   height: 100vh;
 `;
 
-const Navigation = styled.div`
-  position: fixed;
-  right: 2rem;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
+const sections: Array<{ id: string; header: 'light' | 'dark' }> = [
+  { id: 'splash', header: 'light' },
+  { id: 'best', header: 'dark' },
+  { id: 'business1', header: 'light' },
+  { id: 'business2', header: 'light' },
+  { id: 'work1', header: 'dark' },
+  { id: 'work2', header: 'dark' },
+  { id: 'news', header: 'light' },
+  { id: 'contact', header: 'dark' },
+];
 
-const NavDot = styled.button<{ active: boolean }>`
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 2px solid white;
-  background: ${props => (props.active ? 'white' : 'transparent')};
-  cursor: pointer;
-  transition: all 0.3s ease;
-  opacity: 0.7;
+const HiddenScroll = styled.div`
+  height: 100dvh;
+  overflow: auto;
 
-  &:hover {
-    opacity: 1;
-    transform: scale(1.2);
+  &::-webkit-scrollbar {
+    display: none;
   }
 `;
 
-const sections: Array<{ id: string; component: React.ComponentType; header: 'light' | 'dark' }> = [
-  { id: 'hero', component: LineupSection, header: 'light' },
-  { id: 'best', component: BestSection, header: 'light' },
-  { id: 'services', component: ServicesSection, header: 'light' },
-  { id: 'about', component: AboutSection, header: 'light' },
-  { id: 'contact', component: ContactSection, header: 'light' },
-];
-
 export default function Home() {
-  const [showSplash, setShowSplash] = useState(false);
-  const [currentSection, setCurrentSection] = useState(0);
+  const [currentSection, setCurrentSection] = useState('splash');
   const [isScrolling, setIsScrolling] = useState(false);
+  const [splashEnded, setSplashEnded] = useState(false);
+  const lastScrollTime = useRef(0);
+  const accumulatedDelta = useRef(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const { hasData, setLineUpData } = useMainStore();
 
   useEffect(() => {
     const fetchLineup = async () => {
-      if (hasData) return;
+      if (hasData) return; // 이미 데이터가 있는 경우 API 호출 생략
+
       const { success, body } = await getLineup();
+
       if (success) {
         setLineUpData({
           focusList: body.focusList.sort((a, b) => a.orderIndex - b.orderIndex),
@@ -76,73 +66,127 @@ export default function Home() {
         });
       }
     };
+
     fetchLineup();
-  }, [hasData, setLineUpData]);
+  }, []);
 
   const scrollToSection = useCallback(
     (index: number) => {
       if (isScrolling || index < 0 || index >= sections.length) return;
 
+      // 스플래시가 끝난 후에는 스플래시(index 0)로 돌아갈 수 없도록 제한
+      if (splashEnded && index === 0) return;
+
       setIsScrolling(true);
-      setCurrentSection(index);
+      setCurrentSection(sections[index].id);
 
       setTimeout(() => {
         setIsScrolling(false);
       }, 1000);
     },
-    [isScrolling],
+    [isScrolling, splashEnded],
   );
 
   const handleWheel = useCallback(
     (e: WheelEvent) => {
-      e.preventDefault();
+      console.log(currentSection);
+      if (currentSection !== 'contact') {
+        e.preventDefault();
+      }
 
       if (isScrolling) return;
 
-      if (e.deltaY > 0) {
+      const now = Date.now();
+      const timeDiff = now - lastScrollTime.current;
+
+      // 100ms 이내의 연속된 스크롤은 누적
+      if (timeDiff < 100) {
+        accumulatedDelta.current += e.deltaY;
+      } else {
+        accumulatedDelta.current = e.deltaY;
+      }
+
+      lastScrollTime.current = now;
+
+      // 임계값 설정 (Mac의 부드러운 스크롤 대응)
+      const threshold = 50;
+
+      if (Math.abs(accumulatedDelta.current) < threshold) return;
+
+      const arr = sections.map(section => section.id);
+      const currentIndex = arr.indexOf(currentSection);
+
+      if (accumulatedDelta.current > 0) {
         // 스크롤 다운
-        scrollToSection(currentSection + 1);
+        scrollToSection(currentIndex + 1);
       } else {
         // 스크롤 업
-        scrollToSection(currentSection - 1);
+        // 스플래시가 끝났고 현재가 첫 번째 섹션(best)이면 더 이상 위로 갈 수 없음
+        if (splashEnded && currentIndex === 1) return;
+
+        // work1에서 이전으로 갈 때 business2를 건너뛰고 business1로 이동
+        if (currentSection === 'work1') {
+          scrollToSection(arr.indexOf('business1'));
+        } else {
+          scrollToSection(currentIndex - 1);
+        }
       }
+
+      // 누적값 초기화
+      accumulatedDelta.current = 0;
     },
-    [currentSection, isScrolling, scrollToSection],
+    [currentSection, isScrolling, scrollToSection, splashEnded],
   );
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (isScrolling) return;
 
+      const arr = sections.map(section => section.id);
+      const currentIndex = arr.indexOf(currentSection);
+
       switch (e.key) {
         case 'ArrowDown':
         case ' ':
           e.preventDefault();
-          scrollToSection(currentSection + 1);
+          scrollToSection(currentIndex + 1);
           break;
         case 'ArrowUp':
           e.preventDefault();
-          scrollToSection(currentSection - 1);
+          // 스플래시가 끝났고 현재가 첫 번째 섹션(best)이면 더 이상 위로 갈 수 없음
+          if (splashEnded && currentIndex === 1) return;
+          scrollToSection(currentIndex - 1);
           break;
         case 'Home':
           e.preventDefault();
-          scrollToSection(0);
+          // 스플래시가 끝났으면 Home 키로도 스플래시로 갈 수 없음
+          if (splashEnded) {
+            scrollToSection(1); // best 섹션으로 이동
+          } else {
+            scrollToSection(0); // splash 섹션으로 이동
+          }
           break;
         case 'End':
           e.preventDefault();
-          scrollToSection(sections.length - 1);
+          scrollToSection(arr.indexOf('contact'));
           break;
       }
     },
-    [currentSection, isScrolling, scrollToSection],
+    [currentSection, isScrolling, scrollToSection, splashEnded],
   );
 
   useEffect(() => {
-    window.addEventListener('wheel', handleWheel, { passive: false });
+    if (!containerRef.current) return;
+
+    const ref = containerRef.current;
+
+    ref.addEventListener('wheel', handleWheel, { passive: false });
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      window.removeEventListener('wheel', handleWheel);
+      if (ref) {
+        ref.removeEventListener('wheel', handleWheel);
+      }
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [handleWheel, handleKeyDown]);
@@ -157,62 +201,119 @@ export default function Home() {
       opacity: 1,
       transition: {
         type: 'spring',
-        stiffness: 80,
-        damping: 20,
-        duration: 0.8,
+        stiffness: 100,
+        damping: 25,
+        duration: 0.2,
       },
     },
     exit: {
       y: 0,
-      opacity: 0,
+      opacity: 0.4,
       transition: {
-        duration: 0.3,
+        duration: 1,
         ease: 'easeOut',
       },
     },
   };
 
-  const CurrentSectionComponent = sections[currentSection].component;
-
   return (
-    <div style={{ width: '100%' }}>
+    <HiddenScroll style={{ width: '100%' }}>
       <Header
         pageType='home'
-        mode={showSplash ? 'light' : sections[currentSection].header}
+        mode={
+          currentSection === 'splash'
+            ? 'light'
+            : sections.find(section => section.id === currentSection)?.header || 'light'
+        }
       />
 
-      <SwitchCase
-        value={showSplash.toString()}
-        cases={{
-          true: <IntroSection onEndSplash={() => setShowSplash(false)} />,
-          false: (
-            <Container>
-              <AnimatePresence>
-                <SectionWrapper
-                  key={currentSection}
-                  variants={pageVariants}
-                  initial='initial'
-                  animate='animate'
-                  exit='exit'
-                >
-                  <CurrentSectionComponent />
-                </SectionWrapper>
-              </AnimatePresence>
-
-              <Navigation>
-                {sections.map((_, index) => (
-                  <NavDot
-                    key={index}
-                    active={index === currentSection}
-                    onClick={() => scrollToSection(index)}
-                    aria-label={`섹션 ${index + 1}로 이동`}
-                  />
-                ))}
-              </Navigation>
-            </Container>
-          ),
-        }}
-      />
-    </div>
+      <Container ref={containerRef}>
+        <AnimatePresence>
+          {currentSection === 'splash' && (
+            <SectionWrapper
+              key='splash'
+              variants={pageVariants}
+              initial='initial'
+              animate='animate'
+              exit='exit'
+            >
+              <IntroSection
+                onEndSplash={() => {
+                  setSplashEnded(true);
+                  scrollToSection(1);
+                }}
+              />
+            </SectionWrapper>
+          )}
+          {currentSection === 'best' && (
+            <SectionWrapper
+              key='best'
+              variants={pageVariants}
+              initial='initial'
+              animate='animate'
+              exit='exit'
+            >
+              <LineupSection />
+            </SectionWrapper>
+          )}
+          {(currentSection === 'business1' || currentSection === 'business2') && (
+            <SectionWrapper
+              key='business'
+              variants={pageVariants}
+              initial='initial'
+              animate='animate'
+              exit='exit'
+            >
+              <BusinessSection step={currentSection === 'business1' ? 0 : 1} />
+            </SectionWrapper>
+          )}
+          {currentSection === 'work1' && (
+            <SectionWrapper
+              key='work1'
+              variants={pageVariants}
+              initial='initial'
+              animate='animate'
+              exit='exit'
+            >
+              <WorkSection step={0} />
+            </SectionWrapper>
+          )}
+          {currentSection === 'work2' && (
+            <SectionWrapper
+              key='work2'
+              variants={pageVariants}
+              initial='initial'
+              animate='animate'
+              exit='exit'
+            >
+              <WorkSection step={1} />
+            </SectionWrapper>
+          )}
+          {currentSection === 'news' && (
+            <SectionWrapper
+              key='news'
+              variants={pageVariants}
+              initial='initial'
+              animate='animate'
+              exit='exit'
+            >
+              <NewsSection />
+            </SectionWrapper>
+          )}
+          {currentSection === 'contact' && (
+            <SectionWrapper
+              key='contact'
+              variants={pageVariants}
+              initial='initial'
+              animate='animate'
+              exit='exit'
+            >
+              <ContactSection />
+            </SectionWrapper>
+          )}
+        </AnimatePresence>
+      </Container>
+      <Footer />
+    </HiddenScroll>
   );
 }

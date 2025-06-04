@@ -13,7 +13,10 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ["shortz-prod-s3-content.s3.ap-northeast-2.amazonaws.com"],
+    domains: [
+      "shortz-prod-s3-content.s3.ap-northeast-2.amazonaws.com",
+      "s3.ap-northeast-2.amazonaws.com"
+    ],
   },
 };
 

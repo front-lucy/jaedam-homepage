@@ -6,6 +6,7 @@ import { useRef } from 'react';
 
 interface BestSectionProps {
   className?: string;
+  onScrollNext?: () => void;
 }
 
 const Section = styled.section`
@@ -119,6 +120,23 @@ const Button = styled(motion.button)`
   }
 `;
 
+const pageVariants = {
+  hidden: { 
+    y: 100, 
+    opacity: 0 
+  },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 60,
+      damping: 15,
+      duration: 1.2,
+    },
+  },
+};
+
 export function BestSection({ className }: BestSectionProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { 
@@ -127,22 +145,6 @@ export function BestSection({ className }: BestSectionProps) {
     margin: "-50px"
   });
 
-  const pageVariants = {
-    hidden: { 
-      y: 100, 
-      opacity: 0 
-    },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 60,
-        damping: 15,
-        duration: 1.2,
-      },
-    },
-  };
 
   return (
     <Section 
