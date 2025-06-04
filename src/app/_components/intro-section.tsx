@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import JaedamLogoENG from "@/assets/icons/Logo-Jaedam-Eng.png";
-import SpeechBubbleSVG from "@/assets/icons/visual-bubble.svg";
-import styled from "@emotion/styled";
-import { motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import JaedamLogoENG from '@/assets/icons/Logo-Jaedam-Eng.png';
+import SpeechBubbleSVG from '@/assets/icons/visual-bubble.svg';
+import styled from '@emotion/styled';
+import { motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 
 const Wrapper = styled.div<{ isFixed: boolean }>`
-  position: ${({ isFixed }) => (isFixed ? "fixed" : "relative")};
+  position: ${({ isFixed }) => (isFixed ? 'fixed' : 'relative')};
   top: 0;
   left: 0;
   width: 100%;
@@ -61,23 +61,23 @@ const Tag = styled(motion.div)<{ angle: number }>`
   background-color: #22d4dd;
   color: white;
   font-size: 20px;
-  font-weight: bold; 
+  font-weight: bold;
 
   padding: 8px 18px;
   border-radius: 900px;
   white-space: nowrap;
   box-shadow: 0 2px 8px rgba(34, 212, 221, 0.1);
-  transform: translate(-50%, -50%) rotate(${(props) => props.angle}deg);
+  transform: translate(-50%, -50%) rotate(${props => props.angle}deg);
   z-index: 2;
 `;
 
 const tags = [
-  { label: "WEBTOON", x: -588.18, y: -266.67, angle: -13.45 },
-  { label: "COMIC BOOK", x: -649.0, y: -45.76, angle: -1.61 },
-  { label: "CHARACTER", x: -545.13, y: 185.31, angle: 14.32 },
-  { label: "WEB NOVEL", x: 320.73, y: -257.9, angle: 10.71 },
-  { label: "MOVIE", x: 537.89, y: -69.4, angle: 3.7 },
-  { label: "IP BIZ", x: 416.33, y: 156.13, angle: -9.73 },
+  { label: 'WEBTOON', x: -588.18, y: -266.67, angle: -13.45 },
+  { label: 'COMIC BOOK', x: -649.0, y: -45.76, angle: -1.61 },
+  { label: 'CHARACTER', x: -545.13, y: 185.31, angle: 14.32 },
+  { label: 'WEB NOVEL', x: 320.73, y: -257.9, angle: 10.71 },
+  { label: 'MOVIE', x: 537.89, y: -69.4, angle: 3.7 },
+  { label: 'IP BIZ', x: 416.33, y: 156.13, angle: -9.73 },
 ];
 
 interface IntroSectionProps {
@@ -119,30 +119,38 @@ export function IntroSection({ onEndSplash }: IntroSectionProps) {
     // };
     // window.addEventListener("wheel", handleScroll, { passive: false });
     // return () => window.removeEventListener("wheel", handleScroll);
-    
+
     // 각 애니메이션의 duration에 맞춰서 단계 진행
     const timeouts: NodeJS.Timeout[] = [];
-    
+
     // step 1 → step 2: 텍스트 애니메이션 완료 후 (0.8초)
-    timeouts.push(setTimeout(() => {
-      setStep(2);
-    }, 1800));
-    
+    timeouts.push(
+      setTimeout(() => {
+        setStep(2);
+      }, 2000),
+    );
+
     // step 2 → step 3: 태그 애니메이션 완료 후 (0.8 + 0.3 = 1.1초)
-    timeouts.push(setTimeout(() => {
-      setStep(3);
-    }, 2100));
-    
+    timeouts.push(
+      setTimeout(() => {
+        setStep(3);
+      }, 3500),
+    );
+
     // step 3 → step 4: 말풍선 들어오는 애니메이션 완료 후 (1.1 + 1.0 = 2.1초)
-    timeouts.push(setTimeout(() => {
-      setStep(4);
-    }, 3100));
-    
+    timeouts.push(
+      setTimeout(() => {
+        setStep(4);
+      }, 5000),
+    );
+
     // step 4 → step 5: 로고 애니메이션 완료 후 (2.1 + 2.3 = 4.4초)
-    timeouts.push(setTimeout(() => {
-      setStep(5);
-    }, 5400));
-    
+    timeouts.push(
+      setTimeout(() => {
+        setStep(5);
+      }, 8000),
+    );
+
     return () => {
       timeouts.forEach(timeout => clearTimeout(timeout));
     };
@@ -151,7 +159,7 @@ export function IntroSection({ onEndSplash }: IntroSectionProps) {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
     const hexToRGBA = (hex: string, alpha: number) => {
       const r = parseInt(hex.slice(1, 3), 16);
@@ -170,8 +178,8 @@ export function IntroSection({ onEndSplash }: IntroSectionProps) {
         y: (Math.random() < 0.5 ? -1 : 1) * Math.random() * 0.15,
       },
       alpha: 0.05,
-      hex: "#22D4DD",
-      color: hexToRGBA("#22D4DD", 0.05),
+      hex: '#22D4DD',
+      color: hexToRGBA('#22D4DD', 0.05),
     });
     const updateDot = (dot: Dot) => {
       if (dot.alpha < 0.4) {
@@ -180,12 +188,7 @@ export function IntroSection({ onEndSplash }: IntroSectionProps) {
       }
       dot.x += dot.velocity.x;
       dot.y += dot.velocity.y;
-      if (
-        dot.x > canvas.width + 10 ||
-        dot.x < -10 ||
-        dot.y > canvas.height + 10 ||
-        dot.y < -10
-      ) {
+      if (dot.x > canvas.width + 10 || dot.x < -10 || dot.y > canvas.height + 10 || dot.y < -10) {
         dot.active = false;
       }
     };
@@ -202,7 +205,7 @@ export function IntroSection({ onEndSplash }: IntroSectionProps) {
         }
       }
       dotsRef.current.forEach(updateDot);
-      dotsRef.current = dotsRef.current.filter((dot) => dot.active);
+      dotsRef.current = dotsRef.current.filter(dot => dot.active);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       dotsRef.current.forEach(drawDot);
       requestAnimationFrame(animate);
@@ -214,8 +217,8 @@ export function IntroSection({ onEndSplash }: IntroSectionProps) {
     };
     resize();
     animate();
-    window.addEventListener("resize", resize);
-    return () => window.removeEventListener("resize", resize);
+    window.addEventListener('resize', resize);
+    return () => window.removeEventListener('resize', resize);
   }, []);
 
   return (
@@ -224,7 +227,7 @@ export function IntroSection({ onEndSplash }: IntroSectionProps) {
       {step >= 1 && (
         <Overlay>
           <TextLine
-            initial={{ x: "-100%", opacity: 0 }}
+            initial={{ x: '-100%', opacity: 0 }}
             animate={{ x: 0, opacity: expandBubble ? 0 : 1 }}
             transition={{ duration: 0.8, opacity: { duration: 0.1 } }}
           >
@@ -232,7 +235,7 @@ export function IntroSection({ onEndSplash }: IntroSectionProps) {
             <Light>의 모든</Light>
           </TextLine>
           <TextLine
-            initial={{ x: "100%", opacity: 0 }}
+            initial={{ x: '100%', opacity: 0 }}
             animate={{ x: 0, opacity: expandBubble ? 0 : 1 }}
             transition={{
               duration: 0.8,
@@ -243,7 +246,7 @@ export function IntroSection({ onEndSplash }: IntroSectionProps) {
             <Light>를 담다</Light>
           </TextLine>
           {step >= 2 &&
-            tags.map((tag) => (
+            tags.map(tag => (
               <Tag
                 key={tag.label}
                 angle={tag.angle}
@@ -255,7 +258,7 @@ export function IntroSection({ onEndSplash }: IntroSectionProps) {
                   opacity: expandBubble ? 0 : 1,
                   scale: 1,
                 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
               >
                 {tag.label}
               </Tag>
@@ -265,46 +268,46 @@ export function IntroSection({ onEndSplash }: IntroSectionProps) {
       {step === 3 && bubbleIn && (
         <MotionSpeechBubble
           style={{
-            position: "absolute",
-            left: "36%",
-            top: "30%",
-            transform: "translate(-50%, -50%)",
-            width: "454px",
+            position: 'absolute',
+            left: '36%',
+            top: '30%',
+            transform: 'translate(-50%, -50%)',
+            width: '454px',
             zIndex: -1,
           }}
-          initial={{ top: "100%", scale: 1, opacity: 0 }}
-          animate={{ top: "30%", scale: 1, opacity: 1 }}
-          transition={{ duration: 1, ease: "easeOut" }}
+          initial={{ top: '100%', scale: 1, opacity: 0 }}
+          animate={{ top: '30%', scale: 1, opacity: 1 }}
+          transition={{ duration: 1, ease: 'easeOut' }}
         />
       )}
       {step === 4 && expandBubble && (
         <>
           <MotionSpeechBubble
             style={{
-              position: "absolute",
-              left: "36%",
-              top: "30%",
-              transform: "translate(-50%, -50%)",
-              width: "454px",
+              position: 'absolute',
+              left: '36%',
+              top: '30%',
+              transform: 'translate(-50%, -50%)',
+              width: '454px',
               zIndex: -1,
             }}
             initial={{ scale: 1 }}
             animate={{ scale: 10 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
+            transition={{ duration: 1.2, ease: 'easeOut' }}
           />
-          <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
-          <MotionLogo
-            src={JaedamLogoENG.src}
-            alt="Jaedam Logo"
-            style={{
-              width: "667px",
-              height: "auto",
-              zIndex: 0,
-            }}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.3, duration: 1, ease: "easeOut" }}
-          />
+          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+            <MotionLogo
+              src={JaedamLogoENG.src}
+              alt='Jaedam Logo'
+              style={{
+                width: '667px',
+                height: 'auto',
+                zIndex: 0,
+              }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.3, duration: 1, ease: 'easeOut' }}
+            />
           </div>
         </>
       )}

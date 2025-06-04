@@ -216,6 +216,22 @@ export default function Home() {
     },
   };
 
+  const splashVariants = {
+    initial: {
+      opacity: 1,
+    },
+    animate: {
+      opacity: 1,
+    },
+    exit: {
+      opacity: 0,
+      transition: {
+        duration: 0.5,
+        ease: 'easeOut',
+      },
+    },
+  };
+
   return (
     <HiddenScroll style={{ width: '100%' }}>
       <Header
@@ -232,7 +248,7 @@ export default function Home() {
           {currentSection === 'splash' && (
             <SectionWrapper
               key='splash'
-              variants={pageVariants}
+              variants={splashVariants}
               initial='initial'
               animate='animate'
               exit='exit'
