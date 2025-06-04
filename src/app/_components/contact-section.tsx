@@ -1,192 +1,312 @@
 'use client';
 
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { CSSProperties, useRef } from 'react';
 import styled from '@emotion/styled';
+import { colors, radius, shadow, spacing, TypographyType } from '@/tokens';
+import Image from 'next/image';
+import { DeviceType, useDeviceType } from '@/hooks/useDeviceType';
+import { Text } from '@/components/atom/text';
+import { css } from '@emotion/react';
+import { cards } from '@/constants/contact-card-content';
+import { motion } from 'framer-motion';
 
 interface ContactSectionProps {
   className?: string;
 }
 
-const Section = styled.section`
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-  color: #333;
-`;
-
-const Container = styled(motion.div)`
-  max-width: 64rem;
-  margin: 0 auto;
-  padding: 0 1.5rem;
-  text-align: center;
-`;
-
-const Title = styled.h2`
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
-  color: #333;
-  
-  @media (min-width: 768px) {
-    font-size: 3.5rem;
-  }
-`;
-
-const Description = styled.p`
-  font-size: 1.25rem;
-  margin-bottom: 3rem;
-  opacity: 0.8;
-  max-width: 48rem;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.6;
-  color: #555;
-`;
-
-const ContactGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-  margin-bottom: 3rem;
-  
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-`;
-
-const ContactCard = styled.div`
-  background: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(10px);
-  border-radius: 1.5rem;
-  padding: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  transition: transform 0.3s ease;
-  
-  &:hover {
-    transform: translateY(-5px);
-  }
-`;
-
-const ContactIcon = styled.div`
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-`;
-
-const ContactTitle = styled.h3`
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: #333;
-`;
-
-const ContactInfo = styled.p`
-  font-size: 1rem;
-  color: #555;
-`;
-
-const CTAButton = styled(motion.button)`
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 1.25rem 3rem;
-  border-radius: 9999px;
-  font-weight: 600;
-  font-size: 1.125rem;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
-  transition: all 0.3s ease;
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
-  }
-`;
+const styleVariants: Record<
+  DeviceType,
+  Record<
+    'container' | 'textarea' | 'card' | 'cardArea',
+    CSSProperties & {
+      titleTypography?: TypographyType;
+      descriptionTypography?: TypographyType;
+    }
+  > & {}
+> = {
+  desktop: {
+    container: {
+      top: '200px',
+      gap: '80px',
+    },
+    textarea: {
+      gap: '40px',
+      titleTypography: 'display2-black',
+      descriptionTypography: 'headline2-regular',
+    },
+    cardArea: {
+      gridTemplateColumns: 'repeat(4, 1fr)',
+      gridTemplateRows: 'repeat(1, 1fr)',
+      gap: '20px',
+      padding: '0 20px',
+    },
+    card: {
+      padding: spacing['2XL'],
+      height: '360px',
+      titleTypography: 'headline1-bold',
+      descriptionTypography: 'title2-medium',
+      width: '400px',
+    },
+  },
+  tablet: {
+    container: {
+      top: '258px',
+      gap: '48px',
+    },
+    textarea: {
+      gap: '24px',
+      titleTypography: 'display2-black',
+      descriptionTypography: 'headline2-regular',
+    },
+    cardArea: {
+      gridTemplateRows: 'repeat(2, 1fr)',
+      gridTemplateColumns: 'repeat(2, 320px)',
+      gap: '20px',
+    },
+    card: {
+      padding: spacing['2XL'],
+      height: '180px',
+      titleTypography: 'headline3-bold',
+      descriptionTypography: 'title3-medium',
+      width: '320px',
+    },
+  },
+  mobile: {
+    container: {
+      top: '100px',
+      gap: '32px',
+    },
+    textarea: {
+      gap: '16px',
+      titleTypography: 'headline1-black',
+      descriptionTypography: 'title2-regular',
+    },
+    cardArea: {
+      gridTemplateColumns: 'repeat(1, 320px)',
+      gridTemplateRows: 'repeat(4, 1fr)',
+      gap: '8px',
+    },
+    card: {
+      padding: `${spacing['XL']} ${spacing['L']}`,
+      height: '108px',
+      titleTypography: 'title2-bold',
+      descriptionTypography: 'caption1-medium',
+      width: '320px',
+    },
+  },
+};
 
 export function ContactSection({ className }: ContactSectionProps) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { 
-    once: true, 
-    amount: 0.2,
-    margin: "-50px"
-  });
-
-  const pageVariants = {
-    hidden: { 
-      y: 100, 
-      opacity: 0 
-    },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 60,
-        damping: 15,
-        duration: 1.2,
-      },
-    },
-  };
-
-  const contacts = [
-    {
-      icon: "📧",
-      title: "이메일",
-      info: "contact@company.com"
-    },
-    {
-      icon: "📞",
-      title: "전화",
-      info: "+82 2-1234-5678"
-    },
-    {
-      icon: "📍",
-      title: "주소",
-      info: "서울시 강남구 테헤란로"
-    }
-  ];
+  const device = useDeviceType();
 
   return (
-    <Section 
+    <Wrapper
       ref={ref}
       className={className}
     >
-      <Container
-        variants={pageVariants}
-        initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
-      >
-        <Title>
-          함께 시작해보세요
-        </Title>
-        
-        <Description>
-          새로운 프로젝트나 아이디어가 있으시다면 언제든 연락주세요.
-          전문가 팀이 최고의 솔루션을 제공해드리겠습니다.
-        </Description>
+      <Image
+        src='/assets/images/home-contact-bg.png'
+        alt='Contact Us'
+        fill={true}
+        style={{ objectFit: 'cover', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+        priority={true}
+      />
 
-        <ContactGrid>
-          {contacts.map((contact, index) => (
-            <ContactCard key={index}>
-              <ContactIcon>{contact.icon}</ContactIcon>
-              <ContactTitle>{contact.title}</ContactTitle>
-              <ContactInfo>{contact.info}</ContactInfo>
-            </ContactCard>
-          ))}
-        </ContactGrid>
-        
-        <CTAButton
-          whileHover={{ 
-            scale: 1.05,
-            transition: { type: "spring", stiffness: 400, damping: 10 }
+      <ContentArea device={device}>
+        <div className='text-area'>
+          <Text
+            typography={styleVariants[device].textarea.titleTypography as TypographyType}
+            color={'white'}
+            align='center'
+          >
+            CONTACT
+          </Text>
+          <Text
+            typography={styleVariants[device].textarea.descriptionTypography as TypographyType}
+            color={'white'}
+            align='center'
+          >
+            세상에 즐거움을 더하고 싶다면,
+            <br />
+            시작은 여기서.
+          </Text>
+        </div>
+
+        <motion.div
+          initial={{ 
+            x: 0, 
+            y: 0,
+            opacity: 0
           }}
-          whileTap={{ scale: 0.95 }}
+          animate={{ 
+            x: 0, 
+            y: 0,
+            opacity: 1
+          }}
+          transition={{
+            duration: 1.2,
+            delay: 1,
+          }}
+          style={{
+            display: 'flex',
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'start',
+            position: 'relative',
+            height: device === 'desktop' ? '360px' : device === 'tablet' ? '380px' : '460px', // 카드들이 퍼질 공간 확보
+          }}
         >
-          지금 상담받기
-        </CTAButton>
-      </Container>
-    </Section>
+          {cards.map((card, index) => {
+            // 각 카드의 최종 위치 계산
+            const getFinalPosition = () => {
+              if (device === 'desktop') {
+                // 4개 카드가 한 줄에 배치
+                const cardWidth = 400 + 20;
+                const totalWidth = cardWidth * 4 - 20;
+                const startX = -totalWidth / 2 + 200; // 중앙 기준으로 시작점
+                return { x: startX + index * cardWidth, y: 0 };
+              } else if (device === 'tablet') {
+                // 2x2 grid - 상단 기준으로 아래로 배치
+                const cardWidth = 320 + 20;
+                const cardHeight = 180 + 20;
+                const col = index % 2;
+                const row = Math.floor(index / 2);
+                const startX = -cardWidth / 2 - 10; // 중앙 기준 x
+                const startY = 0; // 상단 기준으로 시작
+                return {
+                  x: startX + col * cardWidth,
+                  y: startY + row * cardHeight
+                };
+              } else {
+                // mobile: 1열로 배치 - 상단 기준으로 아래로 배치
+                const cardHeight = 108 + 8;
+                const startY = 0; // 상단 기준으로 시작
+                return { x: 0, y: startY + index * cardHeight };
+              }
+            };
+
+            // 초기 위치 계산 (디바이스별로 다름)
+            const getInitialPosition = () => {
+              if (device === 'desktop') {
+                return { x: 0, y: 0 }; // 중앙에서 시작
+              } else {
+                // tablet, mobile은 상단(y: 0)에서 시작
+                return { x: 0, y: 0 }; 
+              }
+            };
+
+            const finalPosition = getFinalPosition();
+            const initialPosition = getInitialPosition();
+
+            return (
+              <motion.div
+                className='card-container'
+                key={index}
+                initial={{ 
+                  x: initialPosition.x,
+                  y: initialPosition.y,
+                  opacity: 1
+                }}
+                animate={{ 
+                  x: finalPosition.x, // 각자의 최종 위치로 이동
+                  y: finalPosition.y, // 각자의 최종 위치로 이동
+                  opacity: 1
+                }}
+                transition={{
+                  duration: 1,
+                  delay: 2.15,
+                  ease: [0.22, 1, 0.36, 1]
+                }}
+                style={{
+                  backgroundColor: card.backgroundColor,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  borderRadius: radius.r400,
+                  boxShadow: shadow.s300,
+                  gap: spacing.M,
+                  position: 'absolute', // 모든 카드를 겹치게 만들기
+                  ...getCardInlineStyles(device),
+                }}
+              >
+                <Text
+                  style={{ whiteSpace: device === 'desktop' ? 'pre-line' : 'normal' }}
+                  typography={styleVariants[device].card.titleTypography as TypographyType}
+                >
+                  {card.title}
+                </Text>
+                <Text
+                  style={{ whiteSpace: 'pre-line' }}
+                  typography={styleVariants[device].card.descriptionTypography as TypographyType}
+                >
+                  {card.description}
+                </Text>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+      </ContentArea>
+    </Wrapper>
   );
-} 
+}
+
+const Wrapper = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 100%;
+  background-color: ${colors.white};
+
+  @media (min-width: 800px) {
+    flex-direction: row;
+    justify-content: center;
+  }
+`;
+
+const getContainerStyles = (device: DeviceType) => {
+  const { ...rest } = styleVariants[device].container;
+
+  return css`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    z-index: 1;
+    position: absolute;
+    
+    ${rest};
+  `;
+}
+
+const getTextAreaStyles = (device: DeviceType) => {
+  const { gap } = styleVariants[device].textarea;
+
+  return css`
+    gap: ${gap};
+  `;
+};
+
+const ContentArea = styled.div<{ device: DeviceType }>`
+  ${({ device }) => getContainerStyles(device)}
+  
+  & .text-area {
+    display: flex;
+    flex-direction: column;
+
+    ${({ device }) => getTextAreaStyles(device)};  
+  }
+`
+
+function getCardInlineStyles(device: DeviceType) {
+  const { padding, height, width } = styleVariants[device].card;
+  return {
+    padding,
+    height,
+    width,
+  };
+}

@@ -6,6 +6,7 @@ export type FocusItem = {
   backgroundUrl: string;
   mobileBackgroundUrl: string;
   orderIndex: number;
+  tags?: string[];
 }
 
 export type HighlightItem = {
@@ -13,6 +14,7 @@ export type HighlightItem = {
   thumbnailUrl: string;
   orderIndex: number;
   title: string;
+  writerNames?: string[];
 }
 
 export type LineUpResponse = {
