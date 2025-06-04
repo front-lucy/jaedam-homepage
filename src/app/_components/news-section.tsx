@@ -224,6 +224,11 @@ const LogoLineWrapper = styled.section`
 `;
 
 const LogoLineImage = styled.img`
-  height: 100%;
+  width: 100%;
+  height: 100px;
   object-fit: contain;
+  svg {
+    width: 100%;
+    height: 100%;
+  }
 `;
