@@ -1,9 +1,9 @@
 import { Text } from '@/components/atom/text';
-import styled from '@emotion/styled';
-import { motion, AnimatePresence } from 'framer-motion';
-import { colors, radius, TypographyType } from '@/tokens';
 import { DeviceType, useDeviceType } from '@/hooks/useDeviceType';
 import { useWindowSize } from '@/hooks/useWindowSize';
+import { TypographyType, colors, radius } from '@/tokens';
+import styled from '@emotion/styled';
+import { AnimatePresence, motion } from 'framer-motion';
 import { CSSProperties } from 'react';
 
 const Container = styled.div`
@@ -41,12 +41,13 @@ const CardContainer = styled.div`
 const StyledRandomCard = styled(motion.div)<{
   width?: number;
   height?: number;
+  index: number;
 }>`
   width: ${({ width }) => (width ? `${width}px` : '136px')};
   height: ${({ height }) => (height ? `${height}px` : '136px')};
   border-radius: ${radius.r500};
-  background-color: #fff;
-  box-shadow: 10px 10px 40px 0px #0000001A;
+  background-color: transparent;
+  box-shadow: 10px 10px 40px 0px #0000001a;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -54,6 +55,10 @@ const StyledRandomCard = styled(motion.div)<{
   position: absolute;
   font-size: 12px;
   color: #666;
+  background-image: ${({ index }) => `url('/assets/images/main-business-thmb${index + 1}.png')`};
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 `;
 
 interface BusinessSectionProps {
@@ -93,7 +98,7 @@ const itemPosition = {
     },
     {
       x: 0.6823, // 1310
-      y: 0.7157, // 773
+      y: 0.7537, //
       width: 136,
       height: 136,
     },
@@ -196,11 +201,14 @@ const itemPosition = {
       y: 0.0382, // 31/812
       width: 124,
       height: 176,
-    }
+    },
   ],
 };
 
-const styleVariants: Record<DeviceType, Record<'contents', CSSProperties & { titleTypography: TypographyType, descriptionTypography: TypographyType }>> = {
+const styleVariants: Record<
+  DeviceType,
+  Record<'contents', CSSProperties & { titleTypography: TypographyType; descriptionTypography: TypographyType }>
+> = {
   desktop: {
     contents: {
       titleTypography: 'display2-black',
@@ -211,15 +219,15 @@ const styleVariants: Record<DeviceType, Record<'contents', CSSProperties & { tit
     contents: {
       titleTypography: 'display2-black',
       descriptionTypography: 'title1-regular',
-    }
+    },
   },
   mobile: {
     contents: {
       titleTypography: 'headline1-black',
       descriptionTypography: 'title3-regular',
-    }
+    },
   },
-}
+};
 
 export const BusinessSection = ({ step }: BusinessSectionProps) => {
   const device = useDeviceType();
@@ -244,19 +252,19 @@ export const BusinessSection = ({ step }: BusinessSectionProps) => {
       transition: {
         x: {
           duration: 0.5,
-          ease: "easeOut"
+          ease: 'easeOut',
         },
         y: {
           duration: 2 + Math.random() * 1, // 2-3초 랜덤 duration
-          ease: "easeInOut",
+          ease: 'easeInOut',
           repeat: Infinity,
-          repeatType: "loop" as const,
+          repeatType: 'loop' as const,
           delay: Math.random() * 2, // 0-2초 랜덤 딜레이
         },
         opacity: {
           duration: 0.5,
-          ease: "easeOut"
-        }
+          ease: 'easeOut',
+        },
       },
     }),
   };
@@ -307,9 +315,8 @@ export const BusinessSection = ({ step }: BusinessSectionProps) => {
                 animate={'bounce'}
                 width={position.width}
                 height={position.height}
-              >
-                카드 {index + 1}
-              </StyledRandomCard>
+                index={index}
+              />
             ))}
           </CardContainer>
         </>

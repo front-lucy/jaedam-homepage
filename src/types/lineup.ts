@@ -7,17 +7,18 @@ export type FocusItem = {
   mobileBackgroundUrl: string;
   orderIndex: number;
   tags?: string[];
-}
+  writerNames: string[];
+};
 
 export type HighlightItem = {
   contentId: number;
   thumbnailUrl: string;
   orderIndex: number;
   title: string;
-  writerNames?: string[];
-}
+  writerName?: string[];
+};
 
 export type LineUpResponse = {
   focusList: FocusItem[];
   highlightList: HighlightItem[];
-}
+};

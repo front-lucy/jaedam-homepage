@@ -1,9 +1,9 @@
-import styled from '@emotion/styled';
-import { colors, TypographyType } from '@/tokens';
 import { Text } from '@/components/atom/text';
 import { DeviceType, useDeviceType } from '@/hooks/useDeviceType';
 import { useMainStore } from '@/store/useMainStore';
-import { useState, useEffect, CSSProperties } from 'react';
+import { TypographyType, colors } from '@/tokens';
+import styled from '@emotion/styled';
+import { CSSProperties, useEffect, useState } from 'react';
 
 const variants: Record<
   ReturnType<typeof useDeviceType>,
@@ -84,6 +84,7 @@ const StyledWorkContent = styled.div<{ device?: DeviceType }>`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  padding-top: ${({ device }) => (device === 'desktop' ? '64px' : '16px')};
 
   // work2 섹션에서만 적용
   gap: ${({ device }) => (device ? variants[device].slider.gap : '40px')};
@@ -107,14 +108,11 @@ const SlideWrapper = styled.div<{
 }>`
   display: flex;
   transition: ${({ enableTransition }) => (enableTransition ? 'transform 0.3s ease' : 'none')};
-  transform: translateX(
-    calc(50% - ${({ currentIndex }) => {
-        // 고정된 아이템 너비 308.12px + gap 80px
-        const itemWithGap = 308.12 + 80;
-        // 현재 아이템의 중앙까지의 거리
-        return `(${currentIndex} * ${itemWithGap}px + 154.06px)`;
-      }})
-  );
+  transform: ${({ currentIndex }) => {
+    const itemWithGap = 308.12 + 80;
+    const translateValue = currentIndex * itemWithGap + 154.06;
+    return `translateX(calc(50% - ${translateValue}px))`;
+  }};
   gap: 80px;
   width: 100%;
 `;
@@ -144,23 +142,23 @@ const NavigationContainer = styled.div<{ device: DeviceType }>`
   gap: 24px;
   width: 100%;
   margin-top: 24px;
-  
   max-width: ${({ device }) => variants[device].slider.navigationWidth};
 `;
 
 const NavButton = styled.button`
   border: none;
   color: white;
+  background-color: transparent;
   border-radius: 4px;
   cursor: pointer;
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */
   transition: background 0.1s;
   display: flex;
   align-items: center;
   justify-content: center;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.3);
+    opacity: 0.8;
   }
 
   &:disabled {
@@ -195,6 +193,8 @@ export const WorkSection = ({ step }: WorkSectionProps) => {
   const { highlightList } = useMainStore();
 
   const currentItemsPerSlide = itemsPerSlide[device];
+
+  const [showSlider, setShowSlider] = useState(false);
 
   // 무한 슬라이드를 위한 가상 아이템 생성
   const createInfiniteList = () => {
@@ -279,6 +279,18 @@ export const WorkSection = ({ step }: WorkSectionProps) => {
     return realIndex % highlightList.length;
   };
 
+  useEffect(() => {
+    if (step === 1) {
+      const timer = setTimeout(() => {
+        setShowSlider(true);
+      }, 120); // 0.7초 딜레이 (원하는 시간으로 조정 가능)
+
+      return () => clearTimeout(timer); // 정리
+    } else {
+      setShowSlider(false);
+    }
+  }, [step]);
+
   return (
     <>
       {step === 0 && (
@@ -306,84 +318,86 @@ export const WorkSection = ({ step }: WorkSectionProps) => {
           backgroundImage={highlightList[getCurrentSlideIndex()]?.thumbnailUrl}
         >
           <BlurOverlay />
-          <StyledWorkContent device={device}>
-            <SlideContainer>
-              <SlideWrapper
-                itemsPerSlide={currentItemsPerSlide}
-                currentIndex={activeIndex}
-                totalItems={infiniteList.length}
-                enableTransition={enableTransition}
-              >
-                {infiniteList.map((item, index) => (
-                  <SlideItem
-                    key={`${item.title}-${index}`}
-                    itemsPerSlide={currentItemsPerSlide}
-                  >
-                    <ThumbnailImage
-                      src={item.thumbnailUrl}
-                      alt={item.title}
-                    />
-                  </SlideItem>
-                ))}
-              </SlideWrapper>
-            </SlideContainer>
-
-            {highlightList.length > 1 && (
-              <NavigationContainer device={device}>
-                <NavButton onClick={() => handleNavigation('prev')}>
-                  <svg
-                    width='40'
-                    height='40'
-                    viewBox='0 0 40 40'
-                    fill='none'
-                    xmlns='http://www.w3.org/2000/svg'
-                  >
-                    <path
-                      fillRule='evenodd'
-                      clipRule='evenodd'
-                      d='M28.8935 5.71532L13.02 20.0015L28.8935 34.2876L26.7521 36.667L9.5567 21.1912C9.21944 20.8876 9.02686 20.4552 9.02686 20.0015C9.02686 19.5477 9.21944 19.1153 9.5567 18.8118L26.7521 3.33594L28.8935 5.71532Z'
-                      fill='white'
-                    />
-                  </svg>
-                </NavButton>
-
-                <InfoContainer>
-                  <Text
-                    typography={variants[device].slider.title}
-                    color={'white'}
-                    lineLimit={1}
-                  >
-                    {highlightList[getCurrentSlideIndex()]?.title}
-                  </Text>
-                  {highlightList[getCurrentSlideIndex()]?.writerNames && (
-                    <Text
-                      typography={variants[device].slider.writers}
-                      color={'white'}
+          {showSlider && (
+            <StyledWorkContent device={device}>
+              <SlideContainer>
+                <SlideWrapper
+                  itemsPerSlide={currentItemsPerSlide}
+                  currentIndex={activeIndex}
+                  totalItems={infiniteList.length}
+                  enableTransition={enableTransition}
+                >
+                  {infiniteList.map((item, index) => (
+                    <SlideItem
+                      key={`${item.title}-${index}`}
+                      itemsPerSlide={currentItemsPerSlide}
                     >
-                      &copy;{highlightList[getCurrentSlideIndex()]?.writerNames?.join(',')}
-                    </Text>
-                  )}
-                </InfoContainer>
+                      <ThumbnailImage
+                        src={item.thumbnailUrl}
+                        alt={item.title}
+                      />
+                    </SlideItem>
+                  ))}
+                </SlideWrapper>
+              </SlideContainer>
 
-                <NavButton onClick={() => handleNavigation('next')}>
-                  <svg
-                    width='40'
-                    height='40'
-                    viewBox='0 0 40 40'
-                    fill='none'
-                    xmlns='http://www.w3.org/2000/svg'
-                  >
-                    <path
-                      fillRule='evenodd'
-                      clipRule='evenodd'
-                      d='M11.1065 5.71532L26.98 20.0015L11.1065 34.2876L13.2479 36.667L30.4433 21.1912C30.7806 20.8876 30.9731 20.4552 30.9731 20.0015C30.9731 19.5477 30.7806 19.1153 30.4433 18.8118L13.2479 3.33594L11.1065 5.71532Z'
-                      fill='white'
-                    />
-                  </svg>
-                </NavButton>
-              </NavigationContainer>
-            )}
-          </StyledWorkContent>
+              {highlightList.length > 1 && (
+                <NavigationContainer device={device}>
+                  <NavButton onClick={() => handleNavigation('prev')}>
+                    <svg
+                      width='40'
+                      height='40'
+                      viewBox='0 0 40 40'
+                      fill='none'
+                      xmlns='http://www.w3.org/2000/svg'
+                    >
+                      <path
+                        fillRule='evenodd'
+                        clipRule='evenodd'
+                        d='M28.8935 5.71532L13.02 20.0015L28.8935 34.2876L26.7521 36.667L9.5567 21.1912C9.21944 20.8876 9.02686 20.4552 9.02686 20.0015C9.02686 19.5477 9.21944 19.1153 9.5567 18.8118L26.7521 3.33594L28.8935 5.71532Z'
+                        fill='white'
+                      />
+                    </svg>
+                  </NavButton>
+
+                  <InfoContainer>
+                    <Text
+                      typography={variants[device].slider.title}
+                      color={'white'}
+                      lineLimit={1}
+                    >
+                      {highlightList[getCurrentSlideIndex()]?.title}
+                    </Text>
+                    {highlightList[getCurrentSlideIndex()]?.writerName && (
+                      <Text
+                        typography={variants[device].slider.writers}
+                        color={'white'}
+                      >
+                        &copy;{highlightList[getCurrentSlideIndex()]?.writerName?.join(',')}
+                      </Text>
+                    )}
+                  </InfoContainer>
+
+                  <NavButton onClick={() => handleNavigation('next')}>
+                    <svg
+                      width='40'
+                      height='40'
+                      viewBox='0 0 40 40'
+                      fill='none'
+                      xmlns='http://www.w3.org/2000/svg'
+                    >
+                      <path
+                        fillRule='evenodd'
+                        clipRule='evenodd'
+                        d='M11.1065 5.71532L26.98 20.0015L11.1065 34.2876L13.2479 36.667L30.4433 21.1912C30.7806 20.8876 30.9731 20.4552 30.9731 20.0015C30.9731 19.5477 30.7806 19.1153 30.4433 18.8118L13.2479 3.33594L11.1065 5.71532Z'
+                        fill='white'
+                      />
+                    </svg>
+                  </NavButton>
+                </NavigationContainer>
+              )}
+            </StyledWorkContent>
+          )}
         </Container>
       )}
     </>

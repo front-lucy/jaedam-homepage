@@ -1,11 +1,11 @@
 import { FocusItem, HighlightItem } from '@/types/lineup';
-import { create } from "zustand";
+import { create } from 'zustand';
 
 interface MainStore {
   focusList: FocusItem[];
   highlightList: HighlightItem[];
 
-  setLineUpData: ({ focusList, highlightList }: { focusList: FocusItem[], highlightList: HighlightItem[] }) => void;
+  setLineUpData: ({ focusList, highlightList }: { focusList: FocusItem[]; highlightList: HighlightItem[] }) => void;
 
   hasData: boolean;
 }
@@ -18,12 +18,12 @@ export const useMainStore = create<MainStore>((set, get) => ({
     set({
       focusList: focusList.map(item => ({
         ...item,
-        orderIndex: item.orderIndex || 0 // 기본값 설정
+        orderIndex: item.orderIndex || 0,
       })),
       highlightList: highlightList.map(item => ({
         ...item,
-        orderIndex: item.orderIndex || 0 // 기본값 설정
-      }))
+        orderIndex: item.orderIndex || 0,
+      })),
     });
   },
 

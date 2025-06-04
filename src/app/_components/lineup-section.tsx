@@ -25,7 +25,7 @@ const SectionWrapper = styled.div`
 `;
 
 const BackgroundImage = styled(motion.div, {
-  shouldForwardProp: (prop) => prop !== 'imageUrl',
+  shouldForwardProp: prop => prop !== 'imageUrl',
 })<{ imageUrl: string }>`
   position: absolute;
   top: 0;
@@ -184,8 +184,8 @@ const Container = styled.div<{ device: ReturnType<typeof useDeviceType> }>`
 
     &.active {
       width: 20px;
-      background-color: #22D4DD;
-      border-color: #22D4DD;
+      background-color: #22d4dd;
+      border-color: #22d4dd;
     }
   }
 `;
@@ -218,7 +218,6 @@ const StyledButton = styled.button<{ device: ReturnType<typeof useDeviceType> }>
     }
   }
 `;
-
 
 const backgroundVariants = {
   hidden: {
@@ -304,7 +303,7 @@ export function LineupSection({ className }: HeroSectionProps) {
                       typography={'body-regular'}
                       color='white'
                     >
-                      &copy; {currentFocusItem.title}
+                      &copy; {currentFocusItem.writerNames.join(', ')}
                     </Text>
                   </div>
                   <Text
@@ -313,7 +312,12 @@ export function LineupSection({ className }: HeroSectionProps) {
                   >
                     {currentFocusItem.synopsis}
                   </Text>
-                  <StyledButton device={device}>
+                  <StyledButton
+                    device={device}
+                    onClick={() => {
+                      console.log(currentFocusItem.contentId);
+                    }}
+                  >
                     <Text
                       typography={'button-medium'}
                       color='white'
@@ -337,8 +341,8 @@ export function LineupSection({ className }: HeroSectionProps) {
                 {/* focus item dot 인디케이터 */}
                 <div className='focus-item-indicator'>
                   {focusList.map((_, index) => (
-                    <div 
-                      key={index} 
+                    <div
+                      key={index}
                       className={`focus-item-dot ${index === focusIndex ? 'active' : ''}`}
                       onClick={() => setFocusIndex(index)}
                     />
@@ -397,7 +401,12 @@ export function LineupSection({ className }: HeroSectionProps) {
                   >
                     {currentFocusItem.synopsis}
                   </Text>
-                  <StyledButton device={device}>
+                  <StyledButton
+                    device={device}
+                    onClick={() => {
+                      console.log(currentFocusItem.contentId);
+                    }}
+                  >
                     <Text
                       typography={'button-medium'}
                       color='white'
@@ -487,25 +496,24 @@ export function LineupSection({ className }: HeroSectionProps) {
                     </div>
                   )}
                   <div className='header-container'>
-                    
-                  <Text
-                    typography={'title2-bold'}
-                    color='jaedamCyan'
-                  >
-                    {currentFocusItem.subTitle}
-                  </Text>
-                  <Text
-                    typography={'display2-bold'}
-                    color='white'
-                  >
-                    {currentFocusItem.title}
-                  </Text>
-                  <Text
-                    typography={'body-regular'}
-                    color='white'
-                  >
-                    &copy; {currentFocusItem.title}
-                  </Text>
+                    <Text
+                      typography={'title2-bold'}
+                      color='jaedamCyan'
+                    >
+                      {currentFocusItem.subTitle}
+                    </Text>
+                    <Text
+                      typography={'display2-bold'}
+                      color='white'
+                    >
+                      {currentFocusItem.title}
+                    </Text>
+                    <Text
+                      typography={'body-regular'}
+                      color='white'
+                    >
+                      &copy; {currentFocusItem.writerNames.join(', ')}
+                    </Text>
                   </div>
                   <Text
                     typography={'headline3-medium'}
@@ -513,7 +521,12 @@ export function LineupSection({ className }: HeroSectionProps) {
                   >
                     {currentFocusItem.synopsis}
                   </Text>
-                  <StyledButton device={device}>
+                  <StyledButton
+                    device={device}
+                    onClick={() => {
+                      window.location.href = '/work/' + currentFocusItem.contentId;
+                    }}
+                  >
                     <Text
                       typography={'button-medium'}
                       color='white'
@@ -577,4 +590,3 @@ export function LineupSection({ className }: HeroSectionProps) {
     />
   );
 }
-
