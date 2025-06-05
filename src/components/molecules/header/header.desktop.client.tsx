@@ -43,6 +43,12 @@ const DesktopHeaderClient: FC<HeaderProps> = ({ pageType = 'home', mode = 'light
         >
           NEWS
         </NavItem>
+        <NavItem
+          mode={mode}
+          href='/contact'
+        >
+          CONTACT
+        </NavItem>
       </Nav>
     </Wrapper>
   );
