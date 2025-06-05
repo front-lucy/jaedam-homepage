@@ -6,6 +6,7 @@ import { TypographyType, colors, radius, shadow, spacing, typography } from '@/t
 import { formatDate } from '@/utils/formatDate';
 import styled from '@emotion/styled';
 import { CSSProperties, useEffect, useRef, useState } from 'react';
+import { InfiniteLogoSlider } from './logoslider/InfiniteLogoSlider';
 interface NewsSectionProps {
   className?: string;
 }
@@ -48,33 +49,37 @@ export function NewsSection({ className }: NewsSectionProps) {
   }, []);
 
   return (
-    <Wrapper
-      ref={ref}
-      className={className}
-    >
-      <TextArea>
-        <BubbleSVGWrap />
-        <Text typography={styleVariants[device].contents.titleTypography}>NEWS</Text>
-        <Text typography={styleVariants[device].contents.descriptionTypography}>
-          재담미디어의 재미있는 소식,
-          <br />
-          놓치지 마세요
-        </Text>
-      </TextArea>
-      <CardArea>
-        {(device === 'mobile' ? newsList.slice(0, 3) : newsList).map(item => (
-          <CardContainer key={item.id + item.category}>
-            <Badge>{item.category}</Badge>
-            <CardTitle>{item.title}</CardTitle>
-            <CardDate>{formatDate(item.noticedAt)}</CardDate>
-          </CardContainer>
-        ))}
-      </CardArea>
-    </Wrapper>
+    <>
+      <Wrapper
+        ref={ref}
+        className={className}
+      >
+        <TextArea>
+          <BubbleSVGWrap />
+          <Text typography={styleVariants[device].contents.titleTypography}>NEWS</Text>
+          <Text typography={styleVariants[device].contents.descriptionTypography}>
+            재담미디어의 재미있는 소식,
+            <br />
+            놓치지 마세요
+          </Text>
+        </TextArea>
+        <CardArea>
+          {(device === 'mobile' ? newsList.slice(0, 3) : newsList).map(item => (
+            <CardContainer key={item.id + item.category}>
+              <Badge>{item.category}</Badge>
+              <CardTitle>{item.title}</CardTitle>
+              <CardDate>{formatDate(item.noticedAt)}</CardDate>
+            </CardContainer>
+          ))}
+        </CardArea>{' '}
+        <InfiniteLogoSlider />
+      </Wrapper>
+    </>
   );
 }
 
 const Wrapper = styled.section`
+  position: relative;
   display: flex;
   flex-direction: row;
   justify-content: center;

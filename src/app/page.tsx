@@ -34,9 +34,9 @@ const sections: Array<{ id: string; header: 'light' | 'dark' }> = [
   { id: 'contact', header: 'dark' },
 ];
 
-const HiddenScroll = styled.div`
+const HiddenScroll = styled.div<{ $scrollable: boolean }>`
   height: 100dvh;
-  overflow: auto;
+  overflow: ${({ $scrollable }) => ($scrollable ? 'auto' : 'hidden')};
 
   &::-webkit-scrollbar {
     display: none;
@@ -51,13 +51,13 @@ export default function Home() {
   const accumulatedDelta = useRef(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isFooterVisible, setIsFooterVisible] = useState(false);
+  const [isScrollable, setIsScrollable] = useState(false);
 
   const { hasData, setLineUpData } = useMainStore();
 
   useEffect(() => {
     const fetchLineup = async () => {
-      if (hasData) return; // 이미 데이터가 있는 경우 API 호출 생략
-
+      if (hasData) return;
       const { success, body } = await getLineup();
 
       if (success) {
@@ -74,8 +74,6 @@ export default function Home() {
   const scrollToSection = useCallback(
     (index: number) => {
       if (isScrolling || index < 0 || index >= sections.length) return;
-
-      // 스플래시가 끝난 후에는 스플래시(index 0)로 돌아갈 수 없도록 제한
       if (splashEnded && index === 0) return;
 
       setIsScrolling(true);
@@ -88,7 +86,7 @@ export default function Home() {
     [isScrolling, splashEnded],
   );
 
-  const SCROLL_LOCK_DURATION = 1000; // 1초간 입력 무시
+  const SCROLL_LOCK_DURATION = 1000;
 
   const handleWheel = useCallback(
     (e: WheelEvent) => {
@@ -104,14 +102,13 @@ export default function Home() {
       accumulatedDelta.current += e.deltaY;
       lastScrollTime.current = now;
 
-      // 부드러운 스크롤 대응: 50 이상일 때만 처리
       const threshold = 50;
       if (Math.abs(accumulatedDelta.current) < threshold) return;
 
       const arr = sections.map(section => section.id);
       const currentIndex = arr.indexOf(currentSection);
 
-      setIsScrolling(true); // 입력 락
+      setIsScrolling(true);
 
       if (accumulatedDelta.current > 0) {
         scrollToSection(currentIndex + 1);
@@ -132,7 +129,7 @@ export default function Home() {
       accumulatedDelta.current = 0;
 
       setTimeout(() => {
-        setIsScrolling(false); // 락 해제
+        setIsScrolling(false);
       }, SCROLL_LOCK_DURATION);
     },
     [currentSection, isScrolling, scrollToSection, splashEnded],
@@ -145,6 +142,15 @@ export default function Home() {
       const arr = sections.map(section => section.id);
       const currentIndex = arr.indexOf(currentSection);
 
+      // ✅ 숫자 키 1~9를 눌러 해당 인덱스로 이동
+      if (/^[1-9]$/.test(e.key)) {
+        const targetIndex = Number(e.key) - 1;
+        if (targetIndex >= 0 && targetIndex < arr.length) {
+          scrollToSection(targetIndex);
+          return;
+        }
+      }
+
       switch (e.key) {
         case 'ArrowDown':
         case ' ':
@@ -153,18 +159,12 @@ export default function Home() {
           break;
         case 'ArrowUp':
           e.preventDefault();
-          // 스플래시가 끝났고 현재가 첫 번째 섹션(best)이면 더 이상 위로 갈 수 없음
           if (splashEnded && currentIndex === 1) return;
           scrollToSection(currentIndex - 1);
           break;
         case 'Home':
           e.preventDefault();
-          // 스플래시가 끝났으면 Home 키로도 스플래시로 갈 수 없음
-          if (splashEnded) {
-            scrollToSection(1); // best 섹션으로 이동
-          } else {
-            scrollToSection(0); // splash 섹션으로 이동
-          }
+          scrollToSection(splashEnded ? 1 : 0);
           break;
         case 'End':
           e.preventDefault();
@@ -177,67 +177,52 @@ export default function Home() {
 
   useEffect(() => {
     if (!containerRef.current) return;
-
     const ref = containerRef.current;
 
     ref.addEventListener('wheel', handleWheel, { passive: false });
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      if (ref) {
-        ref.removeEventListener('wheel', handleWheel);
-      }
+      if (ref) ref.removeEventListener('wheel', handleWheel);
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [handleWheel, handleKeyDown]);
 
   const pageVariants = {
-    initial: {
-      y: '100%',
-      opacity: 1,
-    },
+    initial: { y: '100%', opacity: 1 },
     animate: {
       y: 0,
       opacity: 1,
-      transition: {
-        type: 'spring',
-        stiffness: 100,
-        damping: 25,
-        duration: 0.2,
-      },
+      transition: { type: 'spring', stiffness: 100, damping: 25, duration: 0.2 },
     },
     exit: {
       y: 0,
       opacity: 0.4,
-      transition: {
-        duration: 1,
-        ease: 'easeOut',
-      },
+      transition: { duration: 1, ease: 'easeOut' },
     },
   };
 
   const splashVariants = {
-    initial: {
-      opacity: 1,
-    },
-    animate: {
-      opacity: 1,
-    },
+    initial: { opacity: 1 },
+    animate: { opacity: 1 },
     exit: {
       opacity: 0,
-      transition: {
-        duration: 0.5,
-        ease: 'easeOut',
-      },
+      transition: { duration: 0.5, ease: 'easeOut' },
     },
   };
+
   useEffect(() => {
     if (currentSection !== 'contact') {
       setIsFooterVisible(false);
+      setIsScrollable(false);
     }
   }, [currentSection]);
+
   return (
-    <HiddenScroll style={{ width: '100%' }}>
+    <HiddenScroll
+      $scrollable={isScrollable}
+      style={{ width: '100%' }}
+    >
       <Header
         pageType='home'
         mode={
@@ -265,6 +250,7 @@ export default function Home() {
               />
             </SectionWrapper>
           )}
+
           {currentSection === 'best' && (
             <SectionWrapper
               key='best'
@@ -276,6 +262,7 @@ export default function Home() {
               <LineupSection />
             </SectionWrapper>
           )}
+
           {(currentSection === 'business1' || currentSection === 'business2') && (
             <SectionWrapper
               key='business'
@@ -287,6 +274,7 @@ export default function Home() {
               <BusinessSection step={currentSection === 'business1' ? 0 : 1} />
             </SectionWrapper>
           )}
+
           {currentSection === 'work1' && (
             <SectionWrapper
               key='work1'
@@ -298,6 +286,7 @@ export default function Home() {
               <WorkSection step={0} />
             </SectionWrapper>
           )}
+
           {currentSection === 'work2' && (
             <SectionWrapper
               key='work2'
@@ -309,6 +298,7 @@ export default function Home() {
               <WorkSection step={1} />
             </SectionWrapper>
           )}
+
           {currentSection === 'news' && (
             <SectionWrapper
               key='news'
@@ -320,6 +310,7 @@ export default function Home() {
               <NewsSection />
             </SectionWrapper>
           )}
+
           {currentSection === 'contact' && (
             <SectionWrapper
               key='contact'
@@ -327,13 +318,19 @@ export default function Home() {
               initial='initial'
               animate='animate'
               exit='exit'
-              onAnimationComplete={() => setIsFooterVisible(true)}
+              onAnimationComplete={() => {
+                setIsFooterVisible(true);
+                setTimeout(() => {
+                  setIsScrollable(true);
+                }, 100);
+              }}
             >
               <ContactSection />
             </SectionWrapper>
           )}
         </AnimatePresence>
       </Container>
+
       {isFooterVisible && <Footer />}
     </HiddenScroll>
   );
