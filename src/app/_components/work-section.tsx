@@ -331,6 +331,9 @@ export const WorkSection = ({ step }: WorkSectionProps) => {
                     <SlideItem
                       key={`${item.title}-${index}`}
                       itemsPerSlide={currentItemsPerSlide}
+                      onClick={() => {
+                        window.location.href = `/work/${item.contentId}`;
+                      }}
                     >
                       <ThumbnailImage
                         src={item.thumbnailUrl}

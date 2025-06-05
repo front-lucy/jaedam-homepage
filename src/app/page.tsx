@@ -50,6 +50,7 @@ export default function Home() {
   const lastScrollTime = useRef(0);
   const accumulatedDelta = useRef(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isFooterVisible, setIsFooterVisible] = useState(false);
 
   const { hasData, setLineUpData } = useMainStore();
 
@@ -87,9 +88,10 @@ export default function Home() {
     [isScrolling, splashEnded],
   );
 
+  const SCROLL_LOCK_DURATION = 1000; // 1초간 입력 무시
+
   const handleWheel = useCallback(
     (e: WheelEvent) => {
-      console.log(currentSection);
       if (currentSection !== 'contact') {
         e.preventDefault();
       }
@@ -99,32 +101,27 @@ export default function Home() {
       const now = Date.now();
       const timeDiff = now - lastScrollTime.current;
 
-      // 100ms 이내의 연속된 스크롤은 누적
-      if (timeDiff < 100) {
-        accumulatedDelta.current += e.deltaY;
-      } else {
-        accumulatedDelta.current = e.deltaY;
-      }
-
+      accumulatedDelta.current += e.deltaY;
       lastScrollTime.current = now;
 
-      // 임계값 설정 (Mac의 부드러운 스크롤 대응)
+      // 부드러운 스크롤 대응: 50 이상일 때만 처리
       const threshold = 50;
-
       if (Math.abs(accumulatedDelta.current) < threshold) return;
 
       const arr = sections.map(section => section.id);
       const currentIndex = arr.indexOf(currentSection);
 
+      setIsScrolling(true); // 입력 락
+
       if (accumulatedDelta.current > 0) {
-        // 스크롤 다운
         scrollToSection(currentIndex + 1);
       } else {
-        // 스크롤 업
-        // 스플래시가 끝났고 현재가 첫 번째 섹션(best)이면 더 이상 위로 갈 수 없음
-        if (splashEnded && currentIndex === 1) return;
+        if (splashEnded && currentIndex === 1) {
+          setIsScrolling(false);
+          accumulatedDelta.current = 0;
+          return;
+        }
 
-        // work1에서 이전으로 갈 때 business2를 건너뛰고 business1로 이동
         if (currentSection === 'work1') {
           scrollToSection(arr.indexOf('business1'));
         } else {
@@ -132,8 +129,11 @@ export default function Home() {
         }
       }
 
-      // 누적값 초기화
       accumulatedDelta.current = 0;
+
+      setTimeout(() => {
+        setIsScrolling(false); // 락 해제
+      }, SCROLL_LOCK_DURATION);
     },
     [currentSection, isScrolling, scrollToSection, splashEnded],
   );
@@ -231,7 +231,11 @@ export default function Home() {
       },
     },
   };
-
+  useEffect(() => {
+    if (currentSection !== 'contact') {
+      setIsFooterVisible(false);
+    }
+  }, [currentSection]);
   return (
     <HiddenScroll style={{ width: '100%' }}>
       <Header
@@ -323,13 +327,14 @@ export default function Home() {
               initial='initial'
               animate='animate'
               exit='exit'
+              onAnimationComplete={() => setIsFooterVisible(true)}
             >
               <ContactSection />
             </SectionWrapper>
           )}
         </AnimatePresence>
       </Container>
-      <Footer />
+      {isFooterVisible && <Footer />}
     </HiddenScroll>
   );
 }
