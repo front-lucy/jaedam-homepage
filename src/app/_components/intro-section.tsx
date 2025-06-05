@@ -104,7 +104,7 @@ export function IntroSection({ onEndSplash }: IntroSectionProps) {
     if (step === 5) {
       onEndSplash();
     }
-  }, [step]);
+  }, [step, onEndSplash]);
 
   useEffect(() => {
     // let scrollLock = false;

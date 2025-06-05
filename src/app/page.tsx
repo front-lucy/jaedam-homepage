@@ -59,7 +59,6 @@ export default function Home() {
     const fetchLineup = async () => {
       if (hasData) return;
       const { success, body } = await getLineup();
-
       if (success) {
         setLineUpData({
           focusList: body.focusList.sort((a, b) => a.orderIndex - b.orderIndex),
@@ -67,9 +66,8 @@ export default function Home() {
         });
       }
     };
-
     fetchLineup();
-  }, []);
+  }, [hasData, setLineUpData]);
 
   const scrollToSection = useCallback(
     (index: number) => {
@@ -97,7 +95,6 @@ export default function Home() {
       if (isScrolling) return;
 
       const now = Date.now();
-      const timeDiff = now - lastScrollTime.current;
 
       accumulatedDelta.current += e.deltaY;
       lastScrollTime.current = now;

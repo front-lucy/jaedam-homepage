@@ -198,20 +198,16 @@ export const WorkSection = ({ step }: WorkSectionProps) => {
 
   // 무한 슬라이드를 위한 가상 아이템 생성
   const createInfiniteList = () => {
-    if (!highlightList.length) return highlightList;
-
-    // 중앙 정렬을 위해 더 많은 클론이 필요
+    if (!highlightList.length) return [];
     const cloneCount = Math.max(currentItemsPerSlide * 2, highlightList.length);
     const frontClones = [];
     const backClones = [];
 
-    // 앞쪽 클론 생성
     for (let i = 0; i < cloneCount; i++) {
       frontClones.push(highlightList[highlightList.length - 1 - (i % highlightList.length)]);
     }
     frontClones.reverse();
 
-    // 뒤쪽 클론 생성
     for (let i = 0; i < cloneCount; i++) {
       backClones.push(highlightList[i % highlightList.length]);
     }
@@ -230,14 +226,12 @@ export const WorkSection = ({ step }: WorkSectionProps) => {
     const realEndIndex = cloneCount + highlightList.length - 1;
 
     if (activeIndex > realEndIndex) {
-      // 마지막을 넘어갔을 때
       setTimeout(() => {
         setEnableTransition(false);
         setActiveIndex(realStartIndex + (activeIndex - realEndIndex - 1));
         setTimeout(() => setEnableTransition(true), 50);
       }, 300);
     } else if (activeIndex < realStartIndex) {
-      // 첫 번째 이전으로 갔을 때
       setTimeout(() => {
         setEnableTransition(false);
         setActiveIndex(realEndIndex + (activeIndex - realStartIndex + 1));
@@ -250,158 +244,120 @@ export const WorkSection = ({ step }: WorkSectionProps) => {
   useEffect(() => {
     if (highlightList.length > 0) {
       const cloneCount = Math.max(currentItemsPerSlide * 2, highlightList.length);
-      setActiveIndex(cloneCount); // 첫 번째 실제 아이템이 가운데 오도록
+      setActiveIndex(cloneCount);
     }
   }, [highlightList.length, currentItemsPerSlide]);
 
-  if (!highlightList.length) return null;
+  // 슬라이더 보여줄지 제어
+  useEffect(() => {
+    if (step === 1) {
+      const timer = setTimeout(() => setShowSlider(true), 120);
+      return () => clearTimeout(timer);
+    } else {
+      setShowSlider(false);
+    }
+  }, [step]);
 
   const handleNavigation = (direction: 'prev' | 'next') => {
     if (highlightList.length <= 1) return;
-
     setEnableTransition(true);
-    if (direction === 'prev') {
-      setActiveIndex(prev => prev - 1);
-    } else {
-      setActiveIndex(prev => prev + 1);
-    }
+    setActiveIndex(prev => (direction === 'prev' ? prev - 1 : prev + 1));
   };
 
-  // 현재 실제 슬라이드 인덱스 계산 (dots 표시용)
   const getCurrentSlideIndex = () => {
     if (highlightList.length <= 1) return 0;
     const cloneCount = Math.max(currentItemsPerSlide * 2, highlightList.length);
     const realIndex = activeIndex - cloneCount;
-
     if (realIndex < 0) {
       return highlightList.length + (realIndex % highlightList.length);
     }
     return realIndex % highlightList.length;
   };
 
-  useEffect(() => {
-    if (step === 1) {
-      const timer = setTimeout(() => {
-        setShowSlider(true);
-      }, 120); // 0.7초 딜레이 (원하는 시간으로 조정 가능)
-
-      return () => clearTimeout(timer); // 정리
-    } else {
-      setShowSlider(false);
-    }
-  }, [step]);
-
   return (
     <>
-      {step === 0 && (
-        <Container data-work-section>
-          <StyledWorkContent>
-            <Text
-              typography={variants[device].container.title}
-              color={'white'}
-            >
-              WORK
-            </Text>
-            <Text
-              typography={variants[device].container.writers}
-              color={'white'}
-              align='center'
-            >
-              우리는 재미를 만들고 즐거움을 확장해요.
-            </Text>
-          </StyledWorkContent>
-        </Container>
-      )}
-      {step === 1 && (
-        <Container
-          data-work-section
-          backgroundImage={highlightList[getCurrentSlideIndex()]?.thumbnailUrl}
-        >
-          <BlurOverlay />
-          {showSlider && (
-            <StyledWorkContent device={device}>
-              <SlideContainer>
-                <SlideWrapper
-                  itemsPerSlide={currentItemsPerSlide}
-                  currentIndex={activeIndex}
-                  totalItems={infiniteList.length}
-                  enableTransition={enableTransition}
+      {highlightList.length === 0 ? null : (
+        <>
+          {step === 0 && (
+            <Container data-work-section>
+              <StyledWorkContent>
+                <Text
+                  typography={variants[device].container.title}
+                  color='white'
                 >
-                  {infiniteList.map((item, index) => (
-                    <SlideItem
-                      key={`${item.title}-${index}`}
-                      itemsPerSlide={currentItemsPerSlide}
-                      onClick={() => {
-                        window.location.href = `/work/${item.contentId}`;
-                      }}
-                    >
-                      <ThumbnailImage
-                        src={item.thumbnailUrl}
-                        alt={item.title}
-                      />
-                    </SlideItem>
-                  ))}
-                </SlideWrapper>
-              </SlideContainer>
-
-              {highlightList.length > 1 && (
-                <NavigationContainer device={device}>
-                  <NavButton onClick={() => handleNavigation('prev')}>
-                    <svg
-                      width='40'
-                      height='40'
-                      viewBox='0 0 40 40'
-                      fill='none'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path
-                        fillRule='evenodd'
-                        clipRule='evenodd'
-                        d='M28.8935 5.71532L13.02 20.0015L28.8935 34.2876L26.7521 36.667L9.5567 21.1912C9.21944 20.8876 9.02686 20.4552 9.02686 20.0015C9.02686 19.5477 9.21944 19.1153 9.5567 18.8118L26.7521 3.33594L28.8935 5.71532Z'
-                        fill='white'
-                      />
-                    </svg>
-                  </NavButton>
-
-                  <InfoContainer>
-                    <Text
-                      typography={variants[device].slider.title}
-                      color={'white'}
-                      lineLimit={1}
-                    >
-                      {highlightList[getCurrentSlideIndex()]?.title}
-                    </Text>
-                    {highlightList[getCurrentSlideIndex()]?.writerName && (
-                      <Text
-                        typography={variants[device].slider.writers}
-                        color={'white'}
-                      >
-                        &copy;{highlightList[getCurrentSlideIndex()]?.writerName?.join(',')}
-                      </Text>
-                    )}
-                  </InfoContainer>
-
-                  <NavButton onClick={() => handleNavigation('next')}>
-                    <svg
-                      width='40'
-                      height='40'
-                      viewBox='0 0 40 40'
-                      fill='none'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path
-                        fillRule='evenodd'
-                        clipRule='evenodd'
-                        d='M11.1065 5.71532L26.98 20.0015L11.1065 34.2876L13.2479 36.667L30.4433 21.1912C30.7806 20.8876 30.9731 20.4552 30.9731 20.0015C30.9731 19.5477 30.7806 19.1153 30.4433 18.8118L13.2479 3.33594L11.1065 5.71532Z'
-                        fill='white'
-                      />
-                    </svg>
-                  </NavButton>
-                </NavigationContainer>
-              )}
-            </StyledWorkContent>
+                  WORK
+                </Text>
+                <Text
+                  typography={variants[device].container.writers}
+                  color='white'
+                  align='center'
+                >
+                  우리는 재미를 만들고 즐거움을 확장해요.
+                </Text>
+              </StyledWorkContent>
+            </Container>
           )}
-        </Container>
+
+          {step === 1 && (
+            <Container
+              data-work-section
+              backgroundImage={highlightList[getCurrentSlideIndex()]?.thumbnailUrl}
+            >
+              <BlurOverlay />
+              {showSlider && (
+                <StyledWorkContent device={device}>
+                  <SlideContainer>
+                    <SlideWrapper
+                      itemsPerSlide={currentItemsPerSlide}
+                      currentIndex={activeIndex}
+                      totalItems={infiniteList.length}
+                      enableTransition={enableTransition}
+                    >
+                      {infiniteList.map((item, index) => (
+                        <SlideItem
+                          key={`${item.title}-${index}`}
+                          itemsPerSlide={currentItemsPerSlide}
+                          onClick={() => (window.location.href = `/work/${item.contentId}`)}
+                        >
+                          <ThumbnailImage
+                            src={item.thumbnailUrl}
+                            alt={item.title}
+                          />
+                        </SlideItem>
+                      ))}
+                    </SlideWrapper>
+                  </SlideContainer>
+
+                  {highlightList.length > 1 && (
+                    <NavigationContainer device={device}>
+                      <NavButton onClick={() => handleNavigation('prev')}>{/* SVG 왼쪽 */}</NavButton>
+
+                      <InfoContainer>
+                        <Text
+                          typography={variants[device].slider.title}
+                          color='white'
+                          lineLimit={1}
+                        >
+                          {highlightList[getCurrentSlideIndex()]?.title}
+                        </Text>
+                        {highlightList[getCurrentSlideIndex()]?.writerName && (
+                          <Text
+                            typography={variants[device].slider.writers}
+                            color='white'
+                          >
+                            &copy;{highlightList[getCurrentSlideIndex()]?.writerName?.join(',')}
+                          </Text>
+                        )}
+                      </InfoContainer>
+
+                      <NavButton onClick={() => handleNavigation('next')}>{/* SVG 오른쪽 */}</NavButton>
+                    </NavigationContainer>
+                  )}
+                </StyledWorkContent>
+              )}
+            </Container>
+          )}
+        </>
       )}
     </>
   );
