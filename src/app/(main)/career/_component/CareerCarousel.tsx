@@ -135,7 +135,6 @@ export const CareerCarousel = ({ items }: CareerCarouselProps) => {
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDragging) return;
-    e.preventDefault();
     const x = e.touches[0].pageX;
     const walk = (x - startX) * 2;
     const threshold = 50;
