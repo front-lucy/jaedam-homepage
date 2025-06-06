@@ -6,6 +6,7 @@ import { useState } from 'react';
 import styled from '@emotion/styled';
 import { colors, radius, spacing } from '@/tokens';
 import BubbleSVG from '@/assets/icons/visual-bubble.svg';
+import * as S from '@/app/_components/layout/container';
 import { Text } from '@/components/atom/text';
 import { DeviceType, useDeviceType } from '@/hooks/useDeviceType';
 import { motion, Variants } from 'framer-motion';
@@ -226,135 +227,142 @@ export default function CareerPage() {
   console.log('🌐 device', device);
 
   return (
-    <StyledCareerContainer device={device}>
-      <SectionHeader
-        tabs={tabs}
-        title={'Career'}
-        activeTab={activeTab}
-        onChange={handleTabChange}
-      />
+    <S.CommonContainer css={ContainerAdditional}>
+      <StyledCareerContainer device={device}>
+        <SectionHeader
+          tabs={tabs}
+          title={'Career'}
+          activeTab={activeTab}
+          onChange={handleTabChange}
+        />
 
-      {activeTab === '인재상' && (
-        <SectionBodyContainer>
-          <IdealTalentContent 
-            key={`${activeTab}-ideal`}
-            variants={fadeInUpVariants}
-            initial='hidden'
-            whileInView='visible'
-            viewport={{ once: false, amount: 0.3 }}
-          >
-            <BubbleSVG className={'icon-wrapper'} />
-            <Text
-              typography={device === 'desktop' ? 'headline1-bold' : 'title3-black'}
-              className={'title'}
-              align={'center'}
+        {activeTab === '인재상' && (
+          <SectionBodyContainer>
+            <IdealTalentContent
+              key={`${activeTab}-ideal`}
+              variants={fadeInUpVariants}
+              initial='hidden'
+              whileInView='visible'
+              viewport={{ once: false, amount: 0.3 }}
             >
-              우리와 함께
-              <em>&nbsp; 재미있는 세상</em>
-              을 만들 <br /> 인재를 찾습니다.
-            </Text>
-            <div className='description'>
+              <BubbleSVG className={'icon-wrapper'} />
               <Text
-                typography={'title3-regular'}
+                typography={device === 'desktop' ? 'headline1-bold' : 'title3-black'}
+                className={'title'}
                 align={'center'}
               >
-                우리는 작가의 대리인이자 작품의 책임자입니다.
+                우리와 함께
+                <em>&nbsp; 재미있는 세상</em>
+                을 만들 <br /> 인재를 찾습니다.
               </Text>
-              <Text
-                typography={'title3-regular'}
-                align={'center'}
-              >
-                우리는 진지한 탐색자이자 조언가이고 다양성을 수용하는 협력자이자 실천가입니다.
-              </Text>
-              <Text
-                typography={'title3-regular'}
-                align={'center'}
-              >
-                우리는 재담미디어의 핵심가치를 상징하는 인재입니다.
-              </Text>
-            </div>
-          </IdealTalentContent>
-
-          <Section
-            key={`${activeTab}-diagram`}
-            device={device}
-            variants={fadeInUpVariants}
-            initial='hidden'
-            whileInView='visible'
-            viewport={{ once: false, amount: 0.3 }}
-          >
-            {diagrams.map((diagram, index) => (
-              <motion.div
-                key={index}
-                variants={fadeInUpVariants}
-                style={{ width: '100%' }}
-              >
-                <div className='content-wrapper'>
-                  <Text
-                    typography={'title2-bold'}
-                    align={'center'}
-                  >
-                    {diagram.title}
-                  </Text>
-                  <motion.div
-                    variants={diagramContainerVariants}
-                    style={{ width: '100%' }}
-                  >
-                    <DiagramItemsContainer className='diagram-items'>
-                      {diagram.items.map((item, itemIndex) => (
-                        <motion.li
-                          key={itemIndex}
-                          css={diagramCss}
-                          variants={diagramItemVariants[device]}
-                          custom={itemIndex}
-                          className='diagram-item'
-                        >
-                          <motion.div variants={textVariants}>
-                            <Text typography={device === 'desktop' ? 'title1-bold' : 'title2-bold'}>{item}</Text>
-                          </motion.div>
-                        </motion.li>
-                      ))}
-                    </DiagramItemsContainer>
-                  </motion.div>
-                </div>
-              </motion.div>
-            ))}
-          </Section>
-
-          <Section
-            key={`${activeTab}-carousel`}
-            device={device}
-            variants={fadeInUpVariants}
-            initial='hidden'
-            whileInView='visible'
-            viewport={{ once: false, amount: 0.3 }}
-          >
-            <motion.div variants={fadeInUpVariants}>
-              <div className='content-wrapper'>
+              <div className='description'>
                 <Text
-                  typography={device === 'mobile' ? 'title1-black' : 'headline3-bold'}
+                  typography={'title3-regular'}
                   align={'center'}
                 >
-                  FUN & JOY
+                  우리는 작가의 대리인이자 작품의 책임자입니다.
                 </Text>
                 <Text
-                  typography={device === 'mobile' ? 'body-regular' : 'title2-regular'}
+                  typography={'title3-regular'}
                   align={'center'}
                 >
-                  세상의 재미를 함께 만들어갈 <br />
-                  재담인을 위한 사옥을 소개합니다.
+                  우리는 진지한 탐색자이자 조언가이고 다양성을 수용하는 협력자이자 실천가입니다.
+                </Text>
+                <Text
+                  typography={'title3-regular'}
+                  align={'center'}
+                >
+                  우리는 재담미디어의 핵심가치를 상징하는 인재입니다.
                 </Text>
               </div>
-            </motion.div>
-            <motion.div variants={fadeInUpVariants}>
-              <CareerCarousel items={carouselItems} />
-            </motion.div>
-          </Section>
-        </SectionBodyContainer>
-      )}
-    </StyledCareerContainer>
+            </IdealTalentContent>
+
+            <Section
+              key={`${activeTab}-diagram`}
+              device={device}
+              variants={fadeInUpVariants}
+              initial='hidden'
+              whileInView='visible'
+              viewport={{ once: false, amount: 0.3 }}
+            >
+              {diagrams.map((diagram, index) => (
+                <motion.div
+                  key={index}
+                  variants={fadeInUpVariants}
+                  style={{ width: '100%' }}
+                >
+                  <div className='content-wrapper'>
+                    <Text
+                      typography={'title2-bold'}
+                      align={'center'}
+                    >
+                      {diagram.title}
+                    </Text>
+                    <motion.div
+                      variants={diagramContainerVariants}
+                      style={{ width: '100%' }}
+                    >
+                      <DiagramItemsContainer className='diagram-items'>
+                        {diagram.items.map((item, itemIndex) => (
+                          <motion.li
+                            key={itemIndex}
+                            css={diagramCss}
+                            variants={diagramItemVariants[device]}
+                            custom={itemIndex}
+                            className='diagram-item'
+                          >
+                            <motion.div variants={textVariants}>
+                              <Text typography={device === 'desktop' ? 'title1-bold' : 'title2-bold'}>{item}</Text>
+                            </motion.div>
+                          </motion.li>
+                        ))}
+                      </DiagramItemsContainer>
+                    </motion.div>
+                  </div>
+                </motion.div>
+              ))}
+            </Section>
+
+            <Section
+              key={`${activeTab}-carousel`}
+              device={device}
+              variants={fadeInUpVariants}
+              initial='hidden'
+              whileInView='visible'
+              viewport={{ once: false, amount: 0.3 }}
+            >
+              <motion.div variants={fadeInUpVariants}>
+                <div className='content-wrapper'>
+                  <Text
+                    typography={device === 'mobile' ? 'title1-black' : 'headline3-bold'}
+                    align={'center'}
+                  >
+                    FUN & JOY
+                  </Text>
+                  <Text
+                    typography={device === 'mobile' ? 'body-regular' : 'title2-regular'}
+                    align={'center'}
+                  >
+                    세상의 재미를 함께 만들어갈 <br />
+                    재담인을 위한 사옥을 소개합니다.
+                  </Text>
+                </div>
+              </motion.div>
+              <motion.div variants={fadeInUpVariants}>
+                <CareerCarousel items={carouselItems} />
+              </motion.div>
+            </Section>
+          </SectionBodyContainer>
+        )}
+      </StyledCareerContainer>
+    </S.CommonContainer>
   );
 }
+
+const ContainerAdditional = css`
+  padding-left: 0;
+  padding-right: 0;
+`;
 
 const StyledCareerContainer = styled(motion.div)<{ device: DeviceType }>`
   display: flex;

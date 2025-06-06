@@ -7,6 +7,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 import { contactItems } from './contact.variants';
+import * as S from '@/app/_components/layout/container';
 
 const fadeUpVariant = {
   hidden: { opacity: 0, y: 24 },
@@ -32,73 +33,75 @@ const simpleFadeUp = {
 
 export default function ContactPage() {
   return (
-    <StyledContainer>
-      <motion.h2
-        css={titleStyle}
-        variants={simpleFadeUp}
-        initial='hidden'
-        whileInView='visible'
-        viewport={{ once: true, amount: 0.2 }}
-      >
-        CONTACT
-      </motion.h2>
+    <S.CommonContainer>
+      <StyledContainer>
+        <motion.h2
+          css={titleStyle}
+          variants={simpleFadeUp}
+          initial='hidden'
+          whileInView='visible'
+          viewport={{ once: true, amount: 0.2 }}
+        >
+          CONTACT
+        </motion.h2>
 
-      <motion.h3
-        css={subTitleStyle}
-        variants={simpleFadeUp}
-        initial='hidden'
-        whileInView='visible'
-        viewport={{ once: true, amount: 0.2 }}
-      >
-        사업 제휴
-      </motion.h3>
+        <motion.h3
+          css={subTitleStyle}
+          variants={simpleFadeUp}
+          initial='hidden'
+          whileInView='visible'
+          viewport={{ once: true, amount: 0.2 }}
+        >
+          사업 제휴
+        </motion.h3>
 
-      <motion.p
-        css={descriptionStyle}
-        variants={simpleFadeUp}
-        initial='hidden'
-        whileInView='visible'
-        viewport={{ once: true, amount: 0.2 }}
-      >
-        재담과 함께할 수 있는 다양한 제안을 기다립니다.
-      </motion.p>
+        <motion.p
+          css={descriptionStyle}
+          variants={simpleFadeUp}
+          initial='hidden'
+          whileInView='visible'
+          viewport={{ once: true, amount: 0.2 }}
+        >
+          재담과 함께할 수 있는 다양한 제안을 기다립니다.
+        </motion.p>
 
-      <motion.div
-        css={rowContainerStyle}
-        variants={simpleFadeUp}
-        initial='hidden'
-        whileInView='visible'
-        viewport={{ once: true, amount: 0.3 }}
-      >
-        {contactItems.map(({ title, description, emails }, index) => (
-          <motion.div
-            key={title}
-            css={[rowWrapperBase, index === 0 && rowWrapperWithTopBorder]}
-            variants={fadeUpVariant}
-            initial='hidden'
-            whileInView='visible'
-            viewport={{ once: true, amount: 0.2 }}
-            custom={index}
-          >
-            <RowTitle>{title}</RowTitle>
-            <ContentBox>
-              <RowDescription>{description}</RowDescription>
-              <EmailList>
-                {emails.map(email => (
-                  <Email
-                    key={email}
-                    href={`mailto:${email}`}
-                  >
-                    <MailIcon />
-                    <span>{email}</span>
-                  </Email>
-                ))}
-              </EmailList>
-            </ContentBox>
-          </motion.div>
-        ))}
-      </motion.div>
-    </StyledContainer>
+        <motion.div
+          css={rowContainerStyle}
+          variants={simpleFadeUp}
+          initial='hidden'
+          whileInView='visible'
+          viewport={{ once: true, amount: 0.3 }}
+        >
+          {contactItems.map(({ title, description, emails }, index) => (
+            <motion.div
+              key={title}
+              css={[rowWrapperBase, index === 0 && rowWrapperWithTopBorder]}
+              variants={fadeUpVariant}
+              initial='hidden'
+              whileInView='visible'
+              viewport={{ once: true, amount: 0.2 }}
+              custom={index}
+            >
+              <RowTitle>{title}</RowTitle>
+              <ContentBox>
+                <RowDescription>{description}</RowDescription>
+                <EmailList>
+                  {emails.map(email => (
+                    <Email
+                      key={email}
+                      href={`mailto:${email}`}
+                    >
+                      <MailIcon />
+                      <span>{email}</span>
+                    </Email>
+                  ))}
+                </EmailList>
+              </ContentBox>
+            </motion.div>
+          ))}
+        </motion.div>
+      </StyledContainer>
+    </S.CommonContainer>
   );
 }
 
@@ -110,7 +113,7 @@ const StyledContainer = styled.div`
   width: 100%;
   padding: 0 140px;
   gap: ${spacing['4XL']};
-`
+`;
 
 const titleStyle = css`
   ${typography['display2-bold']};

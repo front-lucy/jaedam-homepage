@@ -1,20 +1,14 @@
 'use client';
 
-import { Footer } from '@/components/molecules/footer';
-import { Header } from '@/components/molecules/header';
 import * as S from './NewsDetail.styles';
+import * as R from '@/app/_components/layout/container';
 import { NewsDetailProps } from './NewsDetail.type';
 import { NewsDetailAttachment } from './NewsDetailAttachment';
 import { NewsDetailTitleSection } from './NewsDetailTitleSection';
-import { Suspense } from 'react';
 
 export const NewsDetailLayout = ({ category, title, noticedAt, content, fileList }: NewsDetailProps) => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <Header
-        pageType='sub'
-        mode='light'
-      />
+    <R.CommonContainer>
       <S.Wrapper>
         <NewsDetailTitleSection
           category={category as import('@/app/(main)/news/component/news-category/news-card/NewsCard.types').TabKey}
@@ -27,7 +21,6 @@ export const NewsDetailLayout = ({ category, title, noticedAt, content, fileList
           {fileList && fileList.length > 0 && <NewsDetailAttachment attachments={fileList} />}
         </S.ContentWrapper>
       </S.Wrapper>
-      <Footer />
-    </Suspense>
+    </R.CommonContainer>
   );
 };

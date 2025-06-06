@@ -9,6 +9,8 @@ import { GenreTabs } from './component/genre-tabs/GenreTabs';
 import { TabKey, WorkCategoryTabs } from './component/work-category/WorkCategoryTabs';
 import { WorkGrid } from './component/work-grid/WorkGrid';
 import { WorkGridSkeleton } from './component/work-grid/WorkGridSkeleton';
+import * as S from '@/app/_components/layout/container'
+import { css } from '@emotion/react';
 
 const Title = styled.h2`
   font-size: 64px;
@@ -77,7 +79,7 @@ const WorkPage = () => {
   const [activeTab, setActiveTab] = useState<TabKey>('WEBTOON');
 
   return (
-    <>
+    <S.CommonContainer css={ContainerAdditional}>
       <div>
         <Title>WORK</Title>
       </div>
@@ -93,8 +95,18 @@ const WorkPage = () => {
       />
       {isLoading ? <WorkGridSkeleton /> : <WorkGrid items={items} />}
       {/* <Pagination current={currentPage} total={totalPages} onChange={setCurrentPage} /> */}
-    </>
+    </S.CommonContainer>
   );
 };
 
 export default WorkPage;
+
+const ContainerAdditional = css`
+  padding: calc(64px + 80px) 40px 128px 40px;
+  gap: 48px;
+
+  @media (max-width: 1279px) {
+    padding: calc(64px + 80px) 24px 128px 24px;
+    gap: 32px;
+  }
+`;

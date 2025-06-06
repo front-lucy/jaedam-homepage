@@ -32,29 +32,6 @@ const Main = styled.main<{ isCareerPage: boolean }>`
   max-width: 1920px;
   width: 100%;
   flex: 1;
-  flex-direction: column;
-  align-items: center;
-  align-self: stretch;
   margin: 0 auto;
-
-  ${({ isCareerPage }) =>
-    isCareerPage
-      ? `
-        padding: calc(64px + 80px) 0 128px 0;
-        gap: 48px;
-
-        @media (max-width: 1279px) {
-          padding: calc(64px + 80px) 0 128px 0;
-          gap: 32px;
-        }
-      `
-      : `
-        padding: calc(64px + 80px) 40px 128px 40px;
-        gap: 48px;
-
-        @media (max-width: 1279px) {
-          padding: calc(64px + 80px) 24px 128px 24px;
-          gap: 32px;
-        }
-      `}
+  padding: 0;
 `;

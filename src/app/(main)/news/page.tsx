@@ -8,6 +8,7 @@ import { NewsCard } from './component/news-category/news-card/NewsCard';
 import { BadgeType, NewsCardProps } from './component/news-category/news-card/NewsCard.types';
 import { NewsCategoryTabs, TabKey } from './component/news-category/NewsCategoryTabs';
 import { GridContainer, Title } from './news.styles';
+import * as S from '@/app/_components/layout/container';
 
 export default function ContactPage() {
   const [noticeList, setNoticeList] = useState<NoticeHomeListResponse[]>([]);
@@ -36,7 +37,7 @@ export default function ContactPage() {
   }, []);
 
   return (
-    <>
+    <S.CommonContainer>
       <div>
         <Title>NEWS</Title>
       </div>
@@ -53,6 +54,6 @@ export default function ContactPage() {
           />
         ))}
       </GridContainer>
-    </>
+    </S.CommonContainer>
   );
 }

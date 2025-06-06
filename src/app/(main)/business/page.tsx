@@ -1,7 +1,11 @@
+"use client";
+
+import * as S from "@/app/_components/layout/container";
+
 export default function BusinessPage() {
   return (
-    <main>
+    <S.CommonContainer>
       <h1>Business</h1>
-    </main>
+    </S.CommonContainer>
   );
 }
