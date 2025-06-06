@@ -1,3 +1,9 @@
+export type ContactSectionItem = {
+  title: string;
+  description: string;
+  emails: string[];
+}
+
 export const contactItems: ContactSectionItem[] = [
   {
     title: '웹툰 사업',

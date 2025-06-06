@@ -50,6 +50,7 @@ export const Inner = styled.div`
     margin-bottom: 1em;
   } */
 `;
+
 export const TitleSection = styled.section`
   position: relative;
   width: 100%;
