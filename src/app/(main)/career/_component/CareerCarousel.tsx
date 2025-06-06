@@ -127,6 +127,33 @@ export const CareerCarousel = ({ items }: CareerCarouselProps) => {
     setIsDragging(false);
   };
 
+  // 터치 이벤트 핸들러
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setIsDragging(true);
+    setStartX(e.touches[0].pageX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.touches[0].pageX;
+    const walk = (x - startX) * 2;
+    const threshold = 50;
+
+    if (Math.abs(walk) > threshold) {
+      if (walk > 0) {
+        handleCarouselPrev();
+      } else {
+        handleCarouselNext();
+      }
+      setIsDragging(false);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+  };
+
   // 이동 거리 계산
   const getTranslateX = () => {
     if (device === 'mobile') {
@@ -155,6 +182,9 @@ export const CareerCarousel = ({ items }: CareerCarouselProps) => {
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         <CarouselWrapper
           device={device}
