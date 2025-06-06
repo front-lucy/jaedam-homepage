@@ -26,6 +26,7 @@ const LayoutContainer = styled.div`
 const Main = styled.main`
   display: flex;
   max-width: 1920px;
+  width: 100%;
   flex: 1;
   flex-direction: column;
   align-items: center;
