@@ -161,6 +161,13 @@ export const typography = {
     letterSpacing: 'normal',
     textDecoration: 'none',
   },
+  'title1-black': {
+    fontSize: 28,
+    lineHeight: 'auto',
+    fontWeight: fontWeightBlack,
+    letterSpacing: 'normal',
+    textDecoration: 'none',
+  },
   'title1-bold': {
     fontSize: 28,
     lineHeight: 'auto',
@@ -189,6 +196,13 @@ export const typography = {
     letterSpacing: 'normal',
     textDecoration: 'none',
   },
+  'title2-black': {
+    fontSize: 20,
+    lineHeight: 'auto',
+    fontWeight: fontWeightBlack,
+    letterSpacing: 'normal',
+    textDecoration: 'none',
+  },
   'title2-bold': {
     fontSize: 20,
     lineHeight: 'auto',
@@ -214,6 +228,13 @@ export const typography = {
     fontSize: 20,
     lineHeight: 'auto',
     fontWeight: fontWeightRegular,
+    letterSpacing: 'normal',
+    textDecoration: 'none',
+  },
+  'title3-black': {
+    fontSize: 18,
+    lineHeight: 'auto',
+    fontWeight: fontWeightBlack,
     letterSpacing: 'normal',
     textDecoration: 'none',
   },

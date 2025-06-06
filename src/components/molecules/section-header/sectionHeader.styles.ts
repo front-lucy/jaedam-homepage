@@ -62,7 +62,7 @@ export const TabItem = styled.li<{ isActive: boolean }>`
   font-weight: 700;
   color: ${({ isActive }) => (isActive ? colors.gray900 : colors.gray600)};
   cursor: pointer;
-  padding: 4px 0 8px;
+  padding: 4px 0 12px;
   display: flex;
   align-items: center;
   justify-content: center;
