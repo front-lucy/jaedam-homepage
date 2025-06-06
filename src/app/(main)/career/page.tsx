@@ -63,15 +63,6 @@ const variant = {
   },
 };
 
-const containerVariant: Variants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.6,
-    },
-  },
-};
-
 // 스크롤 애니메이션 variants
 const fadeInUpVariants = {
   hidden: {
@@ -84,7 +75,7 @@ const fadeInUpVariants = {
     transition: {
       duration: 0.6,
       ease: 'easeOut',
-      staggerChildren: 0.3,
+      staggerChildren: 0.2,
     },
   },
 };
@@ -235,12 +226,7 @@ export default function CareerPage() {
   console.log('🌐 device', device);
 
   return (
-    <StyledCareerContainer
-      device={device}
-      initial='hidden'
-      animate='visible'
-      variants={containerVariant}
-    >
+    <StyledCareerContainer device={device}>
       <SectionHeader
         tabs={tabs}
         title={'Career'}
@@ -250,7 +236,13 @@ export default function CareerPage() {
 
       {activeTab === '인재상' && (
         <SectionBodyContainer>
-          <IdealTalentContent variants={fadeInUpVariants}>
+          <IdealTalentContent 
+            key={`${activeTab}-ideal`}
+            variants={fadeInUpVariants}
+            initial='hidden'
+            whileInView='visible'
+            viewport={{ once: false, amount: 0.3 }}
+          >
             <BubbleSVG className={'icon-wrapper'} />
             <Text
               typography={device === 'desktop' ? 'headline1-bold' : 'title3-black'}
@@ -284,11 +276,12 @@ export default function CareerPage() {
           </IdealTalentContent>
 
           <Section
+            key={`${activeTab}-diagram`}
             device={device}
             variants={fadeInUpVariants}
             initial='hidden'
             whileInView='visible'
-            viewport={{ once: true, amount: 0.3 }}
+            viewport={{ once: false, amount: 0.3 }}
           >
             {diagrams.map((diagram, index) => (
               <motion.div
@@ -329,28 +322,33 @@ export default function CareerPage() {
           </Section>
 
           <Section
+            key={`${activeTab}-carousel`}
             device={device}
             variants={fadeInUpVariants}
             initial='hidden'
             whileInView='visible'
-            viewport={{ once: true, amount: 0.3 }}
+            viewport={{ once: false, amount: 0.3 }}
           >
-            <div className='content-wrapper'>
-              <Text
-                typography={device === 'mobile' ? 'title1-black' : 'headline3-bold'}
-                align={'center'}
-              >
-                FUN & JOY
-              </Text>
-              <Text
-                typography={device === 'mobile' ? 'body-regular' : 'title2-regular'}
-                align={'center'}
-              >
-                세상의 재미를 함께 만들어갈 <br />
-                재담인을 위한 사옥을 소개합니다.
-              </Text>
-            </div>
-            <CareerCarousel items={carouselItems} />
+            <motion.div variants={fadeInUpVariants}>
+              <div className='content-wrapper'>
+                <Text
+                  typography={device === 'mobile' ? 'title1-black' : 'headline3-bold'}
+                  align={'center'}
+                >
+                  FUN & JOY
+                </Text>
+                <Text
+                  typography={device === 'mobile' ? 'body-regular' : 'title2-regular'}
+                  align={'center'}
+                >
+                  세상의 재미를 함께 만들어갈 <br />
+                  재담인을 위한 사옥을 소개합니다.
+                </Text>
+              </div>
+            </motion.div>
+            <motion.div variants={fadeInUpVariants}>
+              <CareerCarousel items={carouselItems} />
+            </motion.div>
           </Section>
         </SectionBodyContainer>
       )}

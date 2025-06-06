@@ -31,7 +31,7 @@ const carouselVariant = {
     },
   },
   mobile: {
-    itemWidth: '100%' as const,
+    itemWidth: '100vw' as const,
     slidesPerView: 1,
     gap: 16,
     containerWidth: '100vw' as const,
@@ -130,7 +130,8 @@ export const CareerCarousel = ({ items }: CareerCarouselProps) => {
   // 이동 거리 계산
   const getTranslateX = () => {
     if (device === 'mobile') {
-      return `calc(-${virtualIndex * 100}% + 50vw - 50%)`;
+      const gap = variant.gap;
+      return `calc(-${virtualIndex * 100}vw - ${virtualIndex * gap}px)`;
     }
     
     if (device === 'tablet') {
@@ -355,12 +356,11 @@ const CarouselItem = styled.div<{
   ${({ device }) =>
     device === 'mobile' &&
     css`
-      width: calc(100vw - ${spacing.M} * 2);
+      width: 100vw;
     `}
 `;
 
-const CarouselControls = styled.div`
-  display: flex;
+const CarouselControls = styled.div`  display: flex;
   justify-content: space-between;
   align-items: center;
   pointer-events: none;
@@ -393,3 +393,4 @@ const CarouselControls = styled.div`
     }
   }
 `;
+
