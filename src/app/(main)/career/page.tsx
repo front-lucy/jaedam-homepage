@@ -223,9 +223,7 @@ export default function CareerPage() {
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
-
-  console.log('🌐 device', device);
-
+  
   return (
     <S.CommonContainer css={ContainerAdditional}>
       <StyledCareerContainer device={device}>
@@ -280,15 +278,19 @@ export default function CareerPage() {
             <Section
               key={`${activeTab}-diagram`}
               device={device}
+              variants={fadeInUpVariants}
+              initial='hidden'
+              whileInView='visible'
+              viewport={{ once: true, amount: 0.3 }}
             >
               {diagrams.map((diagram, index) => (
                 <motion.div
                   key={index}
                   variants={fadeInUpVariants}
+                  style={{ width: '100%' }}
                   initial='hidden'
                   whileInView='visible'
                   viewport={{ once: true, amount: 0.3 }}
-                  style={{ width: '100%' }}
                 >
                   <div className='content-wrapper'>
                     <Text
