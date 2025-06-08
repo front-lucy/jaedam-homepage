@@ -236,14 +236,14 @@ export default function CareerPage() {
           onChange={handleTabChange}
         />
 
-        {activeTab === '인재상' && (
+        {activeTab === tabs[0] && (
           <SectionBodyContainer>
             <IdealTalentContent
               key={`${activeTab}-ideal`}
               variants={fadeInUpVariants}
               initial='hidden'
               whileInView='visible'
-              viewport={{ once: false, amount: 0.3 }}
+              viewport={{ once: true }}
             >
               <BubbleSVG className={'icon-wrapper'} />
               <Text
@@ -280,15 +280,14 @@ export default function CareerPage() {
             <Section
               key={`${activeTab}-diagram`}
               device={device}
-              variants={fadeInUpVariants}
-              initial='hidden'
-              whileInView='visible'
-              viewport={{ once: false, amount: 0.3 }}
             >
               {diagrams.map((diagram, index) => (
                 <motion.div
                   key={index}
                   variants={fadeInUpVariants}
+                  initial='hidden'
+                  whileInView='visible'
+                  viewport={{ once: true, amount: 0.3 }}
                   style={{ width: '100%' }}
                 >
                   <div className='content-wrapper'>
@@ -329,7 +328,7 @@ export default function CareerPage() {
               variants={fadeInUpVariants}
               initial='hidden'
               whileInView='visible'
-              viewport={{ once: false, amount: 0.3 }}
+              viewport={{ once: true, amount: 0.3 }}
             >
               <motion.div variants={fadeInUpVariants}>
                 <div className='content-wrapper'>
