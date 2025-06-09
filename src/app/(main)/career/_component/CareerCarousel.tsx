@@ -192,7 +192,7 @@ export const CareerCarousel = ({ items }: CareerCarouselProps) => {
             x: getTranslateX(),
           }}
           transition={{
-            type: isTransitioning ? 'spring' : 'none',
+            type: 'none',
             stiffness: 300,
             damping: 30,
             duration: isTransitioning ? 0.3 : 0,

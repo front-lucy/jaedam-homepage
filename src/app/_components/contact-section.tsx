@@ -84,10 +84,10 @@ const styleVariants: Record<
     cardArea: {
       gridTemplateColumns: 'repeat(1, 320px)',
       gridTemplateRows: 'repeat(4, 1fr)',
-      gap: '8px',
+      gap: `${spacing['S']}`,
     },
     card: {
-      padding: `${spacing['XL']} ${spacing['L']}`,
+      padding: `${spacing['L']} ${spacing['XL']}`,
       height: '108px',
       titleTypography: 'title2-bold',
       descriptionTypography: 'caption1-medium',

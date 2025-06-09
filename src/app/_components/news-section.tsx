@@ -84,7 +84,7 @@ const Wrapper = styled.section`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 0px 64px;
+  padding: 80px 64px;
   margin: 0 auto;
   height: 100%;
   background-color: ${colors.white};
@@ -99,12 +99,14 @@ const Wrapper = styled.section`
     gap: ${spacing['4XL']};
     flex-direction: column;
     align-items: flex-start;
+    padding-top: 64px;
   }
 
   @media (max-width: 799px) {
     grid-template-columns: 1fr;
+    padding: 0 ${spacing['XL']};
+    padding-top: 64px;
     gap: ${spacing['3XL']};
-    flex-direction: row;
     justify-content: center;
     flex-direction: column;
     align-items: flex-start;
