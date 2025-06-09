@@ -24,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`${geistSans.variable} ${geistMono.variable}`} style={{ minHeight: "100vh" }}>
+      <body className={`${geistSans.variable} ${geistMono.variable}`} style={{ minHeight: "100dvh" }}>
         {children}
       </body>
     </html>

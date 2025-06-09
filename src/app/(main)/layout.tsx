@@ -24,7 +24,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 const LayoutContainer = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100dvh;
 `;
 
 const Main = styled.main<{ isCareerPage: boolean }>`
@@ -34,25 +34,4 @@ const Main = styled.main<{ isCareerPage: boolean }>`
   flex: 1;
   margin: 0 auto;
   padding: 0;
-
-  ${({ isCareerPage }) =>
-    isCareerPage
-      ? `
-        padding: calc(64px + 80px) 0 128px 0;
-        gap: 48px;
-
-        @media (max-width: 1279px) {
-          padding: calc(64px + 80px) 0 128px 0;
-          gap: 32px;
-        }
-      `
-      : `
-        padding: calc(64px + 80px) 40px 128px 40px;
-        gap: 48px;
-
-        @media (max-width: 1279px) {
-          padding: calc(64px + 80px) 24px 128px 24px;
-          gap: 32px;
-        }
-      `}
 `;

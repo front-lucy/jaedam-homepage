@@ -9,7 +9,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: calc(100vh - 4rem);
+  height: calc(100dvh - 4rem);
   gap: 1rem;
 `;
 

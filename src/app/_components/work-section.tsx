@@ -56,7 +56,7 @@ const Container = styled.div<{
   backgroundImage?: string;
 }>`
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
   background-color: ${colors.black};
   overflow: hidden;
   position: relative;
@@ -164,6 +164,19 @@ const NavButton = styled.button`
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+
+  width: 40px;
+  height: 40px;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: 799px) {
+    width: 24px;
+    height: 24px;
   }
 `;
 
@@ -330,7 +343,22 @@ export const WorkSection = ({ step }: WorkSectionProps) => {
 
                   {highlightList.length > 1 && (
                     <NavigationContainer device={device}>
-                      <NavButton onClick={() => handleNavigation('prev')}>{/* SVG 왼쪽 */}</NavButton>
+                      <NavButton onClick={() => handleNavigation('prev')}>
+                        <svg
+                          width='40'
+                          height='40'
+                          viewBox='0 0 40 40'
+                          fill='none'
+                          xmlns='http://www.w3.org/2000/svg'
+                        >
+                          <path
+                            fillRule='evenodd'
+                            clipRule='evenodd'
+                            d='M28.8933 5.71532L13.0198 20.0015L28.8933 34.2876L26.7518 36.667L9.55646 21.1912C9.21919 20.8876 9.02661 20.4552 9.02661 20.0015C9.02661 19.5477 9.21919 19.1153 9.55646 18.8118L26.7518 3.33594L28.8933 5.71532Z'
+                            fill='white'
+                          />
+                        </svg>
+                      </NavButton>
 
                       <InfoContainer>
                         <Text
@@ -350,7 +378,22 @@ export const WorkSection = ({ step }: WorkSectionProps) => {
                         )}
                       </InfoContainer>
 
-                      <NavButton onClick={() => handleNavigation('next')}>{/* SVG 오른쪽 */}</NavButton>
+                      <NavButton onClick={() => handleNavigation('next')}>
+                        <svg
+                          width='40'
+                          height='40'
+                          viewBox='0 0 40 40'
+                          fill='none'
+                          xmlns='http://www.w3.org/2000/svg'
+                        >
+                          <path
+                            fillRule='evenodd'
+                            clipRule='evenodd'
+                            d='M11.1065 5.71532L26.98 20.0015L11.1065 34.2876L13.2479 36.667L30.4433 21.1912C30.7806 20.8876 30.9731 20.4552 30.9731 20.0015C30.9731 19.5477 30.7806 19.1153 30.4433 18.8118L13.2479 3.33594L11.1065 5.71532Z'
+                            fill='white'
+                          />
+                        </svg>
+                      </NavButton>
                     </NavigationContainer>
                   )}
                 </StyledWorkContent>

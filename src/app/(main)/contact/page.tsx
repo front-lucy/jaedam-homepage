@@ -111,7 +111,6 @@ const StyledContainer = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 0 140px;
   gap: ${spacing['4XL']};
 `;
 

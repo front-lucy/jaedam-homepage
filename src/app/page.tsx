@@ -10,7 +10,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { BusinessSection, ContactSection, IntroSection, LineupSection, NewsSection, WorkSection } from './_components';
 
 const Container = styled.div`
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   position: relative;
 `;
@@ -20,7 +20,7 @@ const SectionWrapper = styled(motion.div)`
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
 `;
 
 const sections: Array<{ id: string; header: 'light' | 'dark' }> = [
@@ -52,6 +52,8 @@ export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isFooterVisible, setIsFooterVisible] = useState(false);
   const [isScrollable, setIsScrollable] = useState(false);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
 
   const { hasData, setLineUpData } = useMainStore();
 
@@ -85,6 +87,7 @@ export default function Home() {
   );
 
   const SCROLL_LOCK_DURATION = 1000;
+  const MIN_SWIPE_DISTANCE = 50;
 
   const handleWheel = useCallback(
     (e: WheelEvent) => {
@@ -132,6 +135,54 @@ export default function Home() {
     [currentSection, isScrolling, scrollToSection, splashEnded],
   );
 
+  const handleTouchStart = useCallback((e: TouchEvent) => {
+    setTouchEnd(0);
+    setTouchStart(e.targetTouches[0].clientY);
+  }, []);
+
+  const handleTouchMove = useCallback((e: TouchEvent) => {
+    if (currentSection !== 'contact') {
+      e.preventDefault();
+    }
+    setTouchEnd(e.targetTouches[0].clientY);
+  }, [currentSection]);
+
+  const handleTouchEnd = useCallback(() => {
+    if (!touchStart || !touchEnd || isScrolling) return;
+    
+    const distance = touchStart - touchEnd;
+    const isDownSwipe = distance > MIN_SWIPE_DISTANCE;
+    const isUpSwipe = distance < -MIN_SWIPE_DISTANCE;
+
+    if (!isDownSwipe && !isUpSwipe) return;
+
+    const arr = sections.map(section => section.id);
+    const currentIndex = arr.indexOf(currentSection);
+    
+    setIsScrolling(true);
+
+    if (isDownSwipe) {
+      // 아래로 스와이프 - 다음 섹션
+      scrollToSection(currentIndex + 1);
+    } else if (isUpSwipe) {
+      // 위로 스와이프 - 이전 섹션
+      if (splashEnded && currentIndex === 1) {
+        setIsScrolling(false);
+        return;
+      }
+
+      if (currentSection === 'work1') {
+        scrollToSection(arr.indexOf('business1'));
+      } else {
+        scrollToSection(currentIndex - 1);
+      }
+    }
+
+    setTimeout(() => {
+      setIsScrolling(false);
+    }, SCROLL_LOCK_DURATION);
+  }, [touchStart, touchEnd, isScrolling, currentSection, scrollToSection, splashEnded]);
+
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (isScrolling) return;
@@ -177,13 +228,21 @@ export default function Home() {
     const ref = containerRef.current;
 
     ref.addEventListener('wheel', handleWheel, { passive: false });
+    ref.addEventListener('touchstart', handleTouchStart, { passive: false });
+    ref.addEventListener('touchmove', handleTouchMove, { passive: false });
+    ref.addEventListener('touchend', handleTouchEnd, { passive: true });
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      if (ref) ref.removeEventListener('wheel', handleWheel);
+      if (ref) {
+        ref.removeEventListener('wheel', handleWheel);
+        ref.removeEventListener('touchstart', handleTouchStart);
+        ref.removeEventListener('touchmove', handleTouchMove);
+        ref.removeEventListener('touchend', handleTouchEnd);
+      }
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [handleWheel, handleKeyDown]);
+  }, [handleWheel, handleKeyDown, handleTouchStart, handleTouchMove, handleTouchEnd]);
 
   const pageVariants = {
     initial: { y: '100%', opacity: 1 },
