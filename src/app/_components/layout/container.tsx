@@ -10,11 +10,11 @@ export const CommonContainer = styled.div<{ css?: SerializedStyles}>`
   flex: 1;
   margin: 0 auto;
   
-  padding: calc(64px + 80px) 40px 128px 40px;
+  padding: calc(80px + 64px) 40px 128px 40px; // 80px: Header height, 64px: real padding top
   gap: 48px;
 
   @media (max-width: 1279px) {
-    padding: calc(48px + 64px) 24px 128px 24px;
+    padding: calc(64px + 48px) 24px 128px 24px; // 64px: Header height, 48px: real padding top
     gap: 32px;
   }
   
