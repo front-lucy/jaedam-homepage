@@ -143,12 +143,12 @@ const diagramItemVariants: Record<DeviceType, Variants> = {
   mobile: {
     hidden: {
       x: 0,
-      y: 0,
+      y: 0, // 가운데 위치에서 시작 (0과 120의 중간값)
       opacity: 0,
     },
     visible: (index: number) => ({
       x: index === 0 ? 0 : index === 1 ? -70 : 70,
-      y: index === 0 ? 0 : 120,
+      y: index === 0 ? -60 : 60,
       opacity: 1,
       transition: {
         opacity: {
@@ -465,6 +465,7 @@ const DiagramItemsContainer = styled.ul`
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
 `;
 
 const diagramCss = css`
