@@ -1,14 +1,14 @@
 'use client';
 
-import { CSSProperties, useRef } from 'react';
-import styled from '@emotion/styled';
-import { colors, radius, shadow, spacing, TypographyType } from '@/tokens';
-import Image from 'next/image';
-import { DeviceType, useDeviceType } from '@/hooks/useDeviceType';
 import { Text } from '@/components/atom/text';
-import { css } from '@emotion/react';
 import { cards } from '@/constants/contact-card-content';
+import { DeviceType, useDeviceType } from '@/hooks/useDeviceType';
+import { colors, radius, shadow, spacing, TypographyType } from '@/tokens';
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { CSSProperties, useRef } from 'react';
 
 interface ContactSectionProps {
   className?: string;
@@ -134,15 +134,15 @@ export function ContactSection({ className }: ContactSectionProps) {
         </div>
 
         <motion.div
-          initial={{ 
-            x: 0, 
+          initial={{
+            x: 0,
             y: 0,
-            opacity: 0
+            opacity: 0,
           }}
-          animate={{ 
-            x: 0, 
+          animate={{
+            x: 0,
             y: 0,
-            opacity: 1
+            opacity: 1,
           }}
           transition={{
             duration: 1.2,
@@ -176,7 +176,7 @@ export function ContactSection({ className }: ContactSectionProps) {
                 const startY = 0; // 상단 기준으로 시작
                 return {
                   x: startX + col * cardWidth,
-                  y: startY + row * cardHeight
+                  y: startY + row * cardHeight,
                 };
               } else {
                 // mobile: 1열로 배치 - 상단 기준으로 아래로 배치
@@ -192,7 +192,7 @@ export function ContactSection({ className }: ContactSectionProps) {
                 return { x: 0, y: 0 }; // 중앙에서 시작
               } else {
                 // tablet, mobile은 상단(y: 0)에서 시작
-                return { x: 0, y: 0 }; 
+                return { x: 0, y: 0 };
               }
             };
 
@@ -203,20 +203,20 @@ export function ContactSection({ className }: ContactSectionProps) {
               <motion.div
                 className='card-container'
                 key={index}
-                initial={{ 
+                initial={{
                   x: initialPosition.x,
                   y: initialPosition.y,
-                  opacity: 1
+                  opacity: 1,
                 }}
-                animate={{ 
+                animate={{
                   x: finalPosition.x, // 각자의 최종 위치로 이동
                   y: finalPosition.y, // 각자의 최종 위치로 이동
-                  opacity: 1
+                  opacity: 1,
                 }}
                 transition={{
                   duration: 1,
                   delay: 2.15,
-                  ease: [0.22, 1, 0.36, 1]
+                  ease: [0.22, 1, 0.36, 1],
                 }}
                 style={{
                   backgroundColor: card.backgroundColor,
@@ -225,7 +225,7 @@ export function ContactSection({ className }: ContactSectionProps) {
                   justifyContent: 'space-between',
                   borderRadius: radius.r400,
                   boxShadow: shadow.s300,
-                  gap: spacing.M,
+                  // gap: spacing.M,
                   position: 'absolute', // 모든 카드를 겹치게 만들기
                   ...getCardInlineStyles(device),
                 }}
@@ -278,10 +278,10 @@ const getContainerStyles = (device: DeviceType) => {
     flex-shrink: 0;
     z-index: 1;
     position: absolute;
-    
+
     ${rest};
   `;
-}
+};
 
 const getTextAreaStyles = (device: DeviceType) => {
   const { gap } = styleVariants[device].textarea;
@@ -293,14 +293,14 @@ const getTextAreaStyles = (device: DeviceType) => {
 
 const ContentArea = styled.div<{ device: DeviceType }>`
   ${({ device }) => getContainerStyles(device)}
-  
+
   & .text-area {
     display: flex;
     flex-direction: column;
 
-    ${({ device }) => getTextAreaStyles(device)};  
+    ${({ device }) => getTextAreaStyles(device)};
   }
-`
+`;
 
 function getCardInlineStyles(device: DeviceType) {
   const { padding, height, width } = styleVariants[device].card;

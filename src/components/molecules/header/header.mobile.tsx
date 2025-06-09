@@ -61,12 +61,42 @@ export const MobileHeader: FC<HeaderProps> = ({ pageType = 'home', mode = 'light
                 </CloseButton>
               </SlideHeader>
               <NavList>
-                <MNavItem href='/about'>ABOUT</MNavItem>
-                <MNavItem href='/business'>BUSINESS</MNavItem>
-                <MNavItem href='/work'>WORK</MNavItem>
-                <MNavItem href='/career'>CAREER</MNavItem>
-                <MNavItem href='/news'>NEWS</MNavItem>
-                <MNavItem href='/contact'>CONTACT</MNavItem>
+                <MNavItem
+                  href='/about'
+                  onClick={() => setMenuOpen(false)}
+                >
+                  ABOUT
+                </MNavItem>
+                <MNavItem
+                  href='/business'
+                  onClick={() => setMenuOpen(false)}
+                >
+                  BUSINESS
+                </MNavItem>
+                <MNavItem
+                  href='/work'
+                  onClick={() => setMenuOpen(false)}
+                >
+                  WORK
+                </MNavItem>
+                <MNavItem
+                  href='/career'
+                  onClick={() => setMenuOpen(false)}
+                >
+                  CAREER
+                </MNavItem>
+                <MNavItem
+                  href='/news'
+                  onClick={() => setMenuOpen(false)}
+                >
+                  NEWS
+                </MNavItem>
+                <MNavItem
+                  href='/contact'
+                  onClick={() => setMenuOpen(false)}
+                >
+                  CONTACT
+                </MNavItem>
               </NavList>
 
               <Footer>

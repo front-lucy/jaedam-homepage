@@ -367,7 +367,7 @@ export default function CareerPage() {
 const ContainerAdditional = css`
   padding-left: 0;
   padding-right: 0;
-  
+
   @media (max-width: 1279px) {
     padding: calc(64px + 64px) 24px 128px 24px;
   }
@@ -469,7 +469,7 @@ const DiagramItemsContainer = styled.ul`
 `;
 
 const diagramCss = css`
-  border-radius: ${radius.r900};
+  border-radius: ${radius.r100};
   border: 1px solid ${colors.jaedamCyan};
   display: flex;
   align-items: center;

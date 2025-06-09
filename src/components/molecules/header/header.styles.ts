@@ -41,10 +41,10 @@ export const Nav = styled.nav`
   gap: 32px;
 `;
 
-export const NavItem = styled(Link)<{ mode?: 'light' | 'dark' }>`
+export const NavItem = styled(Link)<{ mode?: 'light' | 'dark'; active?: boolean }>`
   ${typography['body-medium']};
   cursor: pointer;
-  color: ${({ mode }) => (mode === 'dark' ? colors.white : colors.black)};
+  color: ${({ mode, active }) => (active ? colors.jaedamCyan : mode === 'dark' ? colors.white : colors.black)};
 
   &:hover {
     color: ${colors.jaedamCyan};
