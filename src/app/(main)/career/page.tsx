@@ -1,16 +1,16 @@
 /** @jsxImportSource @emotion/react */
 'use client';
 
-import { SectionHeader } from '@/components/molecules/section-header';
-import { useState } from 'react';
-import styled from '@emotion/styled';
-import { colors, radius, spacing } from '@/tokens';
-import BubbleSVG from '@/assets/icons/visual-bubble.svg';
 import * as S from '@/app/_components/layout/container';
+import BubbleSVG from '@/assets/icons/visual-bubble.svg';
 import { Text } from '@/components/atom/text';
+import { SectionHeader } from '@/components/molecules/section-header';
 import { DeviceType, useDeviceType } from '@/hooks/useDeviceType';
-import { motion, Variants } from 'framer-motion';
+import { colors, radius, spacing } from '@/tokens';
 import { css } from '@emotion/react';
+import styled from '@emotion/styled';
+import { motion, Variants } from 'framer-motion';
+import { useState } from 'react';
 import { CareerCarousel } from './_component/CareerCarousel';
 
 const tabs = ['인재상', '채용공고'];
@@ -195,23 +195,27 @@ const textVariants: Variants = {
 const carouselItems = [
   {
     id: 1,
-    backgroundUrl: 'https://shortz-prod-s3-content.s3.ap-northeast-2.amazonaws.com/2186/meta/thumbnail_title.jpg',
+    backgroundUrl: 'https://s3.ap-northeast-2.amazonaws.com/shortz.net/public/jaedam-homepage/carrer-jaedam1.png',
   },
   {
     id: 2,
-    backgroundUrl: 'https://shortz-prod-s3-content.s3.ap-northeast-2.amazonaws.com/2160/meta/thumbnail_title.jpg\n',
+    backgroundUrl: 'https://s3.ap-northeast-2.amazonaws.com/shortz.net/public/jaedam-homepage/carrer-jaedam2.png',
   },
   {
     id: 3,
-    backgroundUrl: 'https://shortz-prod-s3-content.s3.ap-northeast-2.amazonaws.com/2170/meta/thumbnail_title.jpg',
+    backgroundUrl: 'https://s3.ap-northeast-2.amazonaws.com/shortz.net/public/jaedam-homepage/carrer-jaedam3.png',
   },
   {
     id: 4,
-    backgroundUrl: 'https://shortz-prod-s3-content.s3.ap-northeast-2.amazonaws.com/2150/meta/thumbnail_title.jpg',
+    backgroundUrl: 'https://s3.ap-northeast-2.amazonaws.com/shortz.net/public/jaedam-homepage/carrer-jaedam4.png',
   },
   {
     id: 5,
-    backgroundUrl: 'https://shortz-prod-s3-content.s3.ap-northeast-2.amazonaws.com/2169/meta/thumbnail_title.jpg',
+    backgroundUrl: 'https://s3.ap-northeast-2.amazonaws.com/shortz.net/public/jaedam-homepage/carrer-jaedam5.png',
+  },
+  {
+    id: 6,
+    backgroundUrl: 'https://s3.ap-northeast-2.amazonaws.com/shortz.net/public/jaedam-homepage/carrer-jaedam6.png',
   },
 ];
 
@@ -223,7 +227,7 @@ export default function CareerPage() {
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
-  
+
   return (
     <S.CommonContainer css={ContainerAdditional}>
       <StyledCareerContainer device={device}>
