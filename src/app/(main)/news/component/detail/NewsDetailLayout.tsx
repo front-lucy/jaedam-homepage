@@ -5,11 +5,18 @@ import * as R from '@/app/_components/layout/container';
 import { NewsDetailProps } from './NewsDetail.type';
 import { NewsDetailAttachment } from './NewsDetailAttachment';
 import { NewsDetailTitleSection } from './NewsDetailTitleSection';
+import { css } from '@emotion/react';
 
 export const NewsDetailLayout = ({ category, title, noticedAt, content, fileList }: NewsDetailProps) => {
   return (
-    <R.CommonContainer>
-      <S.Wrapper>
+    <R.CommonContainer css={
+      css`
+        padding: calc(64px + 48px) 24px 128px 24px;
+        @media (max-width: 1279px) {
+          padding: calc(64px + 48px) 24px 128px 24px;
+        }
+      `
+    }>
         <NewsDetailTitleSection
           category={category as import('@/app/(main)/news/component/news-category/news-card/NewsCard.types').TabKey}
           title={title}
@@ -20,7 +27,7 @@ export const NewsDetailLayout = ({ category, title, noticedAt, content, fileList
           <S.Inner dangerouslySetInnerHTML={{ __html: content }} />
           {fileList && fileList.length > 0 && <NewsDetailAttachment attachments={fileList} />}
         </S.ContentWrapper>
-      </S.Wrapper>
+
     </R.CommonContainer>
   );
 };

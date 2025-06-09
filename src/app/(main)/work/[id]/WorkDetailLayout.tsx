@@ -7,6 +7,7 @@ import { FC } from 'react';
 import * as S from './WorkDetailLayout.styles';
 import * as R from '@/app/_components/layout/container';
 import { WorkDetailProps } from './WorkDetailLayout.types';
+import { css } from '@emotion/react';
 
 export const WorkDetailLayout: FC<WorkDetailProps> = ({
   title,
@@ -23,8 +24,13 @@ export const WorkDetailLayout: FC<WorkDetailProps> = ({
   const deviceType = useDeviceType();
 
   return (
-    <R.CommonContainer>
-      <S.Wrapper>
+    <R.CommonContainer css={css`
+      padding: calc(80px + 48px) 24px 128px 24px;
+      @media (max-width: 1279px) {
+        padding: calc(64px + 48px) 24px 128px 24px;
+      }
+    `}>
+      {/* <S.Wrapper> */}
         <S.Container>
           {deviceType !== 'mobile' && (
             <S.BackLink onClick={() => router.back()}>
@@ -94,7 +100,7 @@ export const WorkDetailLayout: FC<WorkDetailProps> = ({
             )}
           </S.ContentWrapper>
         </S.Container>
-      </S.Wrapper>
+      {/* </S.Wrapper> */}
     </R.CommonContainer>
   );
 };

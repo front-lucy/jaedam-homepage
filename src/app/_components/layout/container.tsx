@@ -14,7 +14,7 @@ export const CommonContainer = styled.div<{ css?: SerializedStyles}>`
   gap: 48px;
 
   @media (max-width: 1279px) {
-    padding: calc(64px + 64px) 24px 128px 24px;
+    padding: calc(48px + 64px) 24px 128px 24px;
     gap: 32px;
   }
   

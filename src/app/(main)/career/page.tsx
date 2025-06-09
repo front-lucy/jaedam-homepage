@@ -367,6 +367,10 @@ export default function CareerPage() {
 const ContainerAdditional = css`
   padding-left: 0;
   padding-right: 0;
+  
+  @media (max-width: 1279px) {
+    padding: calc(64px + 64px) 24px 128px 24px;
+  }
 `;
 
 const StyledCareerContainer = styled(motion.div)<{ device: DeviceType }>`
