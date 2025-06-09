@@ -1,5 +1,6 @@
 import LogoIcon from '@/assets/icons/Logo_Jaedam-Eng.svg';
 import { colors, typography } from '@/tokens';
+import isPropValid from '@emotion/is-prop-valid';
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -41,7 +42,9 @@ export const Nav = styled.nav`
   gap: 32px;
 `;
 
-export const NavItem = styled(Link)<{ mode?: 'light' | 'dark'; active?: boolean }>`
+export const NavItem = styled(Link, {
+  shouldForwardProp: prop => isPropValid(prop) && prop !== 'active',
+})<{ mode?: 'light' | 'dark'; active?: boolean }>`
   ${typography['body-medium']};
   cursor: pointer;
   color: ${({ mode, active }) => (active ? colors.jaedamCyan : mode === 'dark' ? colors.white : colors.black)};
