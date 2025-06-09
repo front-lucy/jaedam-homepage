@@ -11,10 +11,10 @@ export const NewsDetailLayout = ({ category, title, noticedAt, content, fileList
   return (
     <R.CommonContainer css={
       css`
-        padding: calc(64px + 48px) 0 64px 0;
+        padding: 80px 0 64px 0;
         justify-content: center;
         @media (max-width: 1279px) {
-          padding: calc(64px + 48px) 0 64px 0;
+          padding: 64px 0 64px 0;
         }
       `
     }>
