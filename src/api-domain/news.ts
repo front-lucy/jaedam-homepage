@@ -1,5 +1,6 @@
 import { globalCommonApi } from '@/shared/api/commonApi';
-import mockNoticeListResponse from '../../mock-notice.json';
+// import mockMainNoticeListResponse from '../../mock-notice.json';
+// import mockNoticeListResponse from '../../mock-notice-list.json';
 
 interface GetNoticeListParams {
   category: 'SNS' | 'JAEDAM_NOTICE' | 'PRESS_RELEASE' | 'MEDIA_CONTENT' | 'LINK_RESOURCE';
@@ -80,6 +81,10 @@ export async function getNoticeList({
     data: {},
   });
   return res;
+
+  // return new Promise((resolve) => {
+  //   resolve(mockNoticeListResponse);
+  // })
 }
 
 // /v1/jaedam/homepage/notice/{id}
@@ -94,14 +99,14 @@ export async function getNoticeDetail(id: number): Promise<ApiWrapped<NoticeHome
 
 // /v1/jaedam/homepage/notice/main 재담 홈페이지 메인 페이지 뉴스 조회
 export async function getMainNoticeList(): Promise<ApiWrapped<NoticeHomeListResponse[]>> {
-  // const res = await globalCommonApi<ApiWrapped<NoticeHomeListResponse[]>>({
-  //   url: `notice/main`,
-  //   method: 'GET',
-  //   data: {},
-  // });
-  // return res;
+  const res = await globalCommonApi<ApiWrapped<NoticeHomeListResponse[]>>({
+    url: `notice/main`,
+    method: 'GET',
+    data: {},
+  });
+  return res;
 
-  return new Promise((resolve) => {
-    resolve(mockNoticeListResponse);
-  })
+  // return new Promise((resolve) => {
+  //   resolve(mockMainNoticeListResponse);
+  // })
 }
