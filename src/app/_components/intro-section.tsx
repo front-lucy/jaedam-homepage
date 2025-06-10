@@ -5,6 +5,8 @@ import SpeechBubbleSVG from '@/assets/icons/visual-bubble.svg';
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
+import { useDeviceType } from '@/hooks/useDeviceType';
+import { useWindowSize } from '@/hooks/useWindowSize';
 
 const Wrapper = styled.div<{ isFixed: boolean }>`
   position: ${({ isFixed }) => (isFixed ? 'fixed' : 'relative')};
@@ -37,13 +39,14 @@ const Overlay = styled.div`
   pointer-events: none;
 `;
 
-const TextLine = styled(motion.div)`
+const TextLine = styled(motion.div)<{ fontSize?: string }>`
+  font-family: Pretendard, serif;
   display: flex;
   gap: 16px;
-  font-size: 140px;
-  font-family: Pretendard;
   line-height: 1;
   color: #111;
+  
+  font-size: ${props => props.fontSize || '120px'};
 `;
 
 const Bold = styled.span`
@@ -54,31 +57,103 @@ const Light = styled.span`
   font-weight: 300;
 `;
 
-const Tag = styled(motion.div)<{ angle: number }>`
+const Tag = styled(motion.div)<{ angle: number; width: string; height: string; fontSize: string }>`
   position: absolute;
-  top: 50%;
-  left: 50%;
   background-color: #22d4dd;
   color: white;
-  font-size: 20px;
   font-weight: bold;
-
-  padding: 8px 18px;
+  width: ${props => props.width};
+  height: ${props => props.height};
+  font-size: ${props => props.fontSize};
   border-radius: 900px;
   white-space: nowrap;
   box-shadow: 0 2px 8px rgba(34, 212, 221, 0.1);
   transform: translate(-50%, -50%) rotate(${props => props.angle}deg);
   z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex-shrink: 0;
 `;
 
-const tags = [
-  { label: 'WEBTOON', x: -588.18, y: -266.67, angle: -13.45 },
-  { label: 'COMIC BOOK', x: -649.0, y: -45.76, angle: -1.61 },
-  { label: 'CHARACTER', x: -545.13, y: 185.31, angle: 14.32 },
-  { label: 'WEB NOVEL', x: 320.73, y: -257.9, angle: 10.71 },
-  { label: 'MOVIE', x: 537.89, y: -69.4, angle: 3.7 },
-  { label: 'IP BIZ', x: 416.33, y: 156.13, angle: -9.73 },
-];
+const styleVariants = {
+  desktop: {
+    title: {
+      fontSize: '120px',
+      lineHeight: '100%',
+    },
+    bubble: {
+      width: '454px',
+      height: 'auto',
+    }
+  },
+  tablet: {
+    title: {
+      fontSize: '90px',
+      lineHeight: '100%',
+    },
+    bubble: {
+      width: '454px',
+      height: 'auto',
+    }
+  },
+  mobile: {
+    title: {
+      fontSize: '60px',
+      lineHeight: '100%',
+    },
+    bubble: {
+      width: '363px',
+      height: 'auto',
+    }
+  },
+}
+
+const badgeVariants = {
+  desktop: {
+    width: '160px',
+    height: '45px',
+    fontSize: '18px',
+  },
+  tablet: {
+    width: '128px',
+    height: '36px',
+    fontSize: '14px',
+  },
+  mobile: {
+    width: '90px',
+    height: '25px',
+    fontSize: '10px',
+  },
+};
+
+const v2Tags = {
+  desktop: [
+    { label: 'WEBTOON', x: 0.214, y: 0.287, angle: -12 }, // 왼쪽: 410/1920, 310/1080
+    { label: 'COMIC BOOK', x: 0.182, y: 0.479, angle: 0 }, // 왼쪽: 350/1920, 517/1080
+    { label: 'CHARACTER', x: 0.219, y: 0.649, angle: 12 }, // 왼쪽: 420/1920, 701/1080
+    { label: 'WEB NOVEL', x: 0.786, y: 0.287, angle: 12 }, // 오른쪽: (1920-410)/1920, 310/1080
+    { label: 'MOVIE', x: 0.818, y: 0.479, angle: 0 }, // 오른쪽: (1920-350)/1920, 517/1080
+    { label: 'IP BIZ', x: 0.781, y: 0.649, angle: -12 }, // 오른쪽: (1920-420)/1920, 701/1080
+  ],
+  tablet: [
+    { label: 'WEBTOON', x: 0.023, y: 0.323, angle: -12 }, // 18/800, 349/1080
+    { label: 'COMIC BOOK', x: -0.038, y: 0.482, angle: 0 }, // -30/800, 521/1080
+    { label: 'CHARACTER', x: 0.033, y: 0.62, angle: 12 }, // 26/800, 670/1080
+    { label: 'WEB NOVEL', x: 0.831, y: 0.32, angle: 12 }, // 665/800, 346/1080
+    { label: 'MOVIE', x: 0.878, y: 0.482, angle: 0 }, // 702/800, 521/1080
+    { label: 'IP BIZ', x: 0.821, y: 0.621, angle: -12 }, // 657/800, 671/1080
+  ],
+  mobile: [
+    { label: 'WEBTOON', x: -0.104, y: 0.336, angle: -12 }, // -39/375, 273/812
+    { label: 'COMIC BOOK', x: -0.195, y: 0.484, angle: 0 }, // -73/375, 393/812
+    { label: 'CHARACTER', x: -0.091, y: 0.611, angle: 12 }, // -34/375, 496/812
+    { label: 'WEB NOVEL', x: 0.891, y: 0.336, angle: 12 }, // 334/375, 273/812
+    { label: 'MOVIE', x: 0.960, y: 0.484, angle: 0 }, // 360/375, 393/812
+    { label: 'IP BIZ', x: 0.877, y: 0.610, angle: -12 }, // 329/375, 496/812
+  ],
+};
 
 interface IntroSectionProps {
   onEndSplash: () => void;
@@ -87,9 +162,13 @@ interface IntroSectionProps {
 export function IntroSection({ onEndSplash }: IntroSectionProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dotsRef = useRef<Dot[]>([]);
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(3);
   const [expandBubble, setExpandBubble] = useState(false);
   const [bubbleIn, setBubbleIn] = useState(false);
+  const windowSize = useWindowSize();
+
+  const device = useDeviceType();
+
   const isFixed = step < 5;
   const MotionSpeechBubble = motion.create(SpeechBubbleSVG);
   const MotionLogo = motion.img;
@@ -105,56 +184,6 @@ export function IntroSection({ onEndSplash }: IntroSectionProps) {
       onEndSplash();
     }
   }, [step, onEndSplash]);
-
-  useEffect(() => {
-    // let scrollLock = false;
-    // const handleScroll = (e: WheelEvent) => {
-    //   if (scrollLock) return;
-    //   scrollLock = true;
-    //   e.preventDefault();
-    //   setStep((prev) => Math.min(prev + 1, 5));
-    //   setTimeout(() => {
-    //     scrollLock = false;
-    //   }, 1000);
-    // };
-    // window.addEventListener("wheel", handleScroll, { passive: false });
-    // return () => window.removeEventListener("wheel", handleScroll);
-
-    // 각 애니메이션의 duration에 맞춰서 단계 진행
-    const timeouts: NodeJS.Timeout[] = [];
-
-    // step 1 → step 2: 텍스트 애니메이션 완료 후 (0.8초)
-    timeouts.push(
-      setTimeout(() => {
-        setStep(2);
-      }, 2000),
-    );
-
-    // step 2 → step 3: 태그 애니메이션 완료 후 (0.8 + 0.3 = 1.1초)
-    timeouts.push(
-      setTimeout(() => {
-        setStep(3);
-      }, 3500),
-    );
-
-    // step 3 → step 4: 말풍선 들어오는 애니메이션 완료 후 (1.1 + 1.0 = 2.1초)
-    timeouts.push(
-      setTimeout(() => {
-        setStep(4);
-      }, 5000),
-    );
-
-    // step 4 → step 5: 로고 애니메이션 완료 후 (2.1 + 2.3 = 4.4초)
-    timeouts.push(
-      setTimeout(() => {
-        setStep(5);
-      }, 8000),
-    );
-
-    return () => {
-      timeouts.forEach(timeout => clearTimeout(timeout));
-    };
-  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -221,6 +250,14 @@ export function IntroSection({ onEndSplash }: IntroSectionProps) {
     return () => window.removeEventListener('resize', resize);
   }, []);
 
+  const tagVariants = {
+    initial: (custom: { x: number; y: number }) => ({
+      x: custom.x * windowSize.width,
+      y: custom.y * windowSize.height,
+      opacity: 0,
+    }),
+  };
+
   return (
     <Wrapper isFixed={isFixed}>
       <Canvas ref={canvasRef} />
@@ -230,6 +267,7 @@ export function IntroSection({ onEndSplash }: IntroSectionProps) {
             initial={{ x: '-100%', opacity: 0 }}
             animate={{ x: 0, opacity: expandBubble ? 0 : 1 }}
             transition={{ duration: 0.8, opacity: { duration: 0.1 } }}
+            fontSize={styleVariants[device].title.fontSize}
           >
             <Bold>세상</Bold>
             <Light>의 모든</Light>
@@ -241,42 +279,54 @@ export function IntroSection({ onEndSplash }: IntroSectionProps) {
               duration: 0.8,
               opacity: { duration: 0.1 },
             }}
+            fontSize={styleVariants[device].title.fontSize}
           >
             <Bold>재미</Bold>
             <Light>를 담다</Light>
           </TextLine>
-          {step >= 2 &&
-            tags.map(tag => (
-              <Tag
-                key={tag.label}
-                angle={tag.angle}
-                style={{ rotate: `${-tag.angle}deg` }}
-                initial={{ x: 0, y: 0, opacity: 0, scale: 1 }}
-                animate={{
-                  x: tag.x,
-                  y: tag.y,
-                  opacity: expandBubble ? 0 : 1,
-                  scale: 1,
-                }}
-                transition={{ duration: 0.3, ease: 'easeOut' }}
-              >
-                {tag.label}
-              </Tag>
-            ))}
         </Overlay>
       )}
+      {step >= 2 &&
+        windowSize.width > 0 &&
+        v2Tags[device].map(tag => {
+          const x = tag.x * windowSize.width;
+          const y = tag.y * windowSize.height;
+          return (
+            <Tag
+              key={tag.label}
+              angle={tag.angle}
+              width={badgeVariants[device].width}
+              height={badgeVariants[device].height}
+              fontSize={badgeVariants[device].fontSize}
+              initial={{
+                x,
+                y,
+              }}
+              custom={{ x, y }}
+              animate={{
+                x,
+                y,
+                opacity: expandBubble ? 0 : 1,
+                scale: 1,
+                rotate: `${-tag.angle}deg`,
+              }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+            >
+              {tag.label}
+            </Tag>
+          );
+        })}
       {step === 3 && bubbleIn && (
         <MotionSpeechBubble
           style={{
             position: 'absolute',
-            left: '36%',
-            top: '30%',
-            transform: 'translate(-50%, -50%)',
-            width: '454px',
+            top: '50%',
+            left: '50%',
+            width: styleVariants[device].bubble.width,
             zIndex: -1,
           }}
-          initial={{ top: '100%', scale: 1, opacity: 0 }}
-          animate={{ top: '30%', scale: 1, opacity: 1 }}
+          initial={{ x: '-50%', y: '50vh', scale: 1, opacity: 0 }}
+          animate={{ x: '-50%', y: '-50%', scale: 1, opacity: 1 }}
           transition={{ duration: 1, ease: 'easeOut' }}
         />
       )}

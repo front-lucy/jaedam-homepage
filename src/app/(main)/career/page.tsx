@@ -143,12 +143,12 @@ const diagramItemVariants: Record<DeviceType, Variants> = {
   mobile: {
     hidden: {
       x: 0,
-      y: 0, // 가운데 위치에서 시작 (0과 120의 중간값)
+      y: 120, // 가운데 위치에서 시작
       opacity: 0,
     },
     visible: (index: number) => ({
       x: index === 0 ? 0 : index === 1 ? -70 : 70,
-      y: index === 0 ? -60 : 60,
+      y: index === 0 ? 0 : 120,
       opacity: 1,
       transition: {
         opacity: {
@@ -367,7 +367,7 @@ export default function CareerPage() {
 const ContainerAdditional = css`
   padding-left: 0;
   padding-right: 0;
-
+  
   @media (max-width: 1279px) {
     padding: calc(64px + 64px) 24px 128px 24px;
   }
@@ -469,7 +469,7 @@ const DiagramItemsContainer = styled.ul`
 `;
 
 const diagramCss = css`
-  border-radius: ${radius.r100};
+  border-radius: ${radius.r900};
   border: 1px solid ${colors.jaedamCyan};
   display: flex;
   align-items: center;
