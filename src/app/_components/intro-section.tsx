@@ -86,6 +86,9 @@ const styleVariants = {
     bubble: {
       width: '454px',
       height: 'auto',
+    },
+    logo: {
+      width: '667px',
     }
   },
   tablet: {
@@ -96,6 +99,9 @@ const styleVariants = {
     bubble: {
       width: '454px',
       height: 'auto',
+    },
+    logo: {
+      width: '413px',
     }
   },
   mobile: {
@@ -106,6 +112,9 @@ const styleVariants = {
     bubble: {
       width: '363px',
       height: 'auto',
+    },
+    logo: {
+      width: '267px',
     }
   },
 }
@@ -162,7 +171,7 @@ interface IntroSectionProps {
 export function IntroSection({ onEndSplash }: IntroSectionProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dotsRef = useRef<Dot[]>([]);
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(1);
   const [expandBubble, setExpandBubble] = useState(false);
   const [bubbleIn, setBubbleIn] = useState(false);
   const windowSize = useWindowSize();
@@ -172,6 +181,56 @@ export function IntroSection({ onEndSplash }: IntroSectionProps) {
   const isFixed = step < 5;
   const MotionSpeechBubble = motion.create(SpeechBubbleSVG);
   const MotionLogo = motion.img;
+
+  useEffect(() => {
+    // let scrollLock = false;
+    // const handleScroll = (e: WheelEvent) => {
+    //   if (scrollLock) return;
+    //   scrollLock = true;
+    //   e.preventDefault();
+    //   setStep((prev) => Math.min(prev + 1, 5));
+    //   setTimeout(() => {
+    //     scrollLock = false;
+    //   }, 1000);
+    // };
+    // window.addEventListener("wheel", handleScroll, { passive: false });
+    // return () => window.removeEventListener("wheel", handleScroll);
+
+    // 각 애니메이션의 duration에 맞춰서 단계 진행
+    const timeouts: NodeJS.Timeout[] = [];
+
+    // step 1 → step 2: 텍스트 애니메이션 완료 후 (0.8초)
+    timeouts.push(
+      setTimeout(() => {
+        setStep(2);
+      }, 2000),
+    );
+
+    // step 2 → step 3: 태그 애니메이션 완료 후 (0.8 + 0.3 = 1.1초)
+    timeouts.push(
+      setTimeout(() => {
+        setStep(3);
+      }, 3500),
+    );
+
+    // step 3 → step 4: 말풍선 들어오는 애니메이션 완료 후 (1.1 + 1.0 = 2.1초)
+    timeouts.push(
+      setTimeout(() => {
+        setStep(4);
+      }, 5000),
+    );
+
+    // step 4 → step 5: 로고 애니메이션 완료 후 (2.1 + 2.3 = 4.4초)
+    timeouts.push(
+      setTimeout(() => {
+        setStep(5);
+      }, 8000),
+    );
+
+    return () => {
+      timeouts.forEach(timeout => clearTimeout(timeout));
+    };
+  }, []);
 
   useEffect(() => {
     if (step === 3) {
@@ -210,6 +269,7 @@ export function IntroSection({ onEndSplash }: IntroSectionProps) {
       hex: '#22D4DD',
       color: hexToRGBA('#22D4DD', 0.05),
     });
+
     const updateDot = (dot: Dot) => {
       if (dot.alpha < 0.4) {
         dot.alpha += 0.005;
@@ -221,12 +281,14 @@ export function IntroSection({ onEndSplash }: IntroSectionProps) {
         dot.active = false;
       }
     };
+
     const drawDot = (dot: Dot) => {
       ctx.fillStyle = dot.color;
       ctx.beginPath();
       ctx.arc(dot.x, dot.y, dot.diameter, 0, Math.PI * 2);
       ctx.fill();
     };
+
     const animate = () => {
       if (dotsRef.current.length < 30) {
         for (let i = dotsRef.current.length; i < 30; i++) {
@@ -239,24 +301,18 @@ export function IntroSection({ onEndSplash }: IntroSectionProps) {
       dotsRef.current.forEach(drawDot);
       requestAnimationFrame(animate);
     };
+
     const resize = () => {
       dotsRef.current = [];
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
+
     resize();
     animate();
     window.addEventListener('resize', resize);
     return () => window.removeEventListener('resize', resize);
   }, []);
-
-  const tagVariants = {
-    initial: (custom: { x: number; y: number }) => ({
-      x: custom.x * windowSize.width,
-      y: custom.y * windowSize.height,
-      opacity: 0,
-    }),
-  };
 
   return (
     <Wrapper isFixed={isFixed}>
@@ -301,6 +357,7 @@ export function IntroSection({ onEndSplash }: IntroSectionProps) {
               initial={{
                 x,
                 y,
+                opacity: 0,
               }}
               custom={{ x, y }}
               animate={{
@@ -350,7 +407,7 @@ export function IntroSection({ onEndSplash }: IntroSectionProps) {
               src={JaedamLogoENG.src}
               alt='Jaedam Logo'
               style={{
-                width: '667px',
+                width: styleVariants[device].logo.width,
                 height: 'auto',
                 zIndex: 0,
               }}
